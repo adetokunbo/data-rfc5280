@@ -1,0 +1,7 @@
+comma-style: leading
+function-arrows: leading
+haddock-style: multi-line
+indentation: 2
+import-export-style: leading
+newlines-between-decls: 2
+respectful: false
