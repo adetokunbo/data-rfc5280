@@ -1,3 +1,6 @@
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE OverloadedStrings #-}
+
 {- |
 Module      : DataType.X509.Extension
 Copyright   : (c) 2023 Tim Emiola
@@ -6,21 +9,39 @@ SPDX-License-Identifier: BSD3
 
 Provides functions and/or data types that support Top Sample goals
 -}
-module DataType.X509.Extension (
-  -- * match a predicate
-  endsThen,
+module DataType.X509.Extension
+  ( -- * Extension types
+    BasicConstraints (..)
 
-) where
+    -- * Print types as @ByteString@
+  , asByteString
+  )
+where
 
-import Test.Hspec (shouldSatisfy)
+import Data.ByteString (ByteString)
+import qualified Data.ByteString as BS
+import Data.ByteString.Builder (intDec, toLazyByteString)
 
 
-{- | @action \`endsThen\` expected@ sets the expectation that the result of
- @action@ __satisfies__ the predicate @p@.
+{- | Represents the basic constraints extension
 
+see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.9
 -}
-endsThen :: (Show a) => IO a -> (a -> Bool) -> IO ()
-endsThen action p = action >>= (`shouldSatisfy` p)
+data BasicConstraints
+  = BasicConstraints
+  { bcIsCA :: !Bool
+  -- ^ is the subject of the certificate a certificate authority
+  , bcPathLength :: !(Maybe Int)
+  -- ^ the maximum number of non-self-issued intermediate certificates
+  -- ^ that may follow this certificate if it is a CA certificate
+  }
+  deriving (Eq, Show)
 
 
-infix 1 `endsThen`
+asByteString :: BasicConstraints -> ByteString
+asByteString BasicConstraints{bcIsCA, bcPathLength} =
+  let bcPrefix = "CA:"
+      bcSuffix = if bcIsCA then "TRUE" else "FALSE"
+      withPathLen x = ",pathLen" <> intDec x
+      pathLen = maybe "" withPathLen bcPathLength
+   in BS.toStrict $ toLazyByteString (bcPrefix <> bcSuffix <> pathLen)

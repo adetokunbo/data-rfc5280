@@ -8,15 +8,20 @@ SPDX-License-Identifier: BSD3
 -}
 module X509.ExtensionSpec (spec) where
 
-import Test.Hspec
 import DataType.X509.Extension
+import Test.Hspec
+
 
 spec :: Spec
 spec = describe "module DataType.X509.Extension" $ do
-  context "endsThen" $
-    it "should be a simple test" $ do
-      getIt `endsThen` (== (Just "a string"))
+  context "BasicContraints:asByteString" $
+    it "converts to ByteString" $ do
+      asByteString notCA `shouldBe` "CA:FALSE"
 
 
-getIt :: IO (Maybe String)
-getIt = pure $ Just "a string"
+notCA :: BasicConstraints
+notCA =
+  BasicConstraints
+    { bcIsCA = False
+    , bcPathLength = Nothing
+    }
