@@ -14,9 +14,12 @@ import Test.Hspec
 
 spec :: Spec
 spec = describe "module DataType.X509.Extension" $ do
-  context "BasicContraints:asByteString" $
+  context "BasicConstraints" $
     it "converts to ByteString" $ do
       asByteString notCA `shouldBe` "CA:FALSE"
+  context "KeyUsage" $
+    it "converts to ByteString" $ do
+      asByteString simpleKeyUsage `shouldBe` "digitalSignature,cRLSign"
 
 
 notCA :: BasicConstraints
@@ -25,3 +28,7 @@ notCA =
     { bcIsCA = False
     , bcPathLength = Nothing
     }
+
+
+simpleKeyUsage :: KeyUsage
+simpleKeyUsage = fromList [DigitalSignature, CRLSign]

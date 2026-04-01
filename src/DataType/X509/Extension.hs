@@ -1,6 +1,9 @@
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeSynonymInstances #-}
 
 {- |
 Module      : DataType.X509.Extension
@@ -13,9 +16,14 @@ Provides functions and/or data types that support Top Sample goals
 module DataType.X509.Extension
   ( -- * Extension types
     BasicConstraints (..)
+  , KeyUsageBit (..)
+  , KeyUsage
 
     -- * Print types as @ByteString@
   , asByteString
+
+    -- * re-export
+  , fromList
   )
 where
 
@@ -23,6 +31,8 @@ import Data.Builder (ToBuilder (..))
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as BS
 import Data.ByteString.Builder (Builder, intDec, toLazyByteString)
+import Data.List (foldl')
+import Data.Set (Set, fromList, toList)
 
 
 {- | Represents the basic constraints extension
@@ -52,3 +62,45 @@ instance ToBuilder BasicConstraints Builder where
 
 asByteString :: (ToBuilder a Builder) => a -> ByteString
 asByteString = BS.toStrict . toLazyByteString . toBuilder
+
+
+{- | Represents the bits that can set for @KeyUsage@
+
+see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.12
+-}
+data KeyUsageBit
+  = DigitalSignature
+  | NonRepudiation
+  | KeyEncipherment
+  | DataEncipherment
+  | KeyAgreement
+  | KeyCertSign
+  | CRLSign
+  | EncipherOnly
+  | DecipherOnly
+  deriving (Eq, Show, Ord, Enum)
+
+
+instance ToBuilder KeyUsageBit Builder where
+  toBuilder DigitalSignature = "digitalSignature"
+  toBuilder NonRepudiation = "nonRepudiation"
+  toBuilder KeyEncipherment = "keyEncipherment"
+  toBuilder DataEncipherment = "dataEncipherment"
+  toBuilder KeyAgreement = "keyAgreement"
+  toBuilder KeyCertSign = "keyCertSign"
+  toBuilder CRLSign = "cRLSign"
+  toBuilder EncipherOnly = "encipherOnly"
+  toBuilder DecipherOnly = "decipherOnly"
+
+
+-- | Defines KeyUsage to be a set of @KeyUsageBit@
+type KeyUsage = Set KeyUsageBit
+
+
+instance ToBuilder KeyUsage Builder where
+  toBuilder = intersperseCommas . map toBuilder . toList
+
+
+intersperseCommas :: [Builder] -> Builder
+intersperseCommas [] = ""
+intersperseCommas (x : xs) = foldl' (\acc y -> acc <> "," <> y) x xs
