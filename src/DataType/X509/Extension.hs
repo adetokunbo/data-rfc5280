@@ -1,3 +1,4 @@
+{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 
@@ -18,9 +19,10 @@ module DataType.X509.Extension
   )
 where
 
+import Data.Builder (ToBuilder (..))
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as BS
-import Data.ByteString.Builder (intDec, toLazyByteString)
+import Data.ByteString.Builder (Builder, intDec, toLazyByteString)
 
 
 {- | Represents the basic constraints extension
@@ -38,10 +40,15 @@ data BasicConstraints
   deriving (Eq, Show)
 
 
-asByteString :: BasicConstraints -> ByteString
-asByteString BasicConstraints{bcIsCA, bcPathLength} =
-  let bcPrefix = "CA:"
-      bcSuffix = if bcIsCA then "TRUE" else "FALSE"
-      withPathLen x = ",pathLen" <> intDec x
-      pathLen = maybe "" withPathLen bcPathLength
-   in BS.toStrict $ toLazyByteString (bcPrefix <> bcSuffix <> pathLen)
+instance ToBuilder BasicConstraints Builder where
+  toBuilder bc =
+    let BasicConstraints{bcIsCA, bcPathLength} = bc
+        bcPrefix = "CA:"
+        bcSuffix = if bcIsCA then "TRUE" else "FALSE"
+        withPathLen x = ",pathLen" <> intDec x
+        pathLen = maybe "" withPathLen bcPathLength
+     in (bcPrefix <> bcSuffix <> pathLen)
+
+
+asByteString :: (ToBuilder a Builder) => a -> ByteString
+asByteString = BS.toStrict . toLazyByteString . toBuilder
