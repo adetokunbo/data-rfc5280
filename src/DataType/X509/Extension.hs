@@ -24,6 +24,7 @@ module DataType.X509.Extension
 
     -- * re-export
   , fromList
+  , NonEmpty (..)
   )
 where
 
@@ -31,8 +32,10 @@ import Data.Builder (ToBuilder (..))
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as BS
 import Data.ByteString.Builder (Builder, intDec, toLazyByteString)
-import Data.List (foldl')
-import Data.Set (Set, fromList, toList)
+import Data.Foldable (foldl')
+import Data.List.NonEmpty (NonEmpty (..))
+import Data.Set.NonEmpty (fromList)
+import qualified Data.Set.NonEmpty as NES
 
 
 {- | Represents the basic constraints extension
@@ -66,7 +69,7 @@ asByteString = BS.toStrict . toLazyByteString . toBuilder
 
 {- | Represents the bits that can set for @KeyUsage@
 
-see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.12
+see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.3
 -}
 data KeyUsageBit
   = DigitalSignature
@@ -93,14 +96,16 @@ instance ToBuilder KeyUsageBit Builder where
   toBuilder DecipherOnly = "decipherOnly"
 
 
--- | Defines KeyUsage to be a set of @KeyUsageBit@
-type KeyUsage = Set KeyUsageBit
+{- | Represents the 'KeyUsage' extension
+
+see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.3
+-}
+type KeyUsage = NES.NESet KeyUsageBit
 
 
 instance ToBuilder KeyUsage Builder where
-  toBuilder = intersperseCommas . map toBuilder . toList
+  toBuilder = intersperseCommas . fmap toBuilder . NES.toList
 
 
-intersperseCommas :: [Builder] -> Builder
-intersperseCommas [] = ""
-intersperseCommas (x : xs) = foldl' (\acc y -> acc <> "," <> y) x xs
+intersperseCommas :: NonEmpty Builder -> Builder
+intersperseCommas (x :| xs) = x <> foldl' (\acc y -> acc <> "," <> y) "" xs

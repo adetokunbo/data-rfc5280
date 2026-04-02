@@ -31,4 +31,4 @@ notCA =
 
 
 simpleKeyUsage :: KeyUsage
-simpleKeyUsage = fromList [DigitalSignature, CRLSign]
+simpleKeyUsage = fromList $ DigitalSignature :| [CRLSign]
