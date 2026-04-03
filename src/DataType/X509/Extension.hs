@@ -20,6 +20,7 @@ module DataType.X509.Extension
   , KeyUsage
   , ExtKeyUsagePurpose (..)
   , ExtKeyUsage
+  , SubjectKeyIdentifier (..)
 
     -- * Print types as @ByteString@
   , asByteString
@@ -33,7 +34,12 @@ where
 import Data.Builder (ToBuilder (..))
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as BS
-import Data.ByteString.Builder (Builder, intDec, toLazyByteString)
+import Data.ByteString.Builder
+  ( Builder
+  , byteString
+  , intDec
+  , toLazyByteString
+  )
 import Data.Foldable (foldl')
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Set.NonEmpty (fromList)
@@ -147,3 +153,18 @@ type ExtKeyUsage = NES.NESet ExtKeyUsagePurpose
 
 instance ToBuilder ExtKeyUsage Builder where
   toBuilder = intersperseCommas . fmap toBuilder . NES.toList
+
+
+{- | Represents the bits that can set for @SubjectKeyIdentifier@
+
+see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.2
+-}
+data SubjectKeyIdentifier
+  = Raw ByteString
+  | Hash_RFC_5280_4212
+  deriving (Eq, Show)
+
+
+instance ToBuilder SubjectKeyIdentifier Builder where
+  toBuilder (Raw x) = byteString x
+  toBuilder _ = "hash"

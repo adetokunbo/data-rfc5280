@@ -23,6 +23,9 @@ spec = describe "module DataType.X509.Extension" $ do
   context "ExtKeyUsage" $
     it "converts to ByteString" $ do
       asByteString simpleExtKeyUsage `shouldBe` "serverAuth,codeSigning"
+  context "SubjectKeyIdentifier" $
+    it "converts to ByteString" $ do
+      asByteString Hash_RFC_5280_4212 `shouldBe` "hash"
 
 
 notCA :: BasicConstraints
