@@ -18,6 +18,8 @@ module DataType.X509.Extension
     BasicConstraints (..)
   , KeyUsageBit (..)
   , KeyUsage
+  , ExtKeyUsagePurpose (..)
+  , ExtKeyUsage
 
     -- * Print types as @ByteString@
   , asByteString
@@ -109,3 +111,39 @@ instance ToBuilder KeyUsage Builder where
 
 intersperseCommas :: NonEmpty Builder -> Builder
 intersperseCommas (x :| xs) = x <> foldl' (\acc y -> acc <> "," <> y) "" xs
+
+
+{- | Represents the bits that can set for @ExtKeyUsage@
+
+see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.12
+-}
+data ExtKeyUsagePurpose
+  = ServerAuth
+  | ClientAuth
+  | CodeSigning
+  | EmailProtection
+  | TimeStamping
+  | OCSPSigning
+  | AnyExtendedKeyUsage
+  deriving (Eq, Show, Ord, Enum)
+
+
+instance ToBuilder ExtKeyUsagePurpose Builder where
+  toBuilder ServerAuth = "serverAuth"
+  toBuilder ClientAuth = "clientAuth"
+  toBuilder CodeSigning = "codeSigning"
+  toBuilder EmailProtection = "emailProtection"
+  toBuilder TimeStamping = "timeStamping"
+  toBuilder OCSPSigning = "OCSPSigning"
+  toBuilder AnyExtendedKeyUsage = "anyExtendedKeyUsage"
+
+
+{- | Represents the @ExtKeyUsage@ extension
+
+see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.12
+-}
+type ExtKeyUsage = NES.NESet ExtKeyUsagePurpose
+
+
+instance ToBuilder ExtKeyUsage Builder where
+  toBuilder = intersperseCommas . fmap toBuilder . NES.toList

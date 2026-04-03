@@ -20,6 +20,9 @@ spec = describe "module DataType.X509.Extension" $ do
   context "KeyUsage" $
     it "converts to ByteString" $ do
       asByteString simpleKeyUsage `shouldBe` "digitalSignature,cRLSign"
+  context "ExtKeyUsage" $
+    it "converts to ByteString" $ do
+      asByteString simpleExtKeyUsage `shouldBe` "serverAuth,codeSigning"
 
 
 notCA :: BasicConstraints
@@ -32,3 +35,7 @@ notCA =
 
 simpleKeyUsage :: KeyUsage
 simpleKeyUsage = fromList $ DigitalSignature :| [CRLSign]
+
+
+simpleExtKeyUsage :: ExtKeyUsage
+simpleExtKeyUsage = fromList $ ServerAuth :| [CodeSigning]
