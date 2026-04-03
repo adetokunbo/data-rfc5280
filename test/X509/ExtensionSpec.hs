@@ -26,6 +26,9 @@ spec = describe "module DataType.X509.Extension" $ do
   context "SubjectKeyIdentifier" $
     it "converts to ByteString" $ do
       asByteString Hash_RFC_5280_4212 `shouldBe` "hash"
+  context "AuthorityKeyIdentifier" $
+    it "converts to ByteString" $
+      asByteString simpleAKI `shouldBe` "keyid:always"
 
 
 notCA :: BasicConstraints
@@ -42,3 +45,13 @@ simpleKeyUsage = fromList $ DigitalSignature :| [CRLSign]
 
 simpleExtKeyUsage :: ExtKeyUsage
 simpleExtKeyUsage = fromList $ ServerAuth :| [CodeSigning]
+
+
+simpleAKI :: AuthorityKeyIdentifier
+simpleAKI =
+  AuthorityKeyIdentifier
+    { akiKeyId = True
+    , akiKeyIdAlways = True
+    , akiIssuer = False
+    , akiIssuerAlways = False
+    }

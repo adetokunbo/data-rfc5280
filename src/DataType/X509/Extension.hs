@@ -21,6 +21,7 @@ module DataType.X509.Extension
   , ExtKeyUsagePurpose (..)
   , ExtKeyUsage
   , SubjectKeyIdentifier (..)
+  , AuthorityKeyIdentifier (..)
 
     -- * Print types as @ByteString@
   , asByteString
@@ -168,3 +169,37 @@ data SubjectKeyIdentifier
 instance ToBuilder SubjectKeyIdentifier Builder where
   toBuilder (Raw x) = byteString x
   toBuilder _ = "hash"
+
+
+{- | Represents the AuthorityKeyIdentifier extension
+
+see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.1
+-}
+data AuthorityKeyIdentifier = AuthorityKeyIdentifier
+  { akiKeyId :: !Bool
+  -- ^ include key ID
+  , akiKeyIdAlways :: !Bool
+  -- ^ always include (even if not in issuer)
+  , akiIssuer :: !Bool
+  -- ^ include issuer name + serial
+  , akiIssuerAlways :: !Bool
+  -- ^ always include
+  }
+  deriving (Eq, Show)
+
+
+instance ToBuilder AuthorityKeyIdentifier Builder where
+  toBuilder aki =
+    let keyId =
+          if akiKeyIdAlways aki
+            then Just "keyid:always"
+            else if akiKeyId aki then Just "keyid" else Nothing
+        issuer =
+          if akiIssuerAlways aki
+            then Just "issuer:always"
+            else if akiIssuer aki then Just "issuer" else Nothing
+     in case (keyId, issuer) of
+          (Nothing, Nothing) -> mempty
+          (Nothing, Just x) -> x
+          (Just x, Nothing) -> x
+          (Just x, Just y) -> intersperseCommas (x :| [y])
