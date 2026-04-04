@@ -22,6 +22,10 @@ module DataType.X509.Extension
   , ExtKeyUsage
   , SubjectKeyIdentifier (..)
   , AuthorityKeyIdentifier (..)
+  , OID
+  , mkOID
+  , CertificatePolicies (..)
+  , mkCertificatePolicies
 
     -- * Print types as @ByteString@
   , asByteString
@@ -122,7 +126,7 @@ intersperseCommas (x :| xs) = x <> foldl' (\acc y -> acc <> "," <> y) "" xs
 
 {- | Represents the bits that can set for @ExtKeyUsage@
 
-see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.12
+see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.3
 -}
 data ExtKeyUsagePurpose
   = ServerAuth
@@ -203,3 +207,40 @@ instance ToBuilder AuthorityKeyIdentifier Builder where
           (Nothing, Just x) -> x
           (Just x, Nothing) -> x
           (Just x, Just y) -> intersperseCommas (x :| [y])
+
+
+-- | An ASN.1 object identifier
+type OID = NonEmpty Int
+
+
+-- | Construct @OID@
+mkOID :: Int -> [Int] -> OID
+mkOID = (:|)
+
+
+{- | Represents @CertificatePolicies@
+
+see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.4
+-}
+newtype CertificatePolicies = CertificatePolicies (NonEmpty OID)
+
+
+-- | Construct @CertificatePolicies@
+mkCertificatePolicies :: OID -> [OID] -> CertificatePolicies
+mkCertificatePolicies x xs = CertificatePolicies $ x :| xs
+
+
+instance ToBuilder CertificatePolicies Builder where
+  toBuilder (CertificatePolicies xs) = intersperseCommas $ fmap toBuilderOid xs
+
+
+toBuilderOid :: OID -> Builder
+toBuilderOid = intersperseWith "." . fmap intDec
+
+
+intersperseCommas :: NonEmpty Builder -> Builder
+intersperseCommas = intersperseWith ","
+
+
+intersperseWith :: Builder -> NonEmpty Builder -> Builder
+intersperseWith sep (x :| xs) = x <> foldl' (\acc y -> acc <> sep <> y) "" xs

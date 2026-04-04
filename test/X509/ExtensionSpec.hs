@@ -29,6 +29,9 @@ spec = describe "module DataType.X509.Extension" $ do
   context "AuthorityKeyIdentifier" $
     it "converts to ByteString" $
       asByteString simpleAKI `shouldBe` "keyid:always"
+  context "CertificatePolicies" $
+    it "converts to ByteString" $
+      asByteString simpleCP `shouldBe` "1.2.3.4"
 
 
 notCA :: BasicConstraints
@@ -55,3 +58,7 @@ simpleAKI =
     , akiIssuer = False
     , akiIssuerAlways = False
     }
+
+
+simpleCP :: CertificatePolicies
+simpleCP = mkCertificatePolicies (mkOID 1 [2, 3, 4]) []
