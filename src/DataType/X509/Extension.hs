@@ -94,7 +94,7 @@ data KeyUsageBit
   | CRLSign
   | EncipherOnly
   | DecipherOnly
-  deriving (Eq, Show, Ord, Enum)
+  deriving (Eq, Show, Ord, Enum, Bounded)
 
 
 instance ToBuilder KeyUsageBit Builder where
@@ -132,7 +132,7 @@ data ExtKeyUsagePurpose
   | TimeStamping
   | OCSPSigning
   | AnyExtendedKeyUsage
-  deriving (Eq, Show, Ord, Enum)
+  deriving (Eq, Show, Ord, Enum, Bounded)
 
 
 instance ToBuilder ExtKeyUsagePurpose Builder where
@@ -219,6 +219,7 @@ mkOID = (:|)
 see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.4
 -}
 newtype CertificatePolicies = CertificatePolicies (NonEmpty OID)
+  deriving (Eq, Show)
 
 
 -- | Construct @CertificatePolicies@
