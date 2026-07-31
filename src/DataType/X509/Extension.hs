@@ -120,10 +120,6 @@ instance ToBuilder KeyUsage Builder where
   toBuilder = intersperseCommas . fmap toBuilder . NES.toList
 
 
-intersperseCommas :: NonEmpty Builder -> Builder
-intersperseCommas (x :| xs) = x <> foldl' (\acc y -> acc <> "," <> y) "" xs
-
-
 {- | Represents the bits that can set for @ExtKeyUsage@
 
 see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.3
