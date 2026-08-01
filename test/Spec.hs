@@ -5,6 +5,7 @@
 module Main where
 
 import qualified X509.Extension.GeneralNameSpec as GeneralName
+import qualified X509.Extension.SubjectAltNameSpec as SubjectAltName
 import qualified X509.ExtensionSpec as Extension
 import System.IO (
   BufferMode (..),
@@ -22,3 +23,4 @@ main = do
   hspec $ do
     Extension.spec
     GeneralName.spec
+    SubjectAltName.spec
