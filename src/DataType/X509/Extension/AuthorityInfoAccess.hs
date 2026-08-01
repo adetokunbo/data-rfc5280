@@ -20,6 +20,7 @@ import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
 import DataType.X509.Extension.GeneralName (GeneralName)
+import DataType.X509.Extension.HasOID (HasOID (..))
 import DataType.X509.Extension.Internal (intersperseCommas)
 
 
@@ -48,6 +49,10 @@ newtype AuthorityInfoAccess = AuthorityInfoAccess (NonEmpty AccessDescription)
 -- | Construct an 'AuthorityInfoAccess' from one or more 'AccessDescription' values.
 mkAuthorityInfoAccess :: AccessDescription -> [AccessDescription] -> AuthorityInfoAccess
 mkAuthorityInfoAccess x xs = AuthorityInfoAccess (x :| xs)
+
+
+instance HasOID AuthorityInfoAccess where
+  extensionOID _ = 1 :| [3, 6, 1, 5, 5, 7, 1, 1]
 
 
 instance ToBuilder AccessDescription Builder where

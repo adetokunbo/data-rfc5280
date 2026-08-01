@@ -16,6 +16,8 @@ module DataType.X509.Extension.SubjectKeyIdentifier
 import Data.Builder (ToBuilder (..))
 import Data.ByteString (ByteString)
 import Data.ByteString.Builder (Builder, byteString)
+import Data.List.NonEmpty (NonEmpty (..))
+import DataType.X509.Extension.HasOID (HasOID (..))
 
 
 {- | Represents a SubjectKeyIdentifier value (RFC 5280 §4.2.1.2).
@@ -29,6 +31,10 @@ data SubjectKeyIdentifier
   -- ^ Use the default hash method: the 160-bit SHA-1 hash of the
   -- subjectPublicKey BIT STRING, as defined in RFC 5280 §4.2.1.2.
   deriving (Eq, Show)
+
+
+instance HasOID SubjectKeyIdentifier where
+  extensionOID _ = 2 :| [5, 29, 14]
 
 
 instance ToBuilder SubjectKeyIdentifier Builder where

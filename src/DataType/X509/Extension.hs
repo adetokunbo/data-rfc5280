@@ -31,6 +31,10 @@ module DataType.X509.Extension
   , CertificatePolicies (..)
   , mkCertificatePolicies
 
+    -- * Criticality wrapper and OID lookup
+  , Extension (..)
+  , HasOID (..)
+
     -- * Print types as @ByteString@
   , asByteString
 
@@ -46,6 +50,7 @@ import qualified Data.ByteString as BS
 import Data.ByteString.Builder (Builder, toLazyByteString)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Set.NonEmpty (fromList)
+import DataType.X509.Extension.HasOID (Extension (..), HasOID (..))
 import DataType.X509.Extension.AuthorityKeyIdentifier
   (AuthorityKeyIdentifier (..), mkAuthorityKeyIdentifier)
 import DataType.X509.Extension.BasicConstraints

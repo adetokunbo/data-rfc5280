@@ -17,6 +17,8 @@ module DataType.X509.Extension.BasicConstraints
 
 import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder, intDec)
+import Data.List.NonEmpty (NonEmpty (..))
+import DataType.X509.Extension.HasOID (HasOID (..))
 
 
 {- | Represents the basic constraints extension
@@ -40,6 +42,10 @@ absent when @cA@ is @FALSE@ (RFC 5280 §4.2.1.9).
 mkBasicConstraints :: Bool -> Maybe Int -> Either String BasicConstraints
 mkBasicConstraints False (Just _) = Left "pathLenConstraint must be absent when cA is FALSE"
 mkBasicConstraints isCA pathLen   = Right $ BasicConstraints { bcIsCA = isCA, bcPathLength = pathLen }
+
+
+instance HasOID BasicConstraints where
+  extensionOID _ = 2 :| [5, 29, 19]
 
 
 instance ToBuilder BasicConstraints Builder where

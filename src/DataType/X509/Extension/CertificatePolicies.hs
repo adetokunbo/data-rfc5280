@@ -16,6 +16,7 @@ module DataType.X509.Extension.CertificatePolicies
 import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
+import DataType.X509.Extension.HasOID (HasOID (..))
 import DataType.X509.Extension.Internal (OID, intersperseCommas, oidBuilder)
 
 
@@ -31,6 +32,10 @@ newtype CertificatePolicies = CertificatePolicies (NonEmpty OID)
 -- | Construct @CertificatePolicies@ from a non-empty sequence of OIDs.
 mkCertificatePolicies :: OID -> [OID] -> CertificatePolicies
 mkCertificatePolicies x xs = CertificatePolicies $ x :| xs
+
+
+instance HasOID CertificatePolicies where
+  extensionOID _ = 2 :| [5, 29, 32]
 
 
 instance ToBuilder CertificatePolicies Builder where

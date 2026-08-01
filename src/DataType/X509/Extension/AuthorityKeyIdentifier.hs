@@ -17,6 +17,7 @@ module DataType.X509.Extension.AuthorityKeyIdentifier
 import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
+import DataType.X509.Extension.HasOID (HasOID (..))
 import DataType.X509.Extension.Internal (intersperseCommas)
 
 
@@ -50,6 +51,10 @@ mkAuthorityKeyIdentifier keyId keyIdAlways issuer issuerAlways =
     , akiIssuer       = issuer  || issuerAlways
     , akiIssuerAlways = issuerAlways
     }
+
+
+instance HasOID AuthorityKeyIdentifier where
+  extensionOID _ = 2 :| [5, 29, 35]
 
 
 instance ToBuilder AuthorityKeyIdentifier Builder where

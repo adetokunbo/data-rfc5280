@@ -31,6 +31,7 @@ library
     DataType.X509.Extension.CertificatePolicies
     DataType.X509.Extension.ExtKeyUsage
     DataType.X509.Extension.GeneralName
+    DataType.X509.Extension.HasOID
     DataType.X509.Extension.KeyUsage
     DataType.X509.Extension.SubjectAltName
     DataType.X509.Extension.SubjectKeyIdentifier
@@ -58,6 +59,7 @@ test-suite test
     X509.ExtensionSpec
     X509.Extension.AuthorityInfoAccessSpec
     X509.Extension.GeneralNameSpec
+    X509.Extension.HasOIDSpec
     X509.Extension.SubjectAltNameSpec
   default-language: Haskell2010
   ghc-options:      -threaded -rtsopts -with-rtsopts=-N -Wall -fwarn-tabs

@@ -18,6 +18,7 @@ import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
 import DataType.X509.Extension.GeneralName (GeneralName)
+import DataType.X509.Extension.HasOID (HasOID (..))
 import DataType.X509.Extension.Internal (intersperseCommas)
 
 
@@ -33,6 +34,10 @@ newtype SubjectAltName = SubjectAltName (NonEmpty GeneralName)
 -- | Construct a 'SubjectAltName' from one or more 'GeneralName' values.
 mkSubjectAltName :: GeneralName -> [GeneralName] -> SubjectAltName
 mkSubjectAltName x xs = SubjectAltName (x :| xs)
+
+
+instance HasOID SubjectAltName where
+  extensionOID _ = 2 :| [5, 29, 17]
 
 
 instance ToBuilder SubjectAltName Builder where

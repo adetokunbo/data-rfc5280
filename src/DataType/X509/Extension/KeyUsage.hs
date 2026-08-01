@@ -18,7 +18,9 @@ module DataType.X509.Extension.KeyUsage
 
 import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder)
+import Data.List.NonEmpty (NonEmpty (..))
 import qualified Data.Set.NonEmpty as NES
+import DataType.X509.Extension.HasOID (HasOID (..))
 import DataType.X509.Extension.Internal (intersperseCommas)
 
 
@@ -56,6 +58,10 @@ instance ToBuilder KeyUsageBit Builder where
 see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.3
 -}
 type KeyUsage = NES.NESet KeyUsageBit
+
+
+instance HasOID KeyUsage where
+  extensionOID _ = 2 :| [5, 29, 15]
 
 
 instance ToBuilder KeyUsage Builder where
