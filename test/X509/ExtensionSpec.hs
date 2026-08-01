@@ -2,7 +2,7 @@
 
 {- |
 Module      : X509.ExtensionSpec
-Copyright   : (c) 2023 Tim Emiola
+Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 -}
