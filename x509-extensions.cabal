@@ -26,8 +26,14 @@ library
   exposed-modules:
     DataType.X509.Extension
     DataType.X509.Extension.AuthorityInfoAccess
+    DataType.X509.Extension.AuthorityKeyIdentifier
+    DataType.X509.Extension.BasicConstraints
+    DataType.X509.Extension.CertificatePolicies
+    DataType.X509.Extension.ExtKeyUsage
     DataType.X509.Extension.GeneralName
+    DataType.X509.Extension.KeyUsage
     DataType.X509.Extension.SubjectAltName
+    DataType.X509.Extension.SubjectKeyIdentifier
   other-modules:
     DataType.X509.Extension.Internal
   hs-source-dirs:   src
