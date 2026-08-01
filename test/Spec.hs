@@ -1,7 +1,11 @@
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE ScopedTypeVariables #-}
+{- |
+Module      : Main
+Copyright   : (c) 2026 Tim Emiola
+Maintainer  : Tim Emiola <adetokunbo@emio.la>
+SPDX-License-Identifier: BSD3
 
+Test suite entry point for x509-extensions.
+-}
 module Main where
 
 import qualified X509.Extension.AuthorityInfoAccessSpec as AuthorityInfoAccess

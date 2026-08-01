@@ -40,7 +40,7 @@ spec = describe "module DataType.X509.Extension" $ do
         `shouldBe` "serverAuth,clientAuth,codeSigning,emailProtection,timeStamping,OCSPSigning,anyExtendedKeyUsage"
   context "SubjectKeyIdentifier" $ do
     it "renders the hash method" $
-      asByteString Hash_RFC_5280_4212 `shouldBe` "hash"
+      asByteString HashMethod `shouldBe` "hash"
     it "renders raw bytes" $
       asByteString (Raw "abc") `shouldBe` "abc"
   context "AuthorityKeyIdentifier" $ do
@@ -70,6 +70,11 @@ spec = describe "module DataType.X509.Extension" $ do
       mkBasicConstraints True (Just 3) `shouldBe` Right caWithPathLen
     it "rejects a non-CA with path length" $
       mkBasicConstraints False (Just 0) `shouldSatisfy` isLeft
+  context "mkAuthorityKeyIdentifier" $
+    it "sets keyId when keyIdAlways is True" $
+      mkAuthorityKeyIdentifier False True False False
+        `shouldBe` AuthorityKeyIdentifier
+          { akiKeyId = True, akiKeyIdAlways = True, akiIssuer = False, akiIssuerAlways = False }
   context "mkOID" $ do
     it "accepts a valid OID" $
       mkOID 1 [2, 3, 4] `shouldBe` Right (1 :| [2, 3, 4])
