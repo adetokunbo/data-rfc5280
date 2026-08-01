@@ -10,6 +10,8 @@ Tests for 'DataType.X509.Extension.GeneralName'.
 -}
 module X509.Extension.GeneralNameSpec (spec) where
 
+import Data.Either (isLeft)
+import qualified Data.Text as T
 import DataType.X509.Extension (asByteString, mkOID)
 import DataType.X509.Extension.GeneralName
 import qualified Net.IP as IP
@@ -45,3 +47,24 @@ spec = describe "module DataType.X509.Extension.GeneralName" $ do
   context "RegisteredID" $
     it "converts to ByteString" $
       asByteString (RegisteredID (mkOID 2 [5, 4, 3])) `shouldBe` "RID:2.5.4.3"
+  context "mkDNSName" $ do
+    it "accepts a simple hostname" $
+      mkDNSName "example.com" `shouldBe` Right (DNSName "example.com")
+    it "accepts a multi-label hostname" $
+      mkDNSName "foo.bar.example.com" `shouldBe` Right (DNSName "foo.bar.example.com")
+    it "accepts a wildcard first label" $
+      mkDNSName "*.example.com" `shouldBe` Right (DNSName "*.example.com")
+    it "accepts a single label" $
+      mkDNSName "localhost" `shouldBe` Right (DNSName "localhost")
+    it "rejects an empty name" $
+      mkDNSName "" `shouldSatisfy` isLeft
+    it "rejects a label ending with a hyphen" $
+      mkDNSName "example-.com" `shouldSatisfy` isLeft
+    it "rejects a label starting with a hyphen" $
+      mkDNSName "-example.com" `shouldSatisfy` isLeft
+    it "rejects an empty label" $
+      mkDNSName "example..com" `shouldSatisfy` isLeft
+    it "rejects a label exceeding 63 characters" $
+      mkDNSName (T.replicate 64 "a" <> ".com") `shouldSatisfy` isLeft
+    it "rejects a name exceeding 253 characters" $
+      mkDNSName (T.intercalate "." (replicate 5 (T.replicate 50 "a"))) `shouldSatisfy` isLeft
