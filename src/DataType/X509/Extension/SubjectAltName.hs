@@ -1,4 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
 {- |
@@ -17,9 +16,9 @@ module DataType.X509.Extension.SubjectAltName
 
 import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder)
-import Data.Foldable (foldl')
 import Data.List.NonEmpty (NonEmpty (..))
 import DataType.X509.Extension.GeneralName (GeneralName)
+import DataType.X509.Extension.Internal (intersperseCommas)
 
 
 {- | Represents the SubjectAltName extension (RFC 5280 §4.2.1.6).
@@ -40,9 +39,3 @@ instance ToBuilder SubjectAltName Builder where
   toBuilder (SubjectAltName names) = intersperseCommas (fmap toBuilder names)
 
 
-intersperseCommas :: NonEmpty Builder -> Builder
-intersperseCommas = intersperseWith ","
-
-
-intersperseWith :: Builder -> NonEmpty Builder -> Builder
-intersperseWith sep (x :| xs) = x <> foldl' (\acc y -> acc <> sep <> y) "" xs

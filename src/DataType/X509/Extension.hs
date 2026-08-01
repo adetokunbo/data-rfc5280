@@ -45,10 +45,10 @@ import Data.ByteString.Builder
   , intDec
   , toLazyByteString
   )
-import Data.Foldable (foldl')
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Set.NonEmpty (fromList)
 import qualified Data.Set.NonEmpty as NES
+import DataType.X509.Extension.Internal (OID, intersperseCommas, mkOID, oidBuilder)
 
 
 {- | Represents the basic constraints extension
@@ -205,15 +205,6 @@ instance ToBuilder AuthorityKeyIdentifier Builder where
           (Just x, Just y) -> intersperseCommas (x :| [y])
 
 
--- | An ASN.1 object identifier
-type OID = NonEmpty Int
-
-
--- | Construct @OID@
-mkOID :: Int -> [Int] -> OID
-mkOID = (:|)
-
-
 {- | Represents @CertificatePolicies@
 
 see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.4
@@ -228,16 +219,4 @@ mkCertificatePolicies x xs = CertificatePolicies $ x :| xs
 
 
 instance ToBuilder CertificatePolicies Builder where
-  toBuilder (CertificatePolicies xs) = intersperseCommas $ fmap toBuilderOid xs
-
-
-toBuilderOid :: OID -> Builder
-toBuilderOid = intersperseWith "." . fmap intDec
-
-
-intersperseCommas :: NonEmpty Builder -> Builder
-intersperseCommas = intersperseWith ","
-
-
-intersperseWith :: Builder -> NonEmpty Builder -> Builder
-intersperseWith sep (x :| xs) = x <> foldl' (\acc y -> acc <> sep <> y) "" xs
+  toBuilder (CertificatePolicies xs) = intersperseCommas $ fmap oidBuilder xs

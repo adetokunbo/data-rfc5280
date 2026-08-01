@@ -27,6 +27,8 @@ library
     DataType.X509.Extension
     DataType.X509.Extension.GeneralName
     DataType.X509.Extension.SubjectAltName
+  other-modules:
+    DataType.X509.Extension.Internal
   hs-source-dirs:   src
   build-depends:
     , base                 >=4.10 && <5

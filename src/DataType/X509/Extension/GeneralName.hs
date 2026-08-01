@@ -20,14 +20,12 @@ module DataType.X509.Extension.GeneralName
 where
 
 import Data.Builder (ToBuilder (..))
-import Data.ByteString.Builder (Builder, byteString, intDec)
+import Data.ByteString.Builder (Builder, byteString)
 import Data.Char (isAlphaNum)
-import Data.Foldable (foldl')
-import Data.List.NonEmpty (NonEmpty (..))
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
-import DataType.X509.Extension (OID)
+import DataType.X509.Extension.Internal (OID, oidBuilder)
 import Net.IP (IP)
 import qualified Net.IP as IP
 import Text.Email.Validate (EmailAddress)
@@ -96,9 +94,3 @@ mkDNSName t
   isValidChar c = isAlphaNum c || c == '-'
 
 
-oidBuilder :: OID -> Builder
-oidBuilder = intersperseWith "." . fmap intDec
-
-
-intersperseWith :: Builder -> NonEmpty Builder -> Builder
-intersperseWith sep (x :| xs) = x <> foldl' (\acc y -> acc <> sep <> y) "" xs
