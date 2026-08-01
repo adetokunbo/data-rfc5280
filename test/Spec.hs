@@ -4,6 +4,7 @@
 
 module Main where
 
+import qualified X509.Extension.GeneralNameSpec as GeneralName
 import qualified X509.ExtensionSpec as Extension
 import System.IO (
   BufferMode (..),
@@ -20,3 +21,4 @@ main = do
   hSetBuffering stderr NoBuffering
   hspec $ do
     Extension.spec
+    GeneralName.spec
