@@ -4,6 +4,7 @@
 
 module Main where
 
+import qualified X509.Extension.AuthorityInfoAccessSpec as AuthorityInfoAccess
 import qualified X509.Extension.GeneralNameSpec as GeneralName
 import qualified X509.Extension.SubjectAltNameSpec as SubjectAltName
 import qualified X509.ExtensionSpec as Extension
@@ -22,5 +23,6 @@ main = do
   hSetBuffering stderr NoBuffering
   hspec $ do
     Extension.spec
+    AuthorityInfoAccess.spec
     GeneralName.spec
     SubjectAltName.spec
