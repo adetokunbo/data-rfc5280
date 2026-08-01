@@ -16,6 +16,7 @@ Provides functions and/or data types that support Top Sample goals
 module DataType.X509.Extension
   ( -- * Extension types
     BasicConstraints (..)
+  , mkBasicConstraints
   , KeyUsageBit (..)
   , KeyUsage
   , ExtKeyUsagePurpose (..)
@@ -64,6 +65,14 @@ data BasicConstraints
   -- ^ that may follow this certificate if it is a CA certificate
   }
   deriving (Eq, Show)
+
+
+{- | Construct a 'BasicConstraints', validating that @pathLenConstraint@ is
+absent when @cA@ is @FALSE@ (RFC 5280 §4.2.1.9).
+-}
+mkBasicConstraints :: Bool -> Maybe Int -> Either String BasicConstraints
+mkBasicConstraints False (Just _) = Left "pathLenConstraint must be absent when cA is FALSE"
+mkBasicConstraints isCA pathLen   = Right $ BasicConstraints { bcIsCA = isCA, bcPathLength = pathLen }
 
 
 instance ToBuilder BasicConstraints Builder where

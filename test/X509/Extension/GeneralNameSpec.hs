@@ -12,7 +12,7 @@ module X509.Extension.GeneralNameSpec (spec) where
 
 import Data.Either (isLeft)
 import qualified Data.Text as T
-import DataType.X509.Extension (asByteString, mkOID)
+import DataType.X509.Extension (asByteString, NonEmpty (..))
 import DataType.X509.Extension.GeneralName
 import qualified Net.IP as IP
 import Test.Hspec
@@ -48,7 +48,7 @@ spec = describe "module DataType.X509.Extension.GeneralName" $ do
       asByteString (URIName uri) `shouldBe` "URI:https://example.com"
   context "RegisteredID" $
     it "converts to ByteString" $
-      asByteString (RegisteredID (mkOID 2 [5, 4, 3])) `shouldBe` "RID:2.5.4.3"
+      asByteString (RegisteredID (2 :| [5, 4, 3])) `shouldBe` "RID:2.5.4.3"
   context "mkDNSName" $ do
     it "accepts a simple hostname" $
       mkDNSName "example.com" `shouldBe` Right (DNSName "example.com")

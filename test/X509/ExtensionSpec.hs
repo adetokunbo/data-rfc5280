@@ -8,6 +8,7 @@ SPDX-License-Identifier: BSD3
 -}
 module X509.ExtensionSpec (spec) where
 
+import Data.Either (isLeft)
 import DataType.X509.Extension
 import Test.Hspec
 
@@ -60,6 +61,24 @@ spec = describe "module DataType.X509.Extension" $ do
       asByteString simpleCP `shouldBe` "1.2.3.4"
     it "renders multiple OIDs" $
       asByteString twoOIDs `shouldBe` "1.2.3.4,2.5.4.3"
+  context "mkBasicConstraints" $ do
+    it "accepts a non-CA without path length" $
+      mkBasicConstraints False Nothing `shouldBe` Right notCA
+    it "accepts a CA without path length" $
+      mkBasicConstraints True Nothing `shouldBe` Right isCA
+    it "accepts a CA with path length" $
+      mkBasicConstraints True (Just 3) `shouldBe` Right caWithPathLen
+    it "rejects a non-CA with path length" $
+      mkBasicConstraints False (Just 0) `shouldSatisfy` isLeft
+  context "mkOID" $ do
+    it "accepts a valid OID" $
+      mkOID 1 [2, 3, 4] `shouldBe` Right (1 :| [2, 3, 4])
+    it "rejects a negative first arc" $
+      mkOID (-1) [] `shouldSatisfy` isLeft
+    it "rejects a first arc greater than 2" $
+      mkOID 3 [] `shouldSatisfy` isLeft
+    it "rejects a negative subsequent arc" $
+      mkOID 1 [-1] `shouldSatisfy` isLeft
 
 
 notCA :: BasicConstraints
@@ -123,8 +142,8 @@ allDisabled = AuthorityKeyIdentifier { akiKeyId = False, akiKeyIdAlways = False,
 
 
 simpleCP :: CertificatePolicies
-simpleCP = mkCertificatePolicies (mkOID 1 [2, 3, 4]) []
+simpleCP = mkCertificatePolicies (1 :| [2, 3, 4]) []
 
 
 twoOIDs :: CertificatePolicies
-twoOIDs = mkCertificatePolicies (mkOID 1 [2, 3, 4]) [mkOID 2 [5, 4, 3]]
+twoOIDs = mkCertificatePolicies (1 :| [2, 3, 4]) [2 :| [5, 4, 3]]

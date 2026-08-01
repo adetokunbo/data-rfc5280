@@ -29,9 +29,17 @@ import Data.List.NonEmpty (NonEmpty (..))
 type OID = NonEmpty Int
 
 
--- | Construct an 'OID' from a first arc and remaining arcs.
-mkOID :: Int -> [Int] -> OID
-mkOID = (:|)
+{- | Construct an 'OID', validating that the first arc is 0–2 and all arcs
+are non-negative.
+
+The second-arc ≤ 39 constraint from X.660 is not enforced; it only applies
+under first arcs 0 and 1 and is rarely violated in practice.
+-}
+mkOID :: Int -> [Int] -> Either String OID
+mkOID first rest
+  | first < 0 || first > 2 = Left $ "OID first arc must be 0, 1, or 2; got " <> show first
+  | any (< 0) rest         = Left "OID arcs must be non-negative"
+  | otherwise              = Right (first :| rest)
 
 
 -- | Render an 'OID' as a dot-separated sequence of integers.
