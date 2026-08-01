@@ -16,6 +16,8 @@ import DataType.X509.Extension (asByteString, mkOID)
 import DataType.X509.Extension.GeneralName
 import qualified Net.IP as IP
 import Test.Hspec
+import Test.Hspec.QuickCheck (prop)
+import Test.QuickCheck (Gen, choose, elements, forAll, vectorOf, (===))
 import Text.Email.Validate (validate)
 import Text.URI (mkURI)
 
@@ -68,3 +70,31 @@ spec = describe "module DataType.X509.Extension.GeneralName" $ do
       mkDNSName (T.replicate 64 "a" <> ".com") `shouldSatisfy` isLeft
     it "rejects a name exceeding 253 characters" $
       mkDNSName (T.intercalate "." (replicate 5 (T.replicate 50 "a"))) `shouldSatisfy` isLeft
+    prop "accepts any validly-constructed hostname" $
+      forAll validDNSName $ \t -> mkDNSName t === Right (DNSName t)
+    prop "rejects any name containing an invalid label character" $
+      forAll nameWithInvalidChar $ \t -> isLeft (mkDNSName t)
+
+
+-- Generates a DNS label containing only lowercase alphanumeric characters.
+validLabel :: Gen T.Text
+validLabel = do
+  n <- choose (1, 10)
+  T.pack <$> vectorOf n (elements (['a'..'z'] ++ ['0'..'9']))
+
+
+-- Generates a valid DNS name of 1-4 alphanumeric-only labels.
+validDNSName :: Gen T.Text
+validDNSName = do
+  n <- choose (1, 4)
+  labels <- vectorOf n validLabel
+  return $ T.intercalate "." labels
+
+
+-- Generates a single label with one invalid character injected in the middle.
+nameWithInvalidChar :: Gen T.Text
+nameWithInvalidChar = do
+  prefix  <- validLabel
+  badChar <- elements "!@#$%^&*()"
+  suffix  <- validLabel
+  return $ prefix <> T.singleton badChar <> suffix
