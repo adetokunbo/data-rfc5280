@@ -49,6 +49,22 @@ spec = describe "module DataType.X509.Extension.GeneralName" $ do
   context "RegisteredID" $
     it "converts to ByteString" $
       asByteString (RegisteredID (2 :| [5, 4, 3])) `shouldBe` "RID:2.5.4.3"
+  context "Other (UTF8String)" $
+    it "converts to ByteString" $
+      asByteString (Other (OtherName (1 :| [2, 3]) UTF8String "hello"))
+        `shouldBe` "otherName:1.2.3;UTF8:hello"
+  context "Other (IA5String)" $
+    it "converts to ByteString" $
+      asByteString (Other (OtherName (1 :| [2, 3]) IA5String "hello"))
+        `shouldBe` "otherName:1.2.3;IA5:hello"
+  context "Other (PrintableString)" $
+    it "converts to ByteString" $
+      asByteString (Other (OtherName (1 :| [2, 3]) PrintableString "Hello World"))
+        `shouldBe` "otherName:1.2.3;PRINTABLE:Hello World"
+  context "Other (BMPString)" $
+    it "converts to ByteString" $
+      asByteString (Other (OtherName (1 :| [2, 3]) BMPString "hello"))
+        `shouldBe` "otherName:1.2.3;BMP:hello"
   context "mkDNSName" $ do
     it "accepts a simple hostname" $
       mkDNSName "example.com" `shouldBe` Right (DNSName "example.com")

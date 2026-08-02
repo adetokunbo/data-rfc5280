@@ -10,11 +10,12 @@ SPDX-License-Identifier: BSD3
 Provides 'GeneralName', the common name type used across several X.509
 extensions, including SubjectAltName and AuthorityInfoAccess.
 
-'DirectoryName', 'OtherName', x400Address, and ediPartyName are not yet
-modelled.
+'DirectoryName', x400Address, and ediPartyName are not yet modelled.
 -}
 module DataType.X509.Extension.GeneralName
   ( GeneralName (..)
+  , OtherName (..)
+  , Asn1StringType (..)
   , mkDNSName
   )
 where
@@ -51,15 +52,50 @@ data GeneralName
     URIName !URI
   | -- | An ASN.1 registered object identifier. Rendered as @RID:\<oid\>@.
     RegisteredID !OID
+  | {- | An arbitrary other name. Rendered as
+    @otherName:\<oid\>;\<type\>:\<value\>@, where @\<type\>@ is the
+    OpenSSL tag string for the 'Asn1StringType'.
+    -}
+    Other !OtherName
   deriving (Eq, Show)
 
 
+{- | The fields of an @otherName@ general name (RFC 5280 §4.1.2.6).
+
+Carries the type OID, the ASN.1 string encoding, and the string value.
+-}
+data OtherName = OtherName
+  { onTypeId   :: !OID           -- ^ OID identifying the name type.
+  , onEncoding :: !Asn1StringType -- ^ ASN.1 string encoding for the value.
+  , onValue    :: !Text           -- ^ The string value.
+  }
+  deriving (Eq, Show)
+
+
+-- | The ASN.1 string encoding tag for an 'OtherName' value.
+data Asn1StringType
+  = UTF8String      -- ^ UTF-8 encoding. Rendered as @UTF8@.
+  | IA5String       -- ^ ASCII (IA5) encoding. Rendered as @IA5@.
+  | PrintableString -- ^ PrintableString encoding. Rendered as @PRINTABLE@.
+  | BMPString       -- ^ BMP (UCS-2) encoding. Rendered as @BMP@.
+  deriving (Eq, Show)
+
+
+instance ToBuilder Asn1StringType Builder where
+  toBuilder UTF8String      = "UTF8"
+  toBuilder IA5String       = "IA5"
+  toBuilder PrintableString = "PRINTABLE"
+  toBuilder BMPString       = "BMP"
+
+
 instance ToBuilder GeneralName Builder where
-  toBuilder (DNSName t) = "DNS:" <> byteString (TE.encodeUtf8 t)
-  toBuilder (IPAddr ip) = "IP:" <> byteString (TE.encodeUtf8 (IP.encode ip))
-  toBuilder (EmailAddr addr) = "email:" <> byteString (Email.toByteString addr)
-  toBuilder (URIName uri) = "URI:" <> byteString (TE.encodeUtf8 (URI.render uri))
+  toBuilder (DNSName t)           = "DNS:" <> byteString (TE.encodeUtf8 t)
+  toBuilder (IPAddr ip)           = "IP:" <> byteString (TE.encodeUtf8 (IP.encode ip))
+  toBuilder (EmailAddr addr)      = "email:" <> byteString (Email.toByteString addr)
+  toBuilder (URIName uri)         = "URI:" <> byteString (TE.encodeUtf8 (URI.render uri))
   toBuilder (RegisteredID o) = "RID:" <> oidBuilder o
+  toBuilder (Other on)       =
+    "otherName:" <> oidBuilder (onTypeId on) <> ";" <> toBuilder (onEncoding on) <> ":" <> byteString (TE.encodeUtf8 (onValue on))
 
 
 {- | Construct a 'DNSName', validating against RFC 1123 hostname rules.

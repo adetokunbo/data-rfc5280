@@ -31,6 +31,12 @@ module DataType.X509.Extension
   , CertificatePolicies (..)
   , mkCertificatePolicies
 
+    -- * General names
+  , GeneralName (..)
+  , OtherName (..)
+  , Asn1StringType (..)
+  , mkDNSName
+
     -- * Criticality wrapper and OID lookup
   , Extension (..)
   , HasOID (..)
@@ -50,6 +56,7 @@ import qualified Data.ByteString as BS
 import Data.ByteString.Builder (Builder, toLazyByteString)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Set.NonEmpty (fromList)
+import DataType.X509.Extension.GeneralName (Asn1StringType (..), GeneralName (..), OtherName (..), mkDNSName)
 import DataType.X509.Extension.HasOID (Extension (..), HasOID (..))
 import DataType.X509.Extension.AuthorityKeyIdentifier
   (AuthorityKeyIdentifier (..), mkAuthorityKeyIdentifier)
