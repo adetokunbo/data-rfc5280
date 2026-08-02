@@ -36,6 +36,7 @@ module DataType.X509.Extension
   , OtherName (..)
   , Asn1StringType (..)
   , mkDNSName
+  , mkOtherName
 
     -- * Criticality wrapper and OID lookup
   , Extension (..)
@@ -56,17 +57,29 @@ import qualified Data.ByteString as BS
 import Data.ByteString.Builder (Builder, toLazyByteString)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Set.NonEmpty (fromList)
-import DataType.X509.Extension.GeneralName (Asn1StringType (..), GeneralName (..), OtherName (..), mkDNSName)
-import DataType.X509.Extension.HasOID (Extension (..), HasOID (..))
 import DataType.X509.Extension.AuthorityKeyIdentifier
-  (AuthorityKeyIdentifier (..), mkAuthorityKeyIdentifier)
+  ( AuthorityKeyIdentifier (..)
+  , mkAuthorityKeyIdentifier
+  )
 import DataType.X509.Extension.BasicConstraints
-  (BasicConstraints (..), mkBasicConstraints)
+  ( BasicConstraints (..)
+  , mkBasicConstraints
+  )
 import DataType.X509.Extension.CertificatePolicies
-  (CertificatePolicies (..), mkCertificatePolicies)
-import DataType.X509.Extension.ExtKeyUsage (ExtKeyUsagePurpose (..), ExtKeyUsage)
+  ( CertificatePolicies (..)
+  , mkCertificatePolicies
+  )
+import DataType.X509.Extension.ExtKeyUsage (ExtKeyUsage, ExtKeyUsagePurpose (..))
+import DataType.X509.Extension.GeneralName
+  ( Asn1StringType (..)
+  , GeneralName (..)
+  , OtherName (..)
+  , mkDNSName
+  , mkOtherName
+  )
+import DataType.X509.Extension.HasOID (Extension (..), HasOID (..))
 import DataType.X509.Extension.Internal (OID, mkOID)
-import DataType.X509.Extension.KeyUsage (KeyUsageBit (..), KeyUsage)
+import DataType.X509.Extension.KeyUsage (KeyUsage, KeyUsageBit (..))
 import DataType.X509.Extension.SubjectKeyIdentifier (SubjectKeyIdentifier (..))
 
 

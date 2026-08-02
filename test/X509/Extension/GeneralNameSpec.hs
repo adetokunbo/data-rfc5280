@@ -90,6 +90,18 @@ spec = describe "module DataType.X509.Extension.GeneralName" $ do
       forAll validDNSName $ \t -> mkDNSName t === Right (DNSName t)
     prop "rejects any name containing an invalid label character" $
       forAll nameWithInvalidChar $ \t -> isLeft (mkDNSName t)
+  context "mkOtherName" $ do
+    it "accepts a valid OID and UTF8String value" $
+      mkOtherName 1 [2, 3] UTF8String "hello"
+        `shouldBe` Right (OtherName (1 :| [2, 3]) UTF8String "hello")
+    it "rejects a negative OID arc" $
+      mkOtherName (-1) [2, 3] UTF8String "hello" `shouldSatisfy` isLeft
+    it "rejects IA5String value containing a non-ASCII character" $
+      mkOtherName 1 [2, 3] IA5String "h\xe9llo" `shouldSatisfy` isLeft
+    it "rejects PrintableString value containing a character outside the alphabet" $
+      mkOtherName 1 [2, 3] PrintableString "user@example" `shouldSatisfy` isLeft
+    it "rejects BMPString value containing a non-BMP character" $
+      mkOtherName 1 [2, 3] BMPString "\x1F600" `shouldSatisfy` isLeft
 
 
 -- Generates a DNS label containing only lowercase alphanumeric characters.

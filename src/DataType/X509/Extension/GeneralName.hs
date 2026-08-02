@@ -17,16 +17,17 @@ module DataType.X509.Extension.GeneralName
   , OtherName (..)
   , Asn1StringType (..)
   , mkDNSName
+  , mkOtherName
   )
 where
 
 import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder, byteString)
-import Data.Char (isAlphaNum)
+import Data.Char (isAlphaNum, isAscii)
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
-import DataType.X509.Extension.Internal (OID, oidBuilder)
+import DataType.X509.Extension.Internal (OID, mkOID, oidBuilder)
 import Net.IP (IP)
 import qualified Net.IP as IP
 import Text.Email.Validate (EmailAddress)
@@ -128,5 +129,36 @@ mkDNSName t
             | otherwise -> Left $ "DNS label contains invalid character: " <> T.unpack l
 
   isValidChar c = isAlphaNum c || c == '-'
+
+
+{- | Construct an 'OtherName', validating the OID and the text value against
+the declared 'Asn1StringType' character set.
+
+Returns @Left@ with a description if validation fails. The OID is validated
+via 'mkOID'. Character-set constraints:
+
+* 'UTF8String' — any 'Text' is accepted.
+* 'IA5String' — all code points must be ≤ U+007F.
+* 'PrintableString' — all characters must be in @[A-Za-z0-9 \'()+,-./:=?]@.
+* 'BMPString' — all code points must be ≤ U+FFFF.
+-}
+mkOtherName :: Int -> [Int] -> Asn1StringType -> Text -> Either String OtherName
+mkOtherName firstArc restArcs enc val = do
+  oid <- mkOID firstArc restArcs
+  validateEncoding enc val
+  return (OtherName oid enc val)
+ where
+  validateEncoding UTF8String      _ = Right ()
+  validateEncoding IA5String       t
+    | T.all (\c -> fromEnum c <= 127) t = Right ()
+    | otherwise = Left "IA5String value contains non-ASCII character"
+  validateEncoding PrintableString t
+    | T.all isPrintableChar t = Right ()
+    | otherwise = Left "PrintableString value contains character outside PrintableString alphabet"
+  validateEncoding BMPString       t
+    | T.all (\c -> fromEnum c <= 0xFFFF) t = Right ()
+    | otherwise = Left "BMPString value contains non-BMP character"
+
+  isPrintableChar c = (isAscii c && isAlphaNum c) || c `elem` (" '()+,-./:=?" :: String)
 
 
