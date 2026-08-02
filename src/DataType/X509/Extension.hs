@@ -38,6 +38,10 @@ module DataType.X509.Extension
   , mkDNSName
   , mkOtherName
 
+    -- * Alt-name extensions
+  , IssuerAltName (..)
+  , mkIssuerAltName
+
     -- * Criticality wrapper and OID lookup
   , Extension (..)
   , HasOID (..)
@@ -78,6 +82,7 @@ import DataType.X509.Extension.GeneralName
   , mkOtherName
   )
 import DataType.X509.Extension.HasOID (Extension (..), HasOID (..))
+import DataType.X509.Extension.IssuerAltName (IssuerAltName (..), mkIssuerAltName)
 import DataType.X509.Extension.Internal (OID, mkOID)
 import DataType.X509.Extension.KeyUsage (KeyUsage, KeyUsageBit (..))
 import DataType.X509.Extension.SubjectKeyIdentifier (SubjectKeyIdentifier (..))
