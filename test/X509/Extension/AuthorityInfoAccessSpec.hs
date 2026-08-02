@@ -10,11 +10,15 @@ Tests for 'DataType.X509.Extension.AuthorityInfoAccess'.
 -}
 module X509.Extension.AuthorityInfoAccessSpec (spec) where
 
-import DataType.X509.Extension (asByteString)
+import qualified Data.ByteString as BS
+import DataType.X509.Extension (asByteString, NonEmpty (..))
 import DataType.X509.Extension.AuthorityInfoAccess
 import DataType.X509.Extension.GeneralName
 import Test.Hspec
+import Test.Hspec.QuickCheck (prop)
+import Test.QuickCheck (forAll)
 import Text.URI (mkURI)
+import X509.Extension.Generators (validDNSName)
 
 
 spec :: Spec
@@ -37,3 +41,16 @@ spec = describe "module DataType.X509.Extension.AuthorityInfoAccess" $ do
             [CAIssuers (URIName issuerUri)]
         )
         `shouldBe` "OCSP;URI:http://ocsp.example.com,caIssuers;URI:http://ca.example.com/issuer.crt"
+    it "renders an Other name as OCSP location" $
+      asByteString
+        ( mkAuthorityInfoAccess
+            (OCSP (Other (OtherName (1 :| [2, 3]) UTF8String "value")))
+            []
+        )
+        `shouldBe` "OCSP;otherName:1.2.3;UTF8:value"
+    prop "OCSP entries always start with OCSP;" $
+      forAll validDNSName $ \n ->
+        BS.isPrefixOf "OCSP;" (asByteString (mkAuthorityInfoAccess (OCSP (DNSName n)) []))
+    prop "CAIssuers entries always start with caIssuers;" $
+      forAll validDNSName $ \n ->
+        BS.isPrefixOf "caIssuers;" (asByteString (mkAuthorityInfoAccess (CAIssuers (DNSName n)) []))

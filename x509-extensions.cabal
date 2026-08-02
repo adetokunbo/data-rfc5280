@@ -59,6 +59,7 @@ test-suite test
     X509.ExtensionSpec
     X509.Extension.AuthorityInfoAccessSpec
     X509.Extension.GeneralNameSpec
+    X509.Extension.Generators
     X509.Extension.HasOIDSpec
     X509.Extension.SubjectAltNameSpec
   default-language: Haskell2010
