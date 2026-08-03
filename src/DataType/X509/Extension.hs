@@ -42,6 +42,12 @@ module DataType.X509.Extension
   , IssuerAltName (..)
   , mkIssuerAltName
 
+    -- * CRL extensions
+  , CRLDistributionPoints (..)
+  , mkCRLDistributionPoints
+  , DistributionPoint (..)
+  , mkDistributionPoint
+
     -- * Criticality wrapper and OID lookup
   , Extension (..)
   , HasOID (..)
@@ -80,6 +86,12 @@ import DataType.X509.Extension.GeneralName
   , OtherName (..)
   , mkDNSName
   , mkOtherName
+  )
+import DataType.X509.Extension.CRLDistributionPoints
+  ( CRLDistributionPoints (..)
+  , DistributionPoint (..)
+  , mkCRLDistributionPoints
+  , mkDistributionPoint
   )
 import DataType.X509.Extension.HasOID (Extension (..), HasOID (..))
 import DataType.X509.Extension.IssuerAltName (IssuerAltName (..), mkIssuerAltName)

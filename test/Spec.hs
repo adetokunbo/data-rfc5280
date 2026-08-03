@@ -9,6 +9,7 @@ Test suite entry point for x509-extensions.
 module Main where
 
 import qualified X509.Extension.AuthorityInfoAccessSpec as AuthorityInfoAccess
+import qualified X509.Extension.CRLDistributionPointsSpec as CRLDistributionPoints
 import qualified X509.Extension.GeneralNameSpec as GeneralName
 import qualified X509.Extension.HasOIDSpec as HasOID
 import qualified X509.Extension.IssuerAltNameSpec as IssuerAltName
@@ -30,6 +31,7 @@ main = do
   hspec $ do
     Extension.spec
     AuthorityInfoAccess.spec
+    CRLDistributionPoints.spec
     GeneralName.spec
     HasOID.spec
     IssuerAltName.spec

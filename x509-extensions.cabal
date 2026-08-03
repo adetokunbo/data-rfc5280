@@ -29,6 +29,7 @@ library
     DataType.X509.Extension.AuthorityKeyIdentifier
     DataType.X509.Extension.BasicConstraints
     DataType.X509.Extension.CertificatePolicies
+    DataType.X509.Extension.CRLDistributionPoints
     DataType.X509.Extension.ExtKeyUsage
     DataType.X509.Extension.GeneralName
     DataType.X509.Extension.HasOID
@@ -59,6 +60,7 @@ test-suite test
   other-modules:
     X509.ExtensionSpec
     X509.Extension.AuthorityInfoAccessSpec
+    X509.Extension.CRLDistributionPointsSpec
     X509.Extension.GeneralNameSpec
     X509.Extension.Generators
     X509.Extension.HasOIDSpec
