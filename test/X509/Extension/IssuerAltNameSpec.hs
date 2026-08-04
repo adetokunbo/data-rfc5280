@@ -11,7 +11,7 @@ Tests for 'DataType.X509.Extension.IssuerAltName'.
 module X509.Extension.IssuerAltNameSpec (spec) where
 
 import qualified Data.ByteString as BS
-import DataType.X509.Extension (asByteString, NonEmpty (..))
+import DataType.X509.Extension (renderOpenSSLConfig, NonEmpty (..))
 import DataType.X509.Extension.GeneralName
 import DataType.X509.Extension.IssuerAltName
 import qualified Net.IP as IP
@@ -26,13 +26,13 @@ spec :: Spec
 spec = describe "module DataType.X509.Extension.IssuerAltName" $ do
   context "mkIssuerAltName" $ do
     it "renders a single DNS name" $
-      asByteString (mkIssuerAltName (DNSName "example.com") [])
+      renderOpenSSLConfig (mkIssuerAltName (DNSName "example.com") [])
         `shouldBe` "DNS:example.com"
     it "renders two DNS names" $
-      asByteString (mkIssuerAltName (DNSName "example.com") [DNSName "www.example.com"])
+      renderOpenSSLConfig (mkIssuerAltName (DNSName "example.com") [DNSName "www.example.com"])
         `shouldBe` "DNS:example.com,DNS:www.example.com"
     it "renders a wildcard alongside its base domain" $
-      asByteString (mkIssuerAltName (DNSName "*.example.com") [DNSName "example.com"])
+      renderOpenSSLConfig (mkIssuerAltName (DNSName "*.example.com") [DNSName "example.com"])
         `shouldBe` "DNS:*.example.com,DNS:example.com"
     it "renders mixed DNS, IP and email names" $
       case IP.decode "192.0.2.1" of
@@ -41,23 +41,23 @@ spec = describe "module DataType.X509.Extension.IssuerAltName" $ do
           case validate "user@example.com" of
             Left err -> expectationFailure $ "invalid test email: " <> err
             Right addr ->
-              asByteString
+              renderOpenSSLConfig
                 ( mkIssuerAltName
                     (DNSName "example.com")
                     [IPAddr ip, EmailAddr addr]
                 )
                 `shouldBe` "DNS:example.com,IP:192.0.2.1,email:user@example.com"
     it "renders an Other name" $
-      asByteString (mkIssuerAltName (Other (OtherName (1 :| [2, 3]) UTF8String "value")) [])
+      renderOpenSSLConfig (mkIssuerAltName (Other (OtherName (1 :| [2, 3]) UTF8String "value")) [])
         `shouldBe` "otherName:1.2.3;UTF8:value"
     prop "a single-name IAN contains no comma" $
       forAll validDNSName $ \n ->
-        BS.elem 0x2C (asByteString (mkIssuerAltName (DNSName n) [])) === False
+        BS.elem 0x2C (renderOpenSSLConfig (mkIssuerAltName (DNSName n) [])) === False
     prop "n DNS names produce exactly n-1 comma separators" $
       forAll (choose (1, 6)) $ \n ->
         forAll (vectorOf n validDNSName) $ \ns ->
           case ns of
             []    -> True === True
             (h:tl) ->
-              let bs = asByteString (mkIssuerAltName (DNSName h) (map DNSName tl))
+              let bs = renderOpenSSLConfig (mkIssuerAltName (DNSName h) (map DNSName tl))
               in BS.length (BS.filter (== 0x2C) bs) === n - 1

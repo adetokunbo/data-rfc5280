@@ -17,50 +17,50 @@ spec :: Spec
 spec = describe "module DataType.X509.Extension" $ do
   context "BasicConstraints" $ do
     it "renders a non-CA certificate" $
-      asByteString notCA `shouldBe` "CA:FALSE"
+      renderOpenSSLConfig notCA `shouldBe` "CA:FALSE"
     it "renders a CA certificate" $
-      asByteString isCA `shouldBe` "CA:TRUE"
+      renderOpenSSLConfig isCA `shouldBe` "CA:TRUE"
     it "renders a CA certificate with path length" $
-      asByteString caWithPathLen `shouldBe` "CA:TRUE,pathLen3"
+      renderOpenSSLConfig caWithPathLen `shouldBe` "CA:TRUE,pathLen3"
   context "KeyUsage" $ do
     it "renders multiple bits" $
-      asByteString simpleKeyUsage `shouldBe` "digitalSignature,cRLSign"
+      renderOpenSSLConfig simpleKeyUsage `shouldBe` "digitalSignature,cRLSign"
     it "renders a single bit without a comma" $
-      asByteString singleKeyUsage `shouldBe` "digitalSignature"
+      renderOpenSSLConfig singleKeyUsage `shouldBe` "digitalSignature"
     it "renders all bits in Enum order" $
-      asByteString allKeyUsageBits
+      renderOpenSSLConfig allKeyUsageBits
         `shouldBe` "digitalSignature,nonRepudiation,keyEncipherment,dataEncipherment,keyAgreement,keyCertSign,cRLSign,encipherOnly,decipherOnly"
   context "ExtKeyUsage" $ do
     it "renders multiple purposes" $
-      asByteString simpleExtKeyUsage `shouldBe` "serverAuth,codeSigning"
+      renderOpenSSLConfig simpleExtKeyUsage `shouldBe` "serverAuth,codeSigning"
     it "renders a single purpose without a comma" $
-      asByteString singleExtKeyUsage `shouldBe` "serverAuth"
+      renderOpenSSLConfig singleExtKeyUsage `shouldBe` "serverAuth"
     it "renders all purposes in Enum order" $
-      asByteString allExtKeyUsagePurposes
+      renderOpenSSLConfig allExtKeyUsagePurposes
         `shouldBe` "serverAuth,clientAuth,codeSigning,emailProtection,timeStamping,OCSPSigning,anyExtendedKeyUsage"
   context "SubjectKeyIdentifier" $ do
     it "renders the hash method" $
-      asByteString HashMethod `shouldBe` "hash"
+      renderOpenSSLConfig HashMethod `shouldBe` "hash"
     it "renders raw bytes" $
-      asByteString (Raw "abc") `shouldBe` "abc"
+      renderOpenSSLConfig (Raw "abc") `shouldBe` "abc"
   context "AuthorityKeyIdentifier" $ do
     it "renders keyid:always" $
-      asByteString simpleAKI `shouldBe` "keyid:always"
+      renderOpenSSLConfig simpleAKI `shouldBe` "keyid:always"
     it "renders keyid" $
-      asByteString keyIdOnly `shouldBe` "keyid"
+      renderOpenSSLConfig keyIdOnly `shouldBe` "keyid"
     it "renders issuer" $
-      asByteString issuerOnly `shouldBe` "issuer"
+      renderOpenSSLConfig issuerOnly `shouldBe` "issuer"
     it "renders issuer:always" $
-      asByteString issuerAlwaysAKI `shouldBe` "issuer:always"
+      renderOpenSSLConfig issuerAlwaysAKI `shouldBe` "issuer:always"
     it "renders keyid:always and issuer:always combined" $
-      asByteString bothAlways `shouldBe` "keyid:always,issuer:always"
+      renderOpenSSLConfig bothAlways `shouldBe` "keyid:always,issuer:always"
     it "renders empty when all flags are disabled" $
-      asByteString allDisabled `shouldBe` ""
+      renderOpenSSLConfig allDisabled `shouldBe` ""
   context "CertificatePolicies" $ do
     it "renders a single OID" $
-      asByteString simpleCP `shouldBe` "1.2.3.4"
+      renderOpenSSLConfig simpleCP `shouldBe` "1.2.3.4"
     it "renders multiple OIDs" $
-      asByteString twoOIDs `shouldBe` "1.2.3.4,2.5.4.3"
+      renderOpenSSLConfig twoOIDs `shouldBe` "1.2.3.4,2.5.4.3"
   context "mkBasicConstraints" $ do
     it "accepts a non-CA without path length" $
       mkBasicConstraints False Nothing `shouldBe` Right notCA

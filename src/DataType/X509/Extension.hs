@@ -8,9 +8,9 @@ Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
 Re-export facade for all standard X.509 certificate extension types, with
-rendering to OpenSSL configuration format via 'asByteString'.
+rendering to OpenSSL configuration format via 'renderOpenSSLConfig'.
 
-Import this module to access every extension type and the 'asByteString'
+Import this module to access every extension type and the 'renderOpenSSLConfig'
 utility in one place, or import individual extension modules directly.
 
 This library is encode-only; no parser or decoder is provided.
@@ -65,8 +65,8 @@ module DataType.X509.Extension
   , Extension (..)
   , HasOID (..)
 
-    -- * Print types as @ByteString@
-  , asByteString
+    -- * Render to OpenSSL config format
+  , renderOpenSSLConfig
 
     -- * re-export
   , fromList
@@ -126,5 +126,5 @@ import DataType.X509.Extension.SubjectKeyIdentifier (SubjectKeyIdentifier (..))
 
 
 -- | Render an extension value as a strict 'ByteString' in OpenSSL configuration format.
-asByteString :: (ToBuilder a Builder) => a -> ByteString
-asByteString = BS.toStrict . toLazyByteString . toBuilder
+renderOpenSSLConfig :: (ToBuilder a Builder) => a -> ByteString
+renderOpenSSLConfig = BS.toStrict . toLazyByteString . toBuilder

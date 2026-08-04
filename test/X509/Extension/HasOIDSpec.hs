@@ -19,7 +19,7 @@ import DataType.X509.Extension
   , KeyUsage
   , NonEmpty (..)
   , SubjectKeyIdentifier
-  , asByteString
+  , renderOpenSSLConfig
   )
 import DataType.X509.Extension.AuthorityInfoAccess (AuthorityInfoAccess)
 import DataType.X509.Extension.HasOID (Extension (..), HasOID (..), extensionOID)
@@ -48,9 +48,9 @@ spec = describe "module DataType.X509.Extension.HasOID" $ do
       extensionOID (Proxy :: Proxy AuthorityInfoAccess) `shouldBe` (1 :| [3, 6, 1, 5, 5, 7, 1, 1])
   context "Extension (ToBuilder)" $ do
     it "prepends 'critical,' when extCritical is True" $
-      asByteString (Extension True notCA) `shouldBe` "critical,CA:FALSE"
+      renderOpenSSLConfig (Extension True notCA) `shouldBe` "critical,CA:FALSE"
     it "renders the value unchanged when extCritical is False" $
-      asByteString (Extension False notCA) `shouldBe` "CA:FALSE"
+      renderOpenSSLConfig (Extension False notCA) `shouldBe` "CA:FALSE"
 
 
 notCA :: BasicConstraints
