@@ -12,6 +12,7 @@ import qualified X509.Extension.AuthorityInfoAccessSpec as AuthorityInfoAccess
 import qualified X509.Extension.CRLDistributionPointsSpec as CRLDistributionPoints
 import qualified X509.Extension.GeneralNameSpec as GeneralName
 import qualified X509.Extension.HasOIDSpec as HasOID
+import qualified X509.Extension.InhibitAnyPolicySpec as InhibitAnyPolicy
 import qualified X509.Extension.IssuerAltNameSpec as IssuerAltName
 import qualified X509.Extension.SubjectAltNameSpec as SubjectAltName
 import qualified X509.ExtensionSpec as Extension
@@ -34,5 +35,6 @@ main = do
     CRLDistributionPoints.spec
     GeneralName.spec
     HasOID.spec
+    InhibitAnyPolicy.spec
     IssuerAltName.spec
     SubjectAltName.spec
