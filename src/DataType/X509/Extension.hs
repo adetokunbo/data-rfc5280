@@ -51,6 +51,10 @@ module DataType.X509.Extension
     -- * Policy extensions
   , InhibitAnyPolicy (..)
   , mkInhibitAnyPolicy
+  , PolicyMappings (..)
+  , mkPolicyMappings
+  , PolicyMapping (..)
+  , mkPolicyMapping
 
     -- * Criticality wrapper and OID lookup
   , Extension (..)
@@ -99,6 +103,12 @@ import DataType.X509.Extension.CRLDistributionPoints
   )
 import DataType.X509.Extension.HasOID (Extension (..), HasOID (..))
 import DataType.X509.Extension.InhibitAnyPolicy (InhibitAnyPolicy (..), mkInhibitAnyPolicy)
+import DataType.X509.Extension.PolicyMappings
+  ( PolicyMapping (..)
+  , PolicyMappings (..)
+  , mkPolicyMapping
+  , mkPolicyMappings
+  )
 import DataType.X509.Extension.IssuerAltName (IssuerAltName (..), mkIssuerAltName)
 import DataType.X509.Extension.Internal (OID, mkOID)
 import DataType.X509.Extension.KeyUsage (KeyUsage, KeyUsageBit (..))
