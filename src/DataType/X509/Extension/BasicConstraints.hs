@@ -12,6 +12,7 @@ Provides the 'BasicConstraints' extension type and its smart constructor.
 -}
 module DataType.X509.Extension.BasicConstraints
   ( BasicConstraints (..)
+  , BasicConstraintsError (..)
   , mkBasicConstraints
   ) where
 
@@ -36,11 +37,17 @@ data BasicConstraints
   deriving (Eq, Show)
 
 
+-- | Failure modes for 'mkBasicConstraints'.
+data BasicConstraintsError
+  = PathLenWithoutCA -- ^ @pathLenConstraint@ is present but @cA@ is @FALSE@.
+  deriving (Eq, Show)
+
+
 {- | Construct a 'BasicConstraints', validating that @pathLenConstraint@ is
 absent when @cA@ is @FALSE@ (RFC 5280 §4.2.1.9).
 -}
-mkBasicConstraints :: Bool -> Maybe Int -> Either String BasicConstraints
-mkBasicConstraints False (Just _) = Left "pathLenConstraint must be absent when cA is FALSE"
+mkBasicConstraints :: Bool -> Maybe Int -> Either BasicConstraintsError BasicConstraints
+mkBasicConstraints False (Just _) = Left PathLenWithoutCA
 mkBasicConstraints isCA pathLen   = Right $ BasicConstraints { bcIsCA = isCA, bcPathLength = pathLen }
 
 

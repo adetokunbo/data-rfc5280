@@ -8,7 +8,6 @@ SPDX-License-Identifier: BSD3
 -}
 module X509.ExtensionSpec (spec) where
 
-import Data.Either (isLeft)
 import DataType.X509.Extension
 import Test.Hspec
 
@@ -69,7 +68,7 @@ spec = describe "module DataType.X509.Extension" $ do
     it "accepts a CA with path length" $
       mkBasicConstraints True (Just 3) `shouldBe` Right caWithPathLen
     it "rejects a non-CA with path length" $
-      mkBasicConstraints False (Just 0) `shouldSatisfy` isLeft
+      mkBasicConstraints False (Just 0) `shouldBe` Left PathLenWithoutCA
   context "mkAuthorityKeyIdentifier" $
     it "sets keyId when keyIdAlways is True" $
       mkAuthorityKeyIdentifier False True False False

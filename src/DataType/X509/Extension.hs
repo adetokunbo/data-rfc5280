@@ -18,6 +18,7 @@ This library is encode-only; no parser or decoder is provided.
 module DataType.X509.Extension
   ( -- * Extension types
     BasicConstraints (..)
+  , BasicConstraintsError (..)
   , mkBasicConstraints
   , KeyUsageBit (..)
   , KeyUsage
@@ -89,6 +90,7 @@ import DataType.X509.Extension.AuthorityKeyIdentifier
   )
 import DataType.X509.Extension.BasicConstraints
   ( BasicConstraints (..)
+  , BasicConstraintsError (..)
   , mkBasicConstraints
   )
 import DataType.X509.Extension.CertificatePolicies
