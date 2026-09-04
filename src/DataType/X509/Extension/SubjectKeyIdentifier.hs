@@ -23,7 +23,7 @@ import DataType.X509.Extension.HasOID (HasOID (..))
 {- | Represents a SubjectKeyIdentifier value (RFC 5280 §4.2.1.2).
 -}
 data SubjectKeyIdentifier
-  = Raw ByteString
+  = Raw !ByteString
   -- ^ A raw key identifier. The caller supplies the bytes directly —
   -- typically the SHA-1 hash of the BIT STRING value of the
   -- subjectPublicKey field.
