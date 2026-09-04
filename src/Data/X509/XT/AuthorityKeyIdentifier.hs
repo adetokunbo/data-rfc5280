@@ -24,7 +24,7 @@ import Data.X509.XT.Internal (intersperseCommas)
 
 {- | Represents the AuthorityKeyIdentifier extension
 
-see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.1
+See <https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.1 RFC 5280 §4.2.1.1>.
 -}
 data AuthorityKeyIdentifier = AuthorityKeyIdentifier
   { akiKeyId :: !Bool

@@ -26,7 +26,7 @@ import Data.X509.XT.Internal (intersperseCommas)
 
 {- | Represents the bits that can set for @ExtKeyUsage@
 
-see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.12
+See <https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.12 RFC 5280 §4.2.1.12>.
 -}
 data ExtKeyUsagePurpose
   = ServerAuth
@@ -51,7 +51,7 @@ instance ToBuilder ExtKeyUsagePurpose Builder where
 
 {- | Represents the @ExtKeyUsage@ extension
 
-see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.12
+See <https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.12 RFC 5280 §4.2.1.12>.
 -}
 type ExtKeyUsage = NES.NESet ExtKeyUsagePurpose
 

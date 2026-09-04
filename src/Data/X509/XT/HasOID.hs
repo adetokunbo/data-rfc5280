@@ -32,7 +32,7 @@ class HasOID a where
 
 {- | Pairs an extension value with its RFC 5280 criticality flag.
 
-see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.1.2.9
+See <https://datatracker.ietf.org/doc/html/rfc5280#section-4.1.2.9 RFC 5280 §4.1.2.9>.
 -}
 data Extension a = Extension
   { extCritical :: !Bool

@@ -26,7 +26,7 @@ import Data.X509.XT.HasOID (HasOID (..))
 
 {- | Represents the basic constraints extension
 
-see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.9
+See <https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.9 RFC 5280 §4.2.1.9>.
 -}
 data BasicConstraints
   = BasicConstraints

@@ -26,7 +26,7 @@ import Data.X509.XT.Internal (intersperseCommas)
 
 {- | Represents the bits that can set for @KeyUsage@
 
-see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.3
+See <https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.3 RFC 5280 §4.2.1.3>.
 -}
 data KeyUsageBit
   = DigitalSignature
@@ -55,7 +55,7 @@ instance ToBuilder KeyUsageBit Builder where
 
 {- | Represents the 'KeyUsage' extension
 
-see RFC 5280: https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.3
+See <https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.3 RFC 5280 §4.2.1.3>.
 -}
 type KeyUsage = NES.NESet KeyUsageBit
 
