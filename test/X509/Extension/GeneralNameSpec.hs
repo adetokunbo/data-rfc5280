@@ -76,17 +76,17 @@ spec = describe "module DataType.X509.Extension.GeneralName" $ do
     it "accepts a single label" $
       mkDNSName "localhost" `shouldBe` Right (DNSName "localhost")
     it "rejects an empty name" $
-      mkDNSName "" `shouldSatisfy` isLeft
+      mkDNSName "" `shouldBe` Left NameEmpty
     it "rejects a label ending with a hyphen" $
-      mkDNSName "example-.com" `shouldSatisfy` isLeft
+      mkDNSName "example-.com" `shouldBe` Left LabelTrailingHyphen
     it "rejects a label starting with a hyphen" $
-      mkDNSName "-example.com" `shouldSatisfy` isLeft
+      mkDNSName "-example.com" `shouldBe` Left LabelLeadingHyphen
     it "rejects an empty label" $
-      mkDNSName "example..com" `shouldSatisfy` isLeft
+      mkDNSName "example..com" `shouldBe` Left NameEmpty
     it "rejects a label exceeding 63 characters" $
-      mkDNSName (T.replicate 64 "a" <> ".com") `shouldSatisfy` isLeft
+      mkDNSName (T.replicate 64 "a" <> ".com") `shouldBe` Left LabelTooLong
     it "rejects a name exceeding 253 characters" $
-      mkDNSName (T.intercalate "." (replicate 5 (T.replicate 50 "a"))) `shouldSatisfy` isLeft
+      mkDNSName (T.intercalate "." (replicate 5 (T.replicate 50 "a"))) `shouldBe` Left NameTooLong
     prop "accepts any validly-constructed hostname" $
       forAll validDNSName $ \t -> mkDNSName t === Right (DNSName t)
     prop "rejects any name containing an invalid label character" $

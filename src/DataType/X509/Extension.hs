@@ -35,6 +35,7 @@ module DataType.X509.Extension
   , GeneralName (..)
   , OtherName (..)
   , Asn1StringType (..)
+  , DNSNameError (..)
   , mkDNSName
   , mkOtherName
 
@@ -95,6 +96,7 @@ import DataType.X509.Extension.CertificatePolicies
 import DataType.X509.Extension.ExtKeyUsage (ExtKeyUsage, ExtKeyUsagePurpose (..))
 import DataType.X509.Extension.GeneralName
   ( Asn1StringType (..)
+  , DNSNameError (..)
   , GeneralName (..)
   , OtherName (..)
   , mkDNSName

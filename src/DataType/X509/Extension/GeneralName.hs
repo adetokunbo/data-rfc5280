@@ -16,6 +16,7 @@ module DataType.X509.Extension.GeneralName
   ( GeneralName (..)
   , OtherName (..)
   , Asn1StringType (..)
+  , DNSNameError (..)
   , mkDNSName
   , mkOtherName
   )
@@ -99,34 +100,46 @@ instance ToBuilder GeneralName Builder where
     "otherName:" <> oidBuilder (onTypeId on) <> ";" <> toBuilder (onEncoding on) <> ":" <> byteString (TE.encodeUtf8 (onValue on))
 
 
+-- | Failure modes for 'mkDNSName'.
+data DNSNameError
+  = NameEmpty           -- ^ The name or a label within it is empty.
+  | NameTooLong         -- ^ The name exceeds 253 characters.
+  | LabelTooLong        -- ^ A label exceeds 63 characters.
+  | LabelLeadingHyphen  -- ^ A label starts with a hyphen.
+  | LabelTrailingHyphen -- ^ A label ends with a hyphen.
+  | LabelInvalidChar    -- ^ A label contains a character outside @[A-Za-z0-9-]@.
+  deriving (Eq, Show)
+
+
 {- | Construct a 'DNSName', validating against RFC 1123 hostname rules.
 
-Returns @Left@ with a description if the name is invalid. Accepts a wildcard
-@*@ as the first label (e.g. @\"*.example.com\"@). IDNA\/punycode encoding of
-Unicode hostnames must be done by the caller before passing to this function.
+Returns @Left@ with a 'DNSNameError' if the name is invalid. Accepts a
+wildcard @*@ as the first label (e.g. @\"*.example.com\"@). IDNA\/punycode
+encoding of Unicode hostnames must be done by the caller before passing to
+this function.
 -}
-mkDNSName :: Text -> Either String GeneralName
+mkDNSName :: Text -> Either DNSNameError GeneralName
 mkDNSName t
-  | T.null t = Left "DNS name must not be empty"
-  | T.length t > 253 = Left "DNS name exceeds 253 characters"
+  | T.null t = Left NameEmpty
+  | T.length t > 253 = Left NameTooLong
   | otherwise = validateLabels (T.splitOn "." t) >> Right (DNSName t)
  where
-  validateLabels [] = Left "DNS name must not be empty"
+  validateLabels [] = Left NameEmpty
   validateLabels (l : ls) = validateFirst l >> mapM_ validateLabel ls
 
   validateFirst "*" = Right ()
   validateFirst l = validateLabel l
 
   validateLabel l
-    | T.null l = Left "DNS label must not be empty"
-    | T.length l > 63 = Left $ "DNS label exceeds 63 characters: " <> T.unpack l
+    | T.null l = Left NameEmpty
+    | T.length l > 63 = Left LabelTooLong
     | otherwise =
         case (T.uncons l, T.unsnoc l) of
-          (Just ('-', _), _) -> Left $ "DNS label must not start with hyphen: " <> T.unpack l
-          (_, Just (_, '-')) -> Left $ "DNS label must not end with hyphen: " <> T.unpack l
+          (Just ('-', _), _) -> Left LabelLeadingHyphen
+          (_, Just (_, '-')) -> Left LabelTrailingHyphen
           _
             | T.all isValidChar l -> Right ()
-            | otherwise -> Left $ "DNS label contains invalid character: " <> T.unpack l
+            | otherwise -> Left LabelInvalidChar
 
   isValidChar c = isAlphaNum c || c == '-'
 
