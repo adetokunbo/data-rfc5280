@@ -64,6 +64,7 @@ test-suite test
     X509.ExtensionSpec
     X509.Extension.AuthorityInfoAccessSpec
     X509.Extension.CRLDistributionPointsSpec
+    X509.Extension.Fixtures
     X509.Extension.GeneralNameSpec
     X509.Extension.Generators
     X509.Extension.HasOIDSpec

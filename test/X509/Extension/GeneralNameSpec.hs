@@ -14,59 +14,55 @@ import Data.Either (isLeft)
 import qualified Data.Text as T
 import DataType.X509.Extension (renderOpenSSLConfig, NonEmpty (..))
 import DataType.X509.Extension.GeneralName
-import qualified Net.IP as IP
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck (forAll, (===))
-import X509.Extension.Generators (nameWithInvalidChar, validDNSName, validDnsName)
-import Text.Email.Validate (validate)
 import Text.URI (mkURI)
+import X509.Extension.Fixtures (assertRight, testEmail, testIP)
+import X509.Extension.Generators (nameWithInvalidChar, validDNSName)
 
 
 spec :: Spec
 spec = describe "module DataType.X509.Extension.GeneralName" $ do
   context "DNS" $
     it "converts to ByteString" $ do
-      dn <- either (fail . show) pure (mkDnsName "example.com")
+      dn <- assertRight (mkDnsName "example.com")
       renderOpenSSLConfig (DNS dn) `shouldBe` "DNS:example.com"
   context "IPAddr (IPv4)" $
-    it "converts to ByteString" $
-      case IP.decode "192.0.2.1" of
-        Nothing -> expectationFailure "could not decode test IPv4 address"
-        Just ip -> renderOpenSSLConfig (IPAddr ip) `shouldBe` "IP:192.0.2.1"
+    it "converts to ByteString" $ do
+      ip <- testIP "192.0.2.1"
+      renderOpenSSLConfig (IPAddr ip) `shouldBe` "IP:192.0.2.1"
   context "IPAddr (IPv6)" $
-    it "converts to ByteString" $
-      case IP.decode "::1" of
-        Nothing -> expectationFailure "could not decode test IPv6 address"
-        Just ip -> renderOpenSSLConfig (IPAddr ip) `shouldBe` "IP:::1"
+    it "converts to ByteString" $ do
+      ip <- testIP "::1"
+      renderOpenSSLConfig (IPAddr ip) `shouldBe` "IP:::1"
   context "EmailAddr" $
-    it "converts to ByteString" $
-      case validate "user@example.com" of
-        Left err -> expectationFailure $ "invalid test email: " <> err
-        Right addr -> renderOpenSSLConfig (EmailAddr addr) `shouldBe` "email:user@example.com"
+    it "converts to ByteString" $ do
+      addr <- testEmail "user@example.com"
+      renderOpenSSLConfig (EmailAddr addr) `shouldBe` "email:user@example.com"
   context "URIName" $
     it "converts to ByteString" $ do
       uri <- mkURI "https://example.com"
       renderOpenSSLConfig (URIName uri) `shouldBe` "URI:https://example.com"
   context "RegisteredID" $
     it "converts to ByteString" $ do
-      rid <- either (fail . show) pure (mkRegisteredID 2 [5, 4, 3])
+      rid <- assertRight (mkRegisteredID 2 [5, 4, 3])
       renderOpenSSLConfig rid `shouldBe` "RID:2.5.4.3"
   context "Other (UTF8String)" $
     it "converts to ByteString" $ do
-      gn <- either (fail . show) pure (mkOther 1 [2, 3] UTF8String "hello")
+      gn <- assertRight (mkOther 1 [2, 3] UTF8String "hello")
       renderOpenSSLConfig gn `shouldBe` "otherName:1.2.3;UTF8:hello"
   context "Other (IA5String)" $
     it "converts to ByteString" $ do
-      gn <- either (fail . show) pure (mkOther 1 [2, 3] IA5String "hello")
+      gn <- assertRight (mkOther 1 [2, 3] IA5String "hello")
       renderOpenSSLConfig gn `shouldBe` "otherName:1.2.3;IA5:hello"
   context "Other (PrintableString)" $
     it "converts to ByteString" $ do
-      gn <- either (fail . show) pure (mkOther 1 [2, 3] PrintableString "Hello World")
+      gn <- assertRight (mkOther 1 [2, 3] PrintableString "Hello World")
       renderOpenSSLConfig gn `shouldBe` "otherName:1.2.3;PRINTABLE:Hello World"
   context "Other (BMPString)" $
     it "converts to ByteString" $ do
-      gn <- either (fail . show) pure (mkOther 1 [2, 3] BMPString "hello")
+      gn <- assertRight (mkOther 1 [2, 3] BMPString "hello")
       renderOpenSSLConfig gn `shouldBe` "otherName:1.2.3;BMP:hello"
   context "mkDnsName" $ do
     it "accepts a simple hostname" $
@@ -94,13 +90,11 @@ spec = describe "module DataType.X509.Extension.GeneralName" $ do
     prop "rejects any name containing an invalid label character" $
       forAll nameWithInvalidChar $ \t -> isLeft (mkDnsName t)
   context "mkOtherName" $ do
-    it "accepts a valid OID and UTF8String value" $
-      case mkOtherName 1 [2, 3] UTF8String "hello" of
-        Left err -> expectationFailure $ show err
-        Right on -> do
-          onTypeId on `shouldBe` (1 :| [2, 3])
-          onEncoding on `shouldBe` UTF8String
-          onValue on `shouldBe` "hello"
+    it "accepts a valid OID and UTF8String value" $ do
+      on <- assertRight (mkOtherName 1 [2, 3] UTF8String "hello")
+      onTypeId on `shouldBe` (1 :| [2, 3])
+      onEncoding on `shouldBe` UTF8String
+      onValue on `shouldBe` "hello"
     it "rejects a negative OID arc" $
       mkOtherName (-1) [2, 3] UTF8String "hello" `shouldBe` Left InvalidOID
     it "rejects IA5String value containing a non-ASCII character" $

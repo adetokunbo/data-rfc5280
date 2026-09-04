@@ -17,6 +17,7 @@ import DataType.X509.Extension.NameConstraints
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck (forAll, (===))
+import X509.Extension.Fixtures (assertRight)
 import X509.Extension.Generators (validDnsName)
 
 
@@ -24,20 +25,20 @@ spec :: Spec
 spec = describe "module DataType.X509.Extension.NameConstraints" $ do
   context "mkNameConstraints" $ do
     it "renders a single permitted DNS constraint" $ do
-      dn <- either (fail . show) pure (mkDnsConstraint ".example.com")
+      dn <- assertRight (mkDnsConstraint ".example.com")
       renderOpenSSLConfig (mkNameConstraints (Permitted (DNS dn)) [])
         `shouldBe` "permitted;DNS:.example.com"
     it "renders a single excluded DNS constraint" $ do
-      dn <- either (fail . show) pure (mkDnsConstraint ".example.com")
+      dn <- assertRight (mkDnsConstraint ".example.com")
       renderOpenSSLConfig (mkNameConstraints (Excluded (DNS dn)) [])
         `shouldBe` "excluded;DNS:.example.com"
     it "renders a single excluded email constraint" $ do
-      dn <- either (fail . show) pure (mkDnsConstraint ".example.org")
+      dn <- assertRight (mkDnsConstraint ".example.org")
       renderOpenSSLConfig (mkNameConstraints (Excluded (DNS dn)) [])
         `shouldBe` "excluded;DNS:.example.org"
     it "renders permitted and excluded constraints together" $ do
-      permitted <- either (fail . show) pure (mkDnsConstraint ".example.com")
-      excluded  <- either (fail . show) pure (mkDnsConstraint ".evil.example.com")
+      permitted <- assertRight (mkDnsConstraint ".example.com")
+      excluded  <- assertRight (mkDnsConstraint ".evil.example.com")
       renderOpenSSLConfig
         ( mkNameConstraints
             (Permitted (DNS permitted))
@@ -45,8 +46,8 @@ spec = describe "module DataType.X509.Extension.NameConstraints" $ do
         )
         `shouldBe` "permitted;DNS:.example.com,excluded;DNS:.evil.example.com"
     it "renders multiple permitted constraints" $ do
-      dn1 <- either (fail . show) pure (mkDnsConstraint ".example.com")
-      dn2 <- either (fail . show) pure (mkDnsConstraint ".example.org")
+      dn1 <- assertRight (mkDnsConstraint ".example.com")
+      dn2 <- assertRight (mkDnsConstraint ".example.org")
       renderOpenSSLConfig
         ( mkNameConstraints
             (Permitted (DNS dn1))

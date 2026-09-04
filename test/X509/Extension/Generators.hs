@@ -13,9 +13,11 @@ module X509.Extension.Generators
   , validDNSName
   , validDnsName
   , nameWithInvalidChar
+  , vectorOf1
   )
 where
 
+import Data.List.NonEmpty (NonEmpty (..))
 import qualified Data.Text as T
 import DataType.X509.Extension.GeneralName (DnsName, mkDnsName)
 import Test.QuickCheck (Gen, choose, elements, vectorOf)
@@ -47,6 +49,17 @@ validDnsName = do
   case mkDnsName t of
     Right dn -> return dn
     Left err -> error $ "validDNSName produced invalid DNS name: " <> show err
+
+
+{- | Like 'vectorOf' but returns a 'NonEmpty' list, guaranteeing at least one
+element. The count @n@ must be ≥ 1; callers should enforce this with
+'choose' or similar.
+-}
+vectorOf1 :: Int -> Gen a -> Gen (NonEmpty a)
+vectorOf1 n gen = do
+  h  <- gen
+  tl <- vectorOf (n - 1) gen
+  return (h :| tl)
 
 
 -- | Generates a single label with one invalid character injected in the middle.

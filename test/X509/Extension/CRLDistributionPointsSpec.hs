@@ -16,9 +16,11 @@ import DataType.X509.Extension.CRLDistributionPoints
 import DataType.X509.Extension.GeneralName
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
-import Test.QuickCheck (choose, forAll, vectorOf, (===))
+import Data.List.NonEmpty (NonEmpty (..))
+import Test.QuickCheck (choose, forAll, (===))
 import Text.URI (mkURI)
-import X509.Extension.Generators (validDnsName)
+import X509.Extension.Fixtures (assertRight)
+import X509.Extension.Generators (validDnsName, vectorOf1)
 
 
 spec :: Spec
@@ -38,11 +40,11 @@ spec = describe "module DataType.X509.Extension.CRLDistributionPoints" $ do
         )
         `shouldBe` "URI:http://crl1.example.com/crl.crl,URI:http://crl2.example.com/crl.crl"
     it "renders a DNS-name distribution point" $ do
-      dn <- either (fail . show) pure (mkDnsName "crl.example.com")
+      dn <- assertRight (mkDnsName "crl.example.com")
       renderOpenSSLConfig (mkCRLDistributionPoints (mkDistributionPoint (DNS dn)) [])
         `shouldBe` "DNS:crl.example.com"
     it "renders an Other distribution point" $ do
-      gn <- either (fail . show) pure (mkOther 1 [2, 3] UTF8String "value")
+      gn <- assertRight (mkOther 1 [2, 3] UTF8String "value")
       renderOpenSSLConfig
         ( mkCRLDistributionPoints
             (mkDistributionPoint gn)
@@ -54,12 +56,9 @@ spec = describe "module DataType.X509.Extension.CRLDistributionPoints" $ do
         BS.elem 0x2C (renderOpenSSLConfig (mkCRLDistributionPoints (mkDistributionPoint (DNS dn)) [])) === False
     prop "n distribution points produce exactly n-1 comma separators" $
       forAll (choose (1, 6)) $ \n ->
-        forAll (vectorOf n validDnsName) $ \dns ->
-          case dns of
-            []    -> True === True
-            (h:tl) ->
-              let pts = mkCRLDistributionPoints
-                          (mkDistributionPoint (DNS h))
-                          (map (mkDistributionPoint . DNS) tl)
-                  bs = renderOpenSSLConfig pts
-              in BS.length (BS.filter (== 0x2C) bs) === n - 1
+        forAll (vectorOf1 n validDnsName) $ \(h :| tl) ->
+          let pts = mkCRLDistributionPoints
+                      (mkDistributionPoint (DNS h))
+                      (map (mkDistributionPoint . DNS) tl)
+              bs = renderOpenSSLConfig pts
+          in BS.length (BS.filter (== 0x2C) bs) === n - 1

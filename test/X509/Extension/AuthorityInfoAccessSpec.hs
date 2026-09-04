@@ -18,6 +18,7 @@ import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck (forAll)
 import Text.URI (mkURI)
+import X509.Extension.Fixtures (assertRight)
 import X509.Extension.Generators (validDnsName)
 
 
@@ -33,8 +34,8 @@ spec = describe "module DataType.X509.Extension.AuthorityInfoAccess" $ do
       renderOpenSSLConfig (mkAuthorityInfoAccess (CAIssuers (URIName uri)) [])
         `shouldBe` "caIssuers;URI:http://ca.example.com/issuer.crt"
     it "renders OCSP and CAIssuers together" $ do
-      ocspUri    <- mkURI "http://ocsp.example.com"
-      issuerUri  <- mkURI "http://ca.example.com/issuer.crt"
+      ocspUri   <- mkURI "http://ocsp.example.com"
+      issuerUri <- mkURI "http://ca.example.com/issuer.crt"
       renderOpenSSLConfig
         ( mkAuthorityInfoAccess
             (OCSP (URIName ocspUri))
@@ -42,7 +43,7 @@ spec = describe "module DataType.X509.Extension.AuthorityInfoAccess" $ do
         )
         `shouldBe` "OCSP;URI:http://ocsp.example.com,caIssuers;URI:http://ca.example.com/issuer.crt"
     it "renders an Other name as OCSP location" $ do
-      gn <- either (fail . show) pure (mkOther 1 [2, 3] UTF8String "value")
+      gn <- assertRight (mkOther 1 [2, 3] UTF8String "value")
       renderOpenSSLConfig (mkAuthorityInfoAccess (OCSP gn) [])
         `shouldBe` "OCSP;otherName:1.2.3;UTF8:value"
     prop "OCSP entries always start with OCSP;" $
