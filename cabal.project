@@ -2,3 +2,6 @@ packages: .
 
 test-show-details: streaming
 
+package x509-extensions
+  haddock-options: --hyperlinked-source
+
