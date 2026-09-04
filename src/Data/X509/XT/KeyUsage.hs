@@ -29,15 +29,33 @@ import Data.X509.XT.Internal (intersperseCommas)
 See <https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.3 RFC 5280 §4.2.1.3>.
 -}
 data KeyUsageBit
-  = DigitalSignature
-  | NonRepudiation
-  | KeyEncipherment
-  | DataEncipherment
-  | KeyAgreement
-  | KeyCertSign
-  | CRLSign
-  | EncipherOnly
-  | DecipherOnly
+  = -- | Verifying digital signatures other than signatures on certificates or
+    -- CRLs. Renders as @\"digitalSignature\"@.
+    DigitalSignature
+  | -- | Verifying digital signatures to provide non-repudiation of signing
+    -- actions (also called @contentCommitment@). Renders as @\"nonRepudiation\"@.
+    NonRepudiation
+  | -- | Enciphering private or secret keys (key transport). Renders as
+    -- @\"keyEncipherment\"@.
+    KeyEncipherment
+  | -- | Directly enciphering raw user data without an intermediate symmetric
+    -- cipher. Renders as @\"dataEncipherment\"@.
+    DataEncipherment
+  | -- | Key agreement protocols (e.g. Diffie-Hellman). Renders as
+    -- @\"keyAgreement\"@.
+    KeyAgreement
+  | -- | Verifying signatures on public-key certificates. Renders as
+    -- @\"keyCertSign\"@.
+    KeyCertSign
+  | -- | Verifying signatures on certificate revocation lists. Renders as
+    -- @\"cRLSign\"@.
+    CRLSign
+  | -- | Enciphering data only during key agreement (used with 'KeyAgreement').
+    -- Renders as @\"encipherOnly\"@.
+    EncipherOnly
+  | -- | Deciphering data only during key agreement (used with 'KeyAgreement').
+    -- Renders as @\"decipherOnly\"@.
+    DecipherOnly
   deriving (Eq, Show, Ord, Enum, Bounded)
 
 
