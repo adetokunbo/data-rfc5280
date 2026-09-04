@@ -26,7 +26,7 @@ import Data.Foldable (foldl')
 import Data.List.NonEmpty (NonEmpty (..))
 
 
--- | An ASN.1 object identifier.
+-- | An ASN.1 object identifier. Construct with 'mkOID'.
 type OID = NonEmpty Int
 
 

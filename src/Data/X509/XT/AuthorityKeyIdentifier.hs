@@ -36,7 +36,9 @@ data AuthorityKeyIdentifier = AuthorityKeyIdentifier
   , akiIssuer :: !Bool
   -- ^ include issuer name + serial
   , akiIssuerAlways :: !Bool
-  -- ^ always include
+  {- ^ always include the issuer name and serial, even if the issuer certificate
+  has no SubjectKeyIdentifier extension
+  -}
   }
   deriving (Eq, Show)
 
