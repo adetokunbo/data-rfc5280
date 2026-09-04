@@ -28,11 +28,13 @@ module Data.X509.XT
   , SubjectKeyIdentifier (..)
   , AuthorityKeyIdentifier (..)
   , mkAuthorityKeyIdentifier
+  , CertificatePolicies (..)
+  , mkCertificatePolicies
+
+    -- * OID construction
   , OID
   , OIDError (..)
   , mkOID
-  , CertificatePolicies (..)
-  , mkCertificatePolicies
 
     -- * General names
   , GeneralName (DNS, IPAddr, EmailAddr, URIName, Other)
@@ -86,7 +88,9 @@ module Data.X509.XT
     -- * Render to OpenSSL config format
   , renderOpenSSLConfig
 
-    -- * re-export
+    -- * Re-exported for convenience
+
+    -- | 'NonEmpty' from "Data.List.NonEmpty"; 'fromList' from "Data.Set.NonEmpty".
   , fromList
   , NonEmpty (..)
   )
@@ -107,6 +111,12 @@ import Data.X509.XT.BasicConstraints
   , BasicConstraintsError (..)
   , mkBasicConstraints
   )
+import Data.X509.XT.CRLDistributionPoints
+  ( CRLDistributionPoints (..)
+  , DistributionPoint (..)
+  , mkCRLDistributionPoints
+  , mkDistributionPoint
+  )
 import Data.X509.XT.CertificatePolicies
   ( CertificatePolicies (..)
   , mkCertificatePolicies
@@ -116,7 +126,7 @@ import Data.X509.XT.GeneralName
   ( Asn1StringType (..)
   , DNSNameError (..)
   , DnsName
-  , GeneralName (DNS, IPAddr, EmailAddr, URIName, Other)
+  , GeneralName (DNS, EmailAddr, IPAddr, Other, URIName)
   , OtherName
   , OtherNameError (..)
   , dnsNameText
@@ -131,14 +141,11 @@ import Data.X509.XT.GeneralName
   , pattern OtherName
   , pattern RegisteredID
   )
-import Data.X509.XT.CRLDistributionPoints
-  ( CRLDistributionPoints (..)
-  , DistributionPoint (..)
-  , mkCRLDistributionPoints
-  , mkDistributionPoint
-  )
 import Data.X509.XT.HasOID (Extension (..), HasOID (..))
 import Data.X509.XT.InhibitAnyPolicy (InhibitAnyPolicy (..), InhibitAnyPolicyError (..), mkInhibitAnyPolicy)
+import Data.X509.XT.Internal (OID, OIDError (..), mkOID)
+import Data.X509.XT.IssuerAltName (IssuerAltName (..), mkIssuerAltName)
+import Data.X509.XT.KeyUsage (KeyUsage, KeyUsageBit (..))
 import Data.X509.XT.NameConstraints
   ( NameConstraint (..)
   , NameConstraints (..)
@@ -150,10 +157,7 @@ import Data.X509.XT.PolicyMappings
   , mkPolicyMapping
   , mkPolicyMappings
   )
-import Data.X509.XT.IssuerAltName (IssuerAltName (..), mkIssuerAltName)
 import Data.X509.XT.SubjectAltName (SubjectAltName (..), mkSubjectAltName)
-import Data.X509.XT.Internal (OID, OIDError (..), mkOID)
-import Data.X509.XT.KeyUsage (KeyUsage, KeyUsageBit (..))
 import Data.X509.XT.SubjectKeyIdentifier (SubjectKeyIdentifier (..))
 
 
