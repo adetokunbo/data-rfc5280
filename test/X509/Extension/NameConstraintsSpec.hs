@@ -17,38 +17,45 @@ import DataType.X509.Extension.NameConstraints
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck (forAll, (===))
-import X509.Extension.Generators (validDNSName)
+import X509.Extension.Generators (validDnsName)
 
 
 spec :: Spec
 spec = describe "module DataType.X509.Extension.NameConstraints" $ do
   context "mkNameConstraints" $ do
-    it "renders a single permitted DNS constraint" $
-      renderOpenSSLConfig (mkNameConstraints (Permitted (DNS (DnsName ".example.com"))) [])
+    it "renders a single permitted DNS constraint" $ do
+      dn <- either (fail . show) pure (mkDnsConstraint ".example.com")
+      renderOpenSSLConfig (mkNameConstraints (Permitted (DNS dn)) [])
         `shouldBe` "permitted;DNS:.example.com"
-    it "renders a single excluded DNS constraint" $
-      renderOpenSSLConfig (mkNameConstraints (Excluded (DNS (DnsName ".example.com"))) [])
+    it "renders a single excluded DNS constraint" $ do
+      dn <- either (fail . show) pure (mkDnsConstraint ".example.com")
+      renderOpenSSLConfig (mkNameConstraints (Excluded (DNS dn)) [])
         `shouldBe` "excluded;DNS:.example.com"
-    it "renders a single excluded email constraint" $
-      renderOpenSSLConfig (mkNameConstraints (Excluded (DNS (DnsName ".example.org"))) [])
+    it "renders a single excluded email constraint" $ do
+      dn <- either (fail . show) pure (mkDnsConstraint ".example.org")
+      renderOpenSSLConfig (mkNameConstraints (Excluded (DNS dn)) [])
         `shouldBe` "excluded;DNS:.example.org"
-    it "renders permitted and excluded constraints together" $
+    it "renders permitted and excluded constraints together" $ do
+      permitted <- either (fail . show) pure (mkDnsConstraint ".example.com")
+      excluded  <- either (fail . show) pure (mkDnsConstraint ".evil.example.com")
       renderOpenSSLConfig
         ( mkNameConstraints
-            (Permitted (DNS (DnsName ".example.com")))
-            [Excluded (DNS (DnsName ".evil.example.com"))]
+            (Permitted (DNS permitted))
+            [Excluded (DNS excluded)]
         )
         `shouldBe` "permitted;DNS:.example.com,excluded;DNS:.evil.example.com"
-    it "renders multiple permitted constraints" $
+    it "renders multiple permitted constraints" $ do
+      dn1 <- either (fail . show) pure (mkDnsConstraint ".example.com")
+      dn2 <- either (fail . show) pure (mkDnsConstraint ".example.org")
       renderOpenSSLConfig
         ( mkNameConstraints
-            (Permitted (DNS (DnsName ".example.com")))
-            [Permitted (DNS (DnsName ".example.org"))]
+            (Permitted (DNS dn1))
+            [Permitted (DNS dn2)]
         )
         `shouldBe` "permitted;DNS:.example.com,permitted;DNS:.example.org"
     prop "a permitted constraint output starts with \"permitted;\"" $
-      forAll validDNSName $ \n ->
-        BS.isPrefixOf "permitted;" (renderOpenSSLConfig (mkNameConstraints (Permitted (DNS (DnsName n))) [])) === True
+      forAll validDnsName $ \dn ->
+        BS.isPrefixOf "permitted;" (renderOpenSSLConfig (mkNameConstraints (Permitted (DNS dn)) [])) === True
     prop "an excluded constraint output starts with \"excluded;\"" $
-      forAll validDNSName $ \n ->
-        BS.isPrefixOf "excluded;" (renderOpenSSLConfig (mkNameConstraints (Excluded (DNS (DnsName n))) [])) === True
+      forAll validDnsName $ \dn ->
+        BS.isPrefixOf "excluded;" (renderOpenSSLConfig (mkNameConstraints (Excluded (DNS dn)) [])) === True

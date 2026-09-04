@@ -18,7 +18,7 @@ import qualified Net.IP as IP
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck (forAll, (===))
-import X509.Extension.Generators (nameWithInvalidChar, validDNSName)
+import X509.Extension.Generators (nameWithInvalidChar, validDNSName, validDnsName)
 import Text.Email.Validate (validate)
 import Text.URI (mkURI)
 
@@ -26,8 +26,9 @@ import Text.URI (mkURI)
 spec :: Spec
 spec = describe "module DataType.X509.Extension.GeneralName" $ do
   context "DNS" $
-    it "converts to ByteString" $
-      renderOpenSSLConfig (DNS (DnsName "example.com")) `shouldBe` "DNS:example.com"
+    it "converts to ByteString" $ do
+      dn <- either (fail . show) pure (mkDnsName "example.com")
+      renderOpenSSLConfig (DNS dn) `shouldBe` "DNS:example.com"
   context "IPAddr (IPv4)" $
     it "converts to ByteString" $
       case IP.decode "192.0.2.1" of
@@ -48,33 +49,34 @@ spec = describe "module DataType.X509.Extension.GeneralName" $ do
       uri <- mkURI "https://example.com"
       renderOpenSSLConfig (URIName uri) `shouldBe` "URI:https://example.com"
   context "RegisteredID" $
-    it "converts to ByteString" $
-      renderOpenSSLConfig (RegisteredID (2 :| [5, 4, 3])) `shouldBe` "RID:2.5.4.3"
+    it "converts to ByteString" $ do
+      rid <- either (fail . show) pure (mkRegisteredID 2 [5, 4, 3])
+      renderOpenSSLConfig rid `shouldBe` "RID:2.5.4.3"
   context "Other (UTF8String)" $
-    it "converts to ByteString" $
-      renderOpenSSLConfig (Other (OtherName (1 :| [2, 3]) UTF8String "hello"))
-        `shouldBe` "otherName:1.2.3;UTF8:hello"
+    it "converts to ByteString" $ do
+      gn <- either (fail . show) pure (mkOther 1 [2, 3] UTF8String "hello")
+      renderOpenSSLConfig gn `shouldBe` "otherName:1.2.3;UTF8:hello"
   context "Other (IA5String)" $
-    it "converts to ByteString" $
-      renderOpenSSLConfig (Other (OtherName (1 :| [2, 3]) IA5String "hello"))
-        `shouldBe` "otherName:1.2.3;IA5:hello"
+    it "converts to ByteString" $ do
+      gn <- either (fail . show) pure (mkOther 1 [2, 3] IA5String "hello")
+      renderOpenSSLConfig gn `shouldBe` "otherName:1.2.3;IA5:hello"
   context "Other (PrintableString)" $
-    it "converts to ByteString" $
-      renderOpenSSLConfig (Other (OtherName (1 :| [2, 3]) PrintableString "Hello World"))
-        `shouldBe` "otherName:1.2.3;PRINTABLE:Hello World"
+    it "converts to ByteString" $ do
+      gn <- either (fail . show) pure (mkOther 1 [2, 3] PrintableString "Hello World")
+      renderOpenSSLConfig gn `shouldBe` "otherName:1.2.3;PRINTABLE:Hello World"
   context "Other (BMPString)" $
-    it "converts to ByteString" $
-      renderOpenSSLConfig (Other (OtherName (1 :| [2, 3]) BMPString "hello"))
-        `shouldBe` "otherName:1.2.3;BMP:hello"
+    it "converts to ByteString" $ do
+      gn <- either (fail . show) pure (mkOther 1 [2, 3] BMPString "hello")
+      renderOpenSSLConfig gn `shouldBe` "otherName:1.2.3;BMP:hello"
   context "mkDnsName" $ do
     it "accepts a simple hostname" $
-      mkDnsName "example.com" `shouldBe` Right (DnsName "example.com")
+      fmap dnsNameText (mkDnsName "example.com") `shouldBe` Right "example.com"
     it "accepts a multi-label hostname" $
-      mkDnsName "foo.bar.example.com" `shouldBe` Right (DnsName "foo.bar.example.com")
+      fmap dnsNameText (mkDnsName "foo.bar.example.com") `shouldBe` Right "foo.bar.example.com"
     it "accepts a wildcard first label" $
-      mkDnsName "*.example.com" `shouldBe` Right (DnsName "*.example.com")
+      fmap dnsNameText (mkDnsName "*.example.com") `shouldBe` Right "*.example.com"
     it "accepts a single label" $
-      mkDnsName "localhost" `shouldBe` Right (DnsName "localhost")
+      fmap dnsNameText (mkDnsName "localhost") `shouldBe` Right "localhost"
     it "rejects an empty name" $
       mkDnsName "" `shouldBe` Left NameEmpty
     it "rejects a label ending with a hyphen" $
@@ -88,13 +90,17 @@ spec = describe "module DataType.X509.Extension.GeneralName" $ do
     it "rejects a name exceeding 253 characters" $
       mkDnsName (T.intercalate "." (replicate 5 (T.replicate 50 "a"))) `shouldBe` Left NameTooLong
     prop "accepts any validly-constructed hostname" $
-      forAll validDNSName $ \t -> mkDnsName t === Right (DnsName t)
+      forAll validDNSName $ \t -> fmap dnsNameText (mkDnsName t) === Right t
     prop "rejects any name containing an invalid label character" $
       forAll nameWithInvalidChar $ \t -> isLeft (mkDnsName t)
   context "mkOtherName" $ do
     it "accepts a valid OID and UTF8String value" $
-      mkOtherName 1 [2, 3] UTF8String "hello"
-        `shouldBe` Right (OtherName (1 :| [2, 3]) UTF8String "hello")
+      case mkOtherName 1 [2, 3] UTF8String "hello" of
+        Left err -> expectationFailure $ show err
+        Right on -> do
+          onTypeId on `shouldBe` (1 :| [2, 3])
+          onEncoding on `shouldBe` UTF8String
+          onValue on `shouldBe` "hello"
     it "rejects a negative OID arc" $
       mkOtherName (-1) [2, 3] UTF8String "hello" `shouldBe` Left InvalidOID
     it "rejects IA5String value containing a non-ASCII character" $
@@ -103,5 +109,3 @@ spec = describe "module DataType.X509.Extension.GeneralName" $ do
       mkOtherName 1 [2, 3] PrintableString "user@example" `shouldBe` Left PrintableInvalidChar
     it "rejects BMPString value containing a non-BMP character" $
       mkOtherName 1 [2, 3] BMPString "\x1F600" `shouldBe` Left BMPNonBMP
-
-

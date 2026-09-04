@@ -11,14 +11,14 @@ Tests for 'DataType.X509.Extension.AuthorityInfoAccess'.
 module X509.Extension.AuthorityInfoAccessSpec (spec) where
 
 import qualified Data.ByteString as BS
-import DataType.X509.Extension (renderOpenSSLConfig, NonEmpty (..))
+import DataType.X509.Extension (renderOpenSSLConfig)
 import DataType.X509.Extension.AuthorityInfoAccess
 import DataType.X509.Extension.GeneralName
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck (forAll)
 import Text.URI (mkURI)
-import X509.Extension.Generators (validDNSName)
+import X509.Extension.Generators (validDnsName)
 
 
 spec :: Spec
@@ -41,16 +41,13 @@ spec = describe "module DataType.X509.Extension.AuthorityInfoAccess" $ do
             [CAIssuers (URIName issuerUri)]
         )
         `shouldBe` "OCSP;URI:http://ocsp.example.com,caIssuers;URI:http://ca.example.com/issuer.crt"
-    it "renders an Other name as OCSP location" $
-      renderOpenSSLConfig
-        ( mkAuthorityInfoAccess
-            (OCSP (Other (OtherName (1 :| [2, 3]) UTF8String "value")))
-            []
-        )
+    it "renders an Other name as OCSP location" $ do
+      gn <- either (fail . show) pure (mkOther 1 [2, 3] UTF8String "value")
+      renderOpenSSLConfig (mkAuthorityInfoAccess (OCSP gn) [])
         `shouldBe` "OCSP;otherName:1.2.3;UTF8:value"
     prop "OCSP entries always start with OCSP;" $
-      forAll validDNSName $ \n ->
-        BS.isPrefixOf "OCSP;" (renderOpenSSLConfig (mkAuthorityInfoAccess (OCSP (DNS (DnsName n))) []))
+      forAll validDnsName $ \dn ->
+        BS.isPrefixOf "OCSP;" (renderOpenSSLConfig (mkAuthorityInfoAccess (OCSP (DNS dn)) []))
     prop "CAIssuers entries always start with caIssuers;" $
-      forAll validDNSName $ \n ->
-        BS.isPrefixOf "caIssuers;" (renderOpenSSLConfig (mkAuthorityInfoAccess (CAIssuers (DNS (DnsName n))) []))
+      forAll validDnsName $ \dn ->
+        BS.isPrefixOf "caIssuers;" (renderOpenSSLConfig (mkAuthorityInfoAccess (CAIssuers (DNS dn)) []))

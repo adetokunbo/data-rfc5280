@@ -1,5 +1,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PatternSynonyms #-}
 
 {- |
 Module      : DataType.X509.Extension.GeneralName
@@ -13,14 +14,23 @@ extensions, including SubjectAltName and AuthorityInfoAccess.
 'DirectoryName', x400Address, and ediPartyName are not yet modelled.
 -}
 module DataType.X509.Extension.GeneralName
-  ( GeneralName (..)
-  , DnsName (..)
-  , OtherName (..)
+  ( GeneralName (DNS, IPAddr, EmailAddr, URIName, Other)
+  , pattern RegisteredID
+  , DnsName
+  , dnsNameText
+  , OtherName
+  , pattern OtherName
+  , onTypeId
+  , onEncoding
+  , onValue
   , Asn1StringType (..)
   , DNSNameError (..)
   , OtherNameError (..)
   , mkDnsName
+  , mkDnsConstraint
+  , mkRegisteredID
   , mkOtherName
+  , mkOther
   )
 where
 
@@ -31,7 +41,7 @@ import Data.Char (isAlphaNum, isAscii)
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
-import DataType.X509.Extension.Internal (OID, mkOID, oidBuilder)
+import DataType.X509.Extension.Internal (OID, OIDError, mkOID, oidBuilder)
 import Net.IP (IP)
 import qualified Net.IP as IP
 import Text.Email.Validate (EmailAddress)
@@ -42,11 +52,17 @@ import qualified Text.URI as URI
 
 {- | A validated DNS hostname.
 
-Prefer 'mkDnsName' to construct a 'DnsName'; it validates the name against
-RFC 1123 hostname rules. Direct use of the constructor bypasses validation.
+The constructor is not exported; use 'mkDnsName' for standard hostnames or
+'mkDnsConstraint' for name-constraint subtree names (which may have a leading
+dot such as @\".example.com\"@).
 -}
 newtype DnsName = DnsName Text
   deriving (Eq, Show)
+
+
+-- | Extract the underlying 'Text' from a 'DnsName'.
+dnsNameText :: DnsName -> Text
+dnsNameText (DnsName t) = t
 
 
 {- | A general name as defined in RFC 5280 §4.1.2.6.
@@ -54,8 +70,7 @@ newtype DnsName = DnsName Text
 Used in extensions such as SubjectAltName and AuthorityInfoAccess.
 -}
 data GeneralName
-  = {- | A DNS hostname. Rendered as @DNS:\<name\>@. Prefer 'mkDnsName' to
-    validate the hostname before construction.
+  = {- | A DNS hostname. Rendered as @DNS:\<name\>@. Construct via 'mkDnsName'.
     -}
     DNS !DnsName
   | -- | An IPv4 or IPv6 address. Rendered as @IP:\<address\>@.
@@ -64,8 +79,8 @@ data GeneralName
     EmailAddr !EmailAddress
   | -- | A URI. Rendered as @URI:\<uri\>@.
     URIName !URI
-  | -- | An ASN.1 registered object identifier. Rendered as @RID:\<oid\>@.
-    RegisteredID !OID
+  | -- Internal constructor; exposed for matching via 'pattern RegisteredID'.
+    RegisteredID_ !OID
   | {- | An arbitrary other name. Rendered as
     @otherName:\<oid\>;\<type\>:\<value\>@, where @\<type\>@ is the
     OpenSSL tag string for the 'Asn1StringType'.
@@ -74,11 +89,25 @@ data GeneralName
   deriving (Eq, Show)
 
 
+{- | Match a 'GeneralName' carrying an ASN.1 registered object identifier.
+
+This is a unidirectional pattern: it can be used in pattern matches but not
+to construct a 'GeneralName'. Use 'mkRegisteredID' to construct one, which
+validates the OID arcs via 'mkOID'.
+-}
+pattern RegisteredID :: OID -> GeneralName
+pattern RegisteredID o <- RegisteredID_ o
+
+{-# COMPLETE DNS, IPAddr, EmailAddr, URIName, RegisteredID, Other #-}
+
+
 {- | The fields of an @otherName@ general name (RFC 5280 §4.1.2.6).
 
 Carries the type OID, the ASN.1 string encoding, and the string value.
+The 'MkOtherName' constructor is not exported; use 'mkOtherName' to construct
+a value and 'pattern OtherName' to match one.
 -}
-data OtherName = OtherName
+data OtherName = MkOtherName
   { onTypeId :: !OID
   -- ^ OID identifying the name type.
   , onEncoding :: !Asn1StringType
@@ -87,6 +116,19 @@ data OtherName = OtherName
   -- ^ The string value.
   }
   deriving (Eq, Show)
+
+
+{- | Match an 'OtherName' value.
+
+This is a unidirectional pattern: it can be used in pattern matches but not
+to construct an 'OtherName'. Use 'mkOtherName' to construct one, which
+validates the OID arcs and checks the value against the declared encoding.
+-}
+pattern OtherName :: OID -> Asn1StringType -> Text -> OtherName
+pattern OtherName oid enc val <-
+  MkOtherName {onTypeId = oid, onEncoding = enc, onValue = val}
+
+{-# COMPLETE OtherName #-}
 
 
 {- | The ASN.1 string encoding for an 'OtherName' value.
@@ -133,12 +175,17 @@ instance ToBuilder GeneralName Builder where
   toBuilder (IPAddr ip) = "IP:" <> byteString (TE.encodeUtf8 (IP.encode ip))
   toBuilder (EmailAddr addr) = "email:" <> byteString (Email.toByteString addr)
   toBuilder (URIName uri) = "URI:" <> byteString (TE.encodeUtf8 (URI.render uri))
-  toBuilder (RegisteredID o) = "RID:" <> oidBuilder o
+  toBuilder (RegisteredID_ o) = "RID:" <> oidBuilder o
   toBuilder (Other on) =
-    "otherName:" <> oidBuilder (onTypeId on) <> ";" <> toBuilder (onEncoding on) <> ":" <> byteString (TE.encodeUtf8 (onValue on))
+    "otherName:"
+      <> oidBuilder (onTypeId on)
+      <> ";"
+      <> toBuilder (onEncoding on)
+      <> ":"
+      <> byteString (TE.encodeUtf8 (onValue on))
 
 
--- | Failure modes for 'mkDnsName'.
+-- | Failure modes for 'mkDnsName' and 'mkDnsConstraint'.
 data DNSNameError
   = -- | The name or a label within it is empty.
     NameEmpty
@@ -161,6 +208,9 @@ Returns @Left@ with a 'DNSNameError' if the name is invalid. Accepts a
 wildcard @*@ as the first label (e.g. @\"*.example.com\"@). IDNA\/punycode
 encoding of Unicode hostnames must be done by the caller before passing to
 this function.
+
+To construct a name-constraint subtree name with a leading dot (e.g.
+@\".example.com\"@), use 'mkDnsConstraint' instead.
 -}
 mkDnsName :: Text -> Either DNSNameError DnsName
 mkDnsName t
@@ -186,6 +236,21 @@ mkDnsName t
             | otherwise -> Left LabelInvalidChar
 
   isValidChar c = isAlphaNum c || c == '-'
+
+
+{- | Construct a 'DnsName' for use as an RFC 5280 name-constraint subtree.
+
+Accepts an optional leading dot (e.g. @\".example.com\"@), which denotes the
+domain and all its subdomains. The remainder after stripping the leading dot
+must satisfy the same RFC 1123 rules as 'mkDnsName'.
+
+Use 'mkDnsName' for ordinary hostname values; use this function only when
+constructing a 'NameConstraints' subtree entry.
+-}
+mkDnsConstraint :: Text -> Either DNSNameError DnsName
+mkDnsConstraint t = case T.stripPrefix "." t of
+  Just rest -> mkDnsName rest >> Right (DnsName t)
+  Nothing -> mkDnsName t
 
 
 -- | Failure modes for 'mkOtherName'.
@@ -216,7 +281,7 @@ mkOtherName :: Int -> [Int] -> Asn1StringType -> Text -> Either OtherNameError O
 mkOtherName firstArc restArcs enc val = do
   oid <- first (const InvalidOID) (mkOID firstArc restArcs)
   validateEncoding enc val
-  return (OtherName oid enc val)
+  return (MkOtherName oid enc val)
  where
   validateEncoding UTF8String _ = Right ()
   validateEncoding IA5String t
@@ -230,3 +295,20 @@ mkOtherName firstArc restArcs enc val = do
     | otherwise = Left BMPNonBMP
 
   isPrintableChar c = (isAscii c && isAlphaNum c) || c `elem` (" '()+,-./:=?" :: String)
+
+
+{- | Construct a 'GeneralName' carrying a validated ASN.1 registered object
+identifier.
+
+The OID arcs are validated via 'mkOID'. Returns @Left 'OIDError'@ if
+validation fails.
+-}
+mkRegisteredID :: Int -> [Int] -> Either OIDError GeneralName
+mkRegisteredID firstArc restArcs = RegisteredID_ <$> mkOID firstArc restArcs
+
+
+{- | Construct a @'Other' 'OtherName'@ 'GeneralName', validating the OID and
+encoding in the same way as 'mkOtherName'.
+-}
+mkOther :: Int -> [Int] -> Asn1StringType -> Text -> Either OtherNameError GeneralName
+mkOther firstArc restArcs enc val = Other <$> mkOtherName firstArc restArcs enc val

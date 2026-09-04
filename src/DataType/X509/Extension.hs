@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE PatternSynonyms #-}
 
 {- |
 Module      : DataType.X509.Extension
@@ -34,14 +35,23 @@ module DataType.X509.Extension
   , mkCertificatePolicies
 
     -- * General names
-  , GeneralName (..)
-  , DnsName (..)
-  , OtherName (..)
+  , GeneralName (DNS, IPAddr, EmailAddr, URIName, Other)
+  , pattern RegisteredID
+  , DnsName
+  , dnsNameText
+  , OtherName
+  , pattern OtherName
+  , onTypeId
+  , onEncoding
+  , onValue
   , Asn1StringType (..)
   , DNSNameError (..)
   , OtherNameError (..)
   , mkDnsName
+  , mkDnsConstraint
+  , mkRegisteredID
   , mkOtherName
+  , mkOther
 
     -- * Alt-name extensions
   , IssuerAltName (..)
@@ -103,12 +113,21 @@ import DataType.X509.Extension.ExtKeyUsage (ExtKeyUsage, ExtKeyUsagePurpose (..)
 import DataType.X509.Extension.GeneralName
   ( Asn1StringType (..)
   , DNSNameError (..)
-  , DnsName (..)
-  , GeneralName (..)
-  , OtherName (..)
+  , DnsName
+  , GeneralName (DNS, IPAddr, EmailAddr, URIName, Other)
+  , OtherName
   , OtherNameError (..)
+  , dnsNameText
+  , mkDnsConstraint
   , mkDnsName
+  , mkOther
   , mkOtherName
+  , mkRegisteredID
+  , onEncoding
+  , onTypeId
+  , onValue
+  , pattern OtherName
+  , pattern RegisteredID
   )
 import DataType.X509.Extension.CRLDistributionPoints
   ( CRLDistributionPoints (..)

@@ -11,11 +11,13 @@ Shared QuickCheck generators for X.509 extension test suites.
 module X509.Extension.Generators
   ( validLabel
   , validDNSName
+  , validDnsName
   , nameWithInvalidChar
   )
 where
 
 import qualified Data.Text as T
+import DataType.X509.Extension.GeneralName (DnsName, mkDnsName)
 import Test.QuickCheck (Gen, choose, elements, vectorOf)
 
 
@@ -32,6 +34,19 @@ validDNSName = do
   n <- choose (1, 4)
   labels <- vectorOf n validLabel
   return $ T.intercalate "." labels
+
+
+{- | Generates a valid 'DnsName'.
+
+Wraps 'validDNSName' and applies 'mkDnsName'; panics if the generator
+produces an invalid name (which it never should).
+-}
+validDnsName :: Gen DnsName
+validDnsName = do
+  t <- validDNSName
+  case mkDnsName t of
+    Right dn -> return dn
+    Left err -> error $ "validDNSName produced invalid DNS name: " <> show err
 
 
 -- | Generates a single label with one invalid character injected in the middle.
