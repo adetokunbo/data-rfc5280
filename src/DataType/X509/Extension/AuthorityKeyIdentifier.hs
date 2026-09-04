@@ -12,7 +12,8 @@ Provides the 'AuthorityKeyIdentifier' extension type and its smart constructor.
 module DataType.X509.Extension.AuthorityKeyIdentifier
   ( AuthorityKeyIdentifier (..)
   , mkAuthorityKeyIdentifier
-  ) where
+  )
+where
 
 import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder)
@@ -29,8 +30,9 @@ data AuthorityKeyIdentifier = AuthorityKeyIdentifier
   { akiKeyId :: !Bool
   -- ^ include key ID
   , akiKeyIdAlways :: !Bool
-  -- ^ always include the key identifier, even if the issuer certificate
-  -- has no SubjectKeyIdentifier extension
+  {- ^ always include the key identifier, even if the issuer certificate
+  has no SubjectKeyIdentifier extension
+  -}
   , akiIssuer :: !Bool
   -- ^ include issuer name + serial
   , akiIssuerAlways :: !Bool
@@ -46,9 +48,9 @@ if @keyIdAlways@ is 'True', @keyId@ is set to 'True'; if @issuerAlways@ is
 mkAuthorityKeyIdentifier :: Bool -> Bool -> Bool -> Bool -> AuthorityKeyIdentifier
 mkAuthorityKeyIdentifier keyId keyIdAlways issuer issuerAlways =
   AuthorityKeyIdentifier
-    { akiKeyId        = keyId   || keyIdAlways
-    , akiKeyIdAlways  = keyIdAlways
-    , akiIssuer       = issuer  || issuerAlways
+    { akiKeyId = keyId || keyIdAlways
+    , akiKeyIdAlways = keyIdAlways
+    , akiIssuer = issuer || issuerAlways
     , akiIssuerAlways = issuerAlways
     }
 
@@ -59,16 +61,16 @@ instance HasOID AuthorityKeyIdentifier where
 
 instance ToBuilder AuthorityKeyIdentifier Builder where
   toBuilder aki =
-    let keyId =
-          if akiKeyIdAlways aki
-            then Just "keyid:always"
-            else if akiKeyId aki then Just "keyid" else Nothing
-        issuer =
-          if akiIssuerAlways aki
-            then Just "issuer:always"
-            else if akiIssuer aki then Just "issuer" else Nothing
+    let keyId
+          | akiKeyIdAlways aki = Just "keyid:always"
+          | akiKeyId aki = Just "keyid"
+          | otherwise = Nothing
+        issuer
+          | akiIssuerAlways aki = Just "issuer:always"
+          | akiIssuer aki = Just "issuer"
+          | otherwise = Nothing
      in case (keyId, issuer) of
           (Nothing, Nothing) -> mempty
-          (Nothing, Just x)  -> x
-          (Just x, Nothing)  -> x
-          (Just x, Just y)   -> intersperseCommas (x :| [y])
+          (Nothing, Just x) -> x
+          (Just x, Nothing) -> x
+          (Just x, Just y) -> intersperseCommas (x :| [y])
