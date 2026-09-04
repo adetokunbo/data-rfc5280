@@ -29,13 +29,22 @@ import Data.X509.XT.Internal (intersperseCommas)
 See <https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.12 RFC 5280 §4.2.1.12>.
 -}
 data ExtKeyUsagePurpose
-  = ServerAuth
-  | ClientAuth
-  | CodeSigning
-  | EmailProtection
-  | TimeStamping
-  | OCSPSigning
-  | AnyExtendedKeyUsage
+  = -- | TLS WWW server authentication. Renders as @\"serverAuth\"@.
+    ServerAuth
+  | -- | TLS WWW client authentication. Renders as @\"clientAuth\"@.
+    ClientAuth
+  | -- | Signing of downloadable executable code. Renders as @\"codeSigning\"@.
+    CodeSigning
+  | -- | Email protection (S\/MIME). Renders as @\"emailProtection\"@.
+    EmailProtection
+  | -- | Binding an object hash to a trusted time source. Renders as
+    -- @\"timeStamping\"@.
+    TimeStamping
+  | -- | Signing OCSP responses. Renders as @\"OCSPSigning\"@ (capital OCSP).
+    OCSPSigning
+  | -- | Permits any extended key usage purpose. Renders as
+    -- @\"anyExtendedKeyUsage\"@ (lowercase @any@).
+    AnyExtendedKeyUsage
   deriving (Eq, Show, Ord, Enum, Bounded)
 
 
