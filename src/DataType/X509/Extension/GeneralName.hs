@@ -14,11 +14,12 @@ extensions, including SubjectAltName and AuthorityInfoAccess.
 -}
 module DataType.X509.Extension.GeneralName
   ( GeneralName (..)
+  , DnsName (..)
   , OtherName (..)
   , Asn1StringType (..)
   , DNSNameError (..)
   , OtherNameError (..)
-  , mkDNSName
+  , mkDnsName
   , mkOtherName
   )
 where
@@ -39,15 +40,24 @@ import Text.URI (URI)
 import qualified Text.URI as URI
 
 
+{- | A validated DNS hostname.
+
+Prefer 'mkDnsName' to construct a 'DnsName'; it validates the name against
+RFC 1123 hostname rules. Direct use of the constructor bypasses validation.
+-}
+newtype DnsName = DnsName Text
+  deriving (Eq, Show)
+
+
 {- | A general name as defined in RFC 5280 §4.1.2.6.
 
 Used in extensions such as SubjectAltName and AuthorityInfoAccess.
 -}
 data GeneralName
-  = {- | A DNS hostname. Rendered as @DNS:\<name\>@. Prefer 'mkDNSName' to
+  = {- | A DNS hostname. Rendered as @DNS:\<name\>@. Prefer 'mkDnsName' to
     validate the hostname before construction.
     -}
-    DNSName !Text
+    DNS !DnsName
   | -- | An IPv4 or IPv6 address. Rendered as @IP:\<address\>@.
     IPAddr !IP
   | -- | An email address. Rendered as @email:\<address\>@.
@@ -69,9 +79,12 @@ data GeneralName
 Carries the type OID, the ASN.1 string encoding, and the string value.
 -}
 data OtherName = OtherName
-  { onTypeId   :: !OID           -- ^ OID identifying the name type.
-  , onEncoding :: !Asn1StringType -- ^ ASN.1 string encoding for the value.
-  , onValue    :: !Text           -- ^ The string value.
+  { onTypeId :: !OID
+  -- ^ OID identifying the name type.
+  , onEncoding :: !Asn1StringType
+  -- ^ ASN.1 string encoding for the value.
+  , onValue :: !Text
+  -- ^ The string value.
   }
   deriving (Eq, Show)
 
@@ -97,53 +110,63 @@ For the vast majority of 'OtherName' use cases — including Microsoft UPN
 four modelled constructors are sufficient.
 -}
 data Asn1StringType
-  = UTF8String      -- ^ UTF-8 encoding. Rendered as @UTF8@.
-  | IA5String       -- ^ ASCII (IA5) encoding. Rendered as @IA5@.
-  | PrintableString -- ^ PrintableString encoding. Rendered as @PRINTABLE@.
-  | BMPString       -- ^ BMP (UCS-2) encoding. Rendered as @BMP@.
+  = -- | UTF-8 encoding. Rendered as @UTF8@.
+    UTF8String
+  | -- | ASCII (IA5) encoding. Rendered as @IA5@.
+    IA5String
+  | -- | PrintableString encoding. Rendered as @PRINTABLE@.
+    PrintableString
+  | -- | BMP (UCS-2) encoding. Rendered as @BMP@.
+    BMPString
   deriving (Eq, Show)
 
 
 instance ToBuilder Asn1StringType Builder where
-  toBuilder UTF8String      = "UTF8"
-  toBuilder IA5String       = "IA5"
+  toBuilder UTF8String = "UTF8"
+  toBuilder IA5String = "IA5"
   toBuilder PrintableString = "PRINTABLE"
-  toBuilder BMPString       = "BMP"
+  toBuilder BMPString = "BMP"
 
 
 instance ToBuilder GeneralName Builder where
-  toBuilder (DNSName t)           = "DNS:" <> byteString (TE.encodeUtf8 t)
-  toBuilder (IPAddr ip)           = "IP:" <> byteString (TE.encodeUtf8 (IP.encode ip))
-  toBuilder (EmailAddr addr)      = "email:" <> byteString (Email.toByteString addr)
-  toBuilder (URIName uri)         = "URI:" <> byteString (TE.encodeUtf8 (URI.render uri))
+  toBuilder (DNS (DnsName t)) = "DNS:" <> byteString (TE.encodeUtf8 t)
+  toBuilder (IPAddr ip) = "IP:" <> byteString (TE.encodeUtf8 (IP.encode ip))
+  toBuilder (EmailAddr addr) = "email:" <> byteString (Email.toByteString addr)
+  toBuilder (URIName uri) = "URI:" <> byteString (TE.encodeUtf8 (URI.render uri))
   toBuilder (RegisteredID o) = "RID:" <> oidBuilder o
-  toBuilder (Other on)       =
+  toBuilder (Other on) =
     "otherName:" <> oidBuilder (onTypeId on) <> ";" <> toBuilder (onEncoding on) <> ":" <> byteString (TE.encodeUtf8 (onValue on))
 
 
--- | Failure modes for 'mkDNSName'.
+-- | Failure modes for 'mkDnsName'.
 data DNSNameError
-  = NameEmpty           -- ^ The name or a label within it is empty.
-  | NameTooLong         -- ^ The name exceeds 253 characters.
-  | LabelTooLong        -- ^ A label exceeds 63 characters.
-  | LabelLeadingHyphen  -- ^ A label starts with a hyphen.
-  | LabelTrailingHyphen -- ^ A label ends with a hyphen.
-  | LabelInvalidChar    -- ^ A label contains a character outside @[A-Za-z0-9-]@.
+  = -- | The name or a label within it is empty.
+    NameEmpty
+  | -- | The name exceeds 253 characters.
+    NameTooLong
+  | -- | A label exceeds 63 characters.
+    LabelTooLong
+  | -- | A label starts with a hyphen.
+    LabelLeadingHyphen
+  | -- | A label ends with a hyphen.
+    LabelTrailingHyphen
+  | -- | A label contains a character outside @[A-Za-z0-9-]@.
+    LabelInvalidChar
   deriving (Eq, Show)
 
 
-{- | Construct a 'DNSName', validating against RFC 1123 hostname rules.
+{- | Construct a 'DnsName', validating against RFC 1123 hostname rules.
 
 Returns @Left@ with a 'DNSNameError' if the name is invalid. Accepts a
 wildcard @*@ as the first label (e.g. @\"*.example.com\"@). IDNA\/punycode
 encoding of Unicode hostnames must be done by the caller before passing to
 this function.
 -}
-mkDNSName :: Text -> Either DNSNameError GeneralName
-mkDNSName t
+mkDnsName :: Text -> Either DNSNameError DnsName
+mkDnsName t
   | T.null t = Left NameEmpty
   | T.length t > 253 = Left NameTooLong
-  | otherwise = validateLabels (T.splitOn "." t) >> Right (DNSName t)
+  | otherwise = validateLabels (T.splitOn "." t) >> Right (DnsName t)
  where
   validateLabels [] = Left NameEmpty
   validateLabels (l : ls) = validateFirst l >> mapM_ validateLabel ls
@@ -167,10 +190,14 @@ mkDNSName t
 
 -- | Failure modes for 'mkOtherName'.
 data OtherNameError
-  = InvalidOID          -- ^ The OID arcs are invalid; see 'OIDError'.
-  | IA5NonAscii         -- ^ The value contains a code point above U+007F.
-  | PrintableInvalidChar -- ^ The value contains a character outside the PrintableString alphabet.
-  | BMPNonBMP           -- ^ The value contains a code point above U+FFFF.
+  = -- | The OID arcs are invalid; see 'OIDError'.
+    InvalidOID
+  | -- | The value contains a code point above U+007F.
+    IA5NonAscii
+  | -- | The value contains a character outside the PrintableString alphabet.
+    PrintableInvalidChar
+  | -- | The value contains a code point above U+FFFF.
+    BMPNonBMP
   deriving (Eq, Show)
 
 
@@ -191,17 +218,15 @@ mkOtherName firstArc restArcs enc val = do
   validateEncoding enc val
   return (OtherName oid enc val)
  where
-  validateEncoding UTF8String      _ = Right ()
-  validateEncoding IA5String       t
+  validateEncoding UTF8String _ = Right ()
+  validateEncoding IA5String t
     | T.all (\c -> fromEnum c <= 127) t = Right ()
     | otherwise = Left IA5NonAscii
   validateEncoding PrintableString t
     | T.all isPrintableChar t = Right ()
     | otherwise = Left PrintableInvalidChar
-  validateEncoding BMPString       t
+  validateEncoding BMPString t
     | T.all (\c -> fromEnum c <= 0xFFFF) t = Right ()
     | otherwise = Left BMPNonBMP
 
   isPrintableChar c = (isAscii c && isAlphaNum c) || c `elem` (" '()+,-./:=?" :: String)
-
-

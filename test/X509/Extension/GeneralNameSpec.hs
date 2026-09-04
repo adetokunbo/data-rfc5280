@@ -25,9 +25,9 @@ import Text.URI (mkURI)
 
 spec :: Spec
 spec = describe "module DataType.X509.Extension.GeneralName" $ do
-  context "DNSName" $
+  context "DNS" $
     it "converts to ByteString" $
-      renderOpenSSLConfig (DNSName "example.com") `shouldBe` "DNS:example.com"
+      renderOpenSSLConfig (DNS (DnsName "example.com")) `shouldBe` "DNS:example.com"
   context "IPAddr (IPv4)" $
     it "converts to ByteString" $
       case IP.decode "192.0.2.1" of
@@ -66,31 +66,31 @@ spec = describe "module DataType.X509.Extension.GeneralName" $ do
     it "converts to ByteString" $
       renderOpenSSLConfig (Other (OtherName (1 :| [2, 3]) BMPString "hello"))
         `shouldBe` "otherName:1.2.3;BMP:hello"
-  context "mkDNSName" $ do
+  context "mkDnsName" $ do
     it "accepts a simple hostname" $
-      mkDNSName "example.com" `shouldBe` Right (DNSName "example.com")
+      mkDnsName "example.com" `shouldBe` Right (DnsName "example.com")
     it "accepts a multi-label hostname" $
-      mkDNSName "foo.bar.example.com" `shouldBe` Right (DNSName "foo.bar.example.com")
+      mkDnsName "foo.bar.example.com" `shouldBe` Right (DnsName "foo.bar.example.com")
     it "accepts a wildcard first label" $
-      mkDNSName "*.example.com" `shouldBe` Right (DNSName "*.example.com")
+      mkDnsName "*.example.com" `shouldBe` Right (DnsName "*.example.com")
     it "accepts a single label" $
-      mkDNSName "localhost" `shouldBe` Right (DNSName "localhost")
+      mkDnsName "localhost" `shouldBe` Right (DnsName "localhost")
     it "rejects an empty name" $
-      mkDNSName "" `shouldBe` Left NameEmpty
+      mkDnsName "" `shouldBe` Left NameEmpty
     it "rejects a label ending with a hyphen" $
-      mkDNSName "example-.com" `shouldBe` Left LabelTrailingHyphen
+      mkDnsName "example-.com" `shouldBe` Left LabelTrailingHyphen
     it "rejects a label starting with a hyphen" $
-      mkDNSName "-example.com" `shouldBe` Left LabelLeadingHyphen
+      mkDnsName "-example.com" `shouldBe` Left LabelLeadingHyphen
     it "rejects an empty label" $
-      mkDNSName "example..com" `shouldBe` Left NameEmpty
+      mkDnsName "example..com" `shouldBe` Left NameEmpty
     it "rejects a label exceeding 63 characters" $
-      mkDNSName (T.replicate 64 "a" <> ".com") `shouldBe` Left LabelTooLong
+      mkDnsName (T.replicate 64 "a" <> ".com") `shouldBe` Left LabelTooLong
     it "rejects a name exceeding 253 characters" $
-      mkDNSName (T.intercalate "." (replicate 5 (T.replicate 50 "a"))) `shouldBe` Left NameTooLong
+      mkDnsName (T.intercalate "." (replicate 5 (T.replicate 50 "a"))) `shouldBe` Left NameTooLong
     prop "accepts any validly-constructed hostname" $
-      forAll validDNSName $ \t -> mkDNSName t === Right (DNSName t)
+      forAll validDNSName $ \t -> mkDnsName t === Right (DnsName t)
     prop "rejects any name containing an invalid label character" $
-      forAll nameWithInvalidChar $ \t -> isLeft (mkDNSName t)
+      forAll nameWithInvalidChar $ \t -> isLeft (mkDnsName t)
   context "mkOtherName" $ do
     it "accepts a valid OID and UTF8String value" $
       mkOtherName 1 [2, 3] UTF8String "hello"

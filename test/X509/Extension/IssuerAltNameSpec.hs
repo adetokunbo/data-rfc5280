@@ -26,13 +26,13 @@ spec :: Spec
 spec = describe "module DataType.X509.Extension.IssuerAltName" $ do
   context "mkIssuerAltName" $ do
     it "renders a single DNS name" $
-      renderOpenSSLConfig (mkIssuerAltName (DNSName "example.com") [])
+      renderOpenSSLConfig (mkIssuerAltName (DNS (DnsName "example.com")) [])
         `shouldBe` "DNS:example.com"
     it "renders two DNS names" $
-      renderOpenSSLConfig (mkIssuerAltName (DNSName "example.com") [DNSName "www.example.com"])
+      renderOpenSSLConfig (mkIssuerAltName (DNS (DnsName "example.com")) [DNS (DnsName "www.example.com")])
         `shouldBe` "DNS:example.com,DNS:www.example.com"
     it "renders a wildcard alongside its base domain" $
-      renderOpenSSLConfig (mkIssuerAltName (DNSName "*.example.com") [DNSName "example.com"])
+      renderOpenSSLConfig (mkIssuerAltName (DNS (DnsName "*.example.com")) [DNS (DnsName "example.com")])
         `shouldBe` "DNS:*.example.com,DNS:example.com"
     it "renders mixed DNS, IP and email names" $
       case IP.decode "192.0.2.1" of
@@ -43,7 +43,7 @@ spec = describe "module DataType.X509.Extension.IssuerAltName" $ do
             Right addr ->
               renderOpenSSLConfig
                 ( mkIssuerAltName
-                    (DNSName "example.com")
+                    (DNS (DnsName "example.com"))
                     [IPAddr ip, EmailAddr addr]
                 )
                 `shouldBe` "DNS:example.com,IP:192.0.2.1,email:user@example.com"
@@ -52,12 +52,12 @@ spec = describe "module DataType.X509.Extension.IssuerAltName" $ do
         `shouldBe` "otherName:1.2.3;UTF8:value"
     prop "a single-name IAN contains no comma" $
       forAll validDNSName $ \n ->
-        BS.elem 0x2C (renderOpenSSLConfig (mkIssuerAltName (DNSName n) [])) === False
+        BS.elem 0x2C (renderOpenSSLConfig (mkIssuerAltName (DNS (DnsName n)) [])) === False
     prop "n DNS names produce exactly n-1 comma separators" $
       forAll (choose (1, 6)) $ \n ->
         forAll (vectorOf n validDNSName) $ \ns ->
           case ns of
             []    -> True === True
             (h:tl) ->
-              let bs = renderOpenSSLConfig (mkIssuerAltName (DNSName h) (map DNSName tl))
+              let bs = renderOpenSSLConfig (mkIssuerAltName (DNS (DnsName h)) (map (DNS . DnsName) tl))
               in BS.length (BS.filter (== 0x2C) bs) === n - 1

@@ -35,11 +35,12 @@ module DataType.X509.Extension
 
     -- * General names
   , GeneralName (..)
+  , DnsName (..)
   , OtherName (..)
   , Asn1StringType (..)
   , DNSNameError (..)
   , OtherNameError (..)
-  , mkDNSName
+  , mkDnsName
   , mkOtherName
 
     -- * Alt-name extensions
@@ -102,10 +103,11 @@ import DataType.X509.Extension.ExtKeyUsage (ExtKeyUsage, ExtKeyUsagePurpose (..)
 import DataType.X509.Extension.GeneralName
   ( Asn1StringType (..)
   , DNSNameError (..)
+  , DnsName (..)
   , GeneralName (..)
   , OtherName (..)
   , OtherNameError (..)
-  , mkDNSName
+  , mkDnsName
   , mkOtherName
   )
 import DataType.X509.Extension.CRLDistributionPoints

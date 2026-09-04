@@ -50,7 +50,7 @@ spec = describe "module DataType.X509.Extension.AuthorityInfoAccess" $ do
         `shouldBe` "OCSP;otherName:1.2.3;UTF8:value"
     prop "OCSP entries always start with OCSP;" $
       forAll validDNSName $ \n ->
-        BS.isPrefixOf "OCSP;" (renderOpenSSLConfig (mkAuthorityInfoAccess (OCSP (DNSName n)) []))
+        BS.isPrefixOf "OCSP;" (renderOpenSSLConfig (mkAuthorityInfoAccess (OCSP (DNS (DnsName n))) []))
     prop "CAIssuers entries always start with caIssuers;" $
       forAll validDNSName $ \n ->
-        BS.isPrefixOf "caIssuers;" (renderOpenSSLConfig (mkAuthorityInfoAccess (CAIssuers (DNSName n)) []))
+        BS.isPrefixOf "caIssuers;" (renderOpenSSLConfig (mkAuthorityInfoAccess (CAIssuers (DNS (DnsName n))) []))

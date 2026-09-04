@@ -24,31 +24,31 @@ spec :: Spec
 spec = describe "module DataType.X509.Extension.NameConstraints" $ do
   context "mkNameConstraints" $ do
     it "renders a single permitted DNS constraint" $
-      renderOpenSSLConfig (mkNameConstraints (Permitted (DNSName ".example.com")) [])
+      renderOpenSSLConfig (mkNameConstraints (Permitted (DNS (DnsName ".example.com"))) [])
         `shouldBe` "permitted;DNS:.example.com"
     it "renders a single excluded DNS constraint" $
-      renderOpenSSLConfig (mkNameConstraints (Excluded (DNSName ".example.com")) [])
+      renderOpenSSLConfig (mkNameConstraints (Excluded (DNS (DnsName ".example.com"))) [])
         `shouldBe` "excluded;DNS:.example.com"
     it "renders a single excluded email constraint" $
-      renderOpenSSLConfig (mkNameConstraints (Excluded (DNSName ".example.org")) [])
+      renderOpenSSLConfig (mkNameConstraints (Excluded (DNS (DnsName ".example.org"))) [])
         `shouldBe` "excluded;DNS:.example.org"
     it "renders permitted and excluded constraints together" $
       renderOpenSSLConfig
         ( mkNameConstraints
-            (Permitted (DNSName ".example.com"))
-            [Excluded (DNSName ".evil.example.com")]
+            (Permitted (DNS (DnsName ".example.com")))
+            [Excluded (DNS (DnsName ".evil.example.com"))]
         )
         `shouldBe` "permitted;DNS:.example.com,excluded;DNS:.evil.example.com"
     it "renders multiple permitted constraints" $
       renderOpenSSLConfig
         ( mkNameConstraints
-            (Permitted (DNSName ".example.com"))
-            [Permitted (DNSName ".example.org")]
+            (Permitted (DNS (DnsName ".example.com")))
+            [Permitted (DNS (DnsName ".example.org"))]
         )
         `shouldBe` "permitted;DNS:.example.com,permitted;DNS:.example.org"
     prop "a permitted constraint output starts with \"permitted;\"" $
       forAll validDNSName $ \n ->
-        BS.isPrefixOf "permitted;" (renderOpenSSLConfig (mkNameConstraints (Permitted (DNSName n)) [])) === True
+        BS.isPrefixOf "permitted;" (renderOpenSSLConfig (mkNameConstraints (Permitted (DNS (DnsName n))) [])) === True
     prop "an excluded constraint output starts with \"excluded;\"" $
       forAll validDNSName $ \n ->
-        BS.isPrefixOf "excluded;" (renderOpenSSLConfig (mkNameConstraints (Excluded (DNSName n)) [])) === True
+        BS.isPrefixOf "excluded;" (renderOpenSSLConfig (mkNameConstraints (Excluded (DNS (DnsName n))) [])) === True
