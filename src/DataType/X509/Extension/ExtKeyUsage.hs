@@ -1,7 +1,6 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeSynonymInstances #-}
 
 {- |
 Module      : DataType.X509.Extension.ExtKeyUsage
@@ -14,7 +13,8 @@ Provides the 'ExtKeyUsage' extension type.
 module DataType.X509.Extension.ExtKeyUsage
   ( ExtKeyUsagePurpose (..)
   , ExtKeyUsage
-  ) where
+  )
+where
 
 import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder)
@@ -40,12 +40,12 @@ data ExtKeyUsagePurpose
 
 
 instance ToBuilder ExtKeyUsagePurpose Builder where
-  toBuilder ServerAuth          = "serverAuth"
-  toBuilder ClientAuth          = "clientAuth"
-  toBuilder CodeSigning         = "codeSigning"
-  toBuilder EmailProtection     = "emailProtection"
-  toBuilder TimeStamping        = "timeStamping"
-  toBuilder OCSPSigning         = "OCSPSigning"
+  toBuilder ServerAuth = "serverAuth"
+  toBuilder ClientAuth = "clientAuth"
+  toBuilder CodeSigning = "codeSigning"
+  toBuilder EmailProtection = "emailProtection"
+  toBuilder TimeStamping = "timeStamping"
+  toBuilder OCSPSigning = "OCSPSigning"
   toBuilder AnyExtendedKeyUsage = "anyExtendedKeyUsage"
 
 
