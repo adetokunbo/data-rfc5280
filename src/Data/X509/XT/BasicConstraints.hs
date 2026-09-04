@@ -8,13 +8,15 @@ Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
+
 Provides the 'BasicConstraints' extension type and its smart constructor.
 -}
 module Data.X509.XT.BasicConstraints
   ( BasicConstraints (..)
   , BasicConstraintsError (..)
   , mkBasicConstraints
-  ) where
+  )
+where
 
 import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder, intDec)
@@ -31,15 +33,18 @@ data BasicConstraints
   { bcIsCA :: !Bool
   -- ^ is the subject of the certificate a certificate authority
   , bcPathLength :: !(Maybe Int)
-  -- ^ the maximum number of non-self-issued intermediate certificates
-  -- ^ that may follow this certificate if it is a CA certificate
+  {- ^ the maximum number of non-self-issued intermediate certificates
+  that may follow this certificate in the path; only meaningful when
+  'bcIsCA' is 'True'
+  -}
   }
   deriving (Eq, Show)
 
 
 -- | Failure modes for 'mkBasicConstraints'.
 data BasicConstraintsError
-  = PathLenWithoutCA -- ^ @pathLenConstraint@ is present but @cA@ is @FALSE@.
+  = -- | @pathLenConstraint@ is present but @cA@ is @FALSE@.
+    PathLenWithoutCA
   deriving (Eq, Show)
 
 
@@ -48,7 +53,7 @@ absent when @cA@ is @FALSE@ (RFC 5280 §4.2.1.9).
 -}
 mkBasicConstraints :: Bool -> Maybe Int -> Either BasicConstraintsError BasicConstraints
 mkBasicConstraints False (Just _) = Left PathLenWithoutCA
-mkBasicConstraints isCA pathLen   = Right $ BasicConstraints { bcIsCA = isCA, bcPathLength = pathLen }
+mkBasicConstraints isCA pathLen = Right $ BasicConstraints{bcIsCA = isCA, bcPathLength = pathLen}
 
 
 instance HasOID BasicConstraints where
