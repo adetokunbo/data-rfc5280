@@ -76,7 +76,26 @@ data OtherName = OtherName
   deriving (Eq, Show)
 
 
--- | The ASN.1 string encoding tag for an 'OtherName' value.
+{- | The ASN.1 string encoding for an 'OtherName' value.
+
+Covers the four types commonly used in practice for X.509 extension values.
+The ASN.1 standard defines additional string types — including
+'VisibleString', 'UniversalString', 'TeletexString', 'NumericString', and
+'GeneralString' — but these are not modelled here because they are either
+legacy types or primarily relevant to distinguished name components rather
+than extension values:
+
+* 'TeletexString' and 'UniversalString' appeared in early X.509 DN fields
+  but are discouraged by RFC 5280 and superseded by 'UTF8String'.
+* 'NumericString' is for digit-only fields such as the @serialNumber@ DN
+  attribute; it has no common use in extension values.
+* 'VisibleString' and 'GeneralString' appear only in edge cases and legacy
+  structures.
+
+For the vast majority of 'OtherName' use cases — including Microsoft UPN
+(which uses 'UTF8String') and email addresses (which use 'IA5String') — the
+four modelled constructors are sufficient.
+-}
 data Asn1StringType
   = UTF8String      -- ^ UTF-8 encoding. Rendered as @UTF8@.
   | IA5String       -- ^ ASCII (IA5) encoding. Rendered as @IA5@.
