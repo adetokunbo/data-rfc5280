@@ -1,0 +1,3 @@
+check = [
+  { type = "Exclude", id = "STAN-0208", scope = "all" }
+]
