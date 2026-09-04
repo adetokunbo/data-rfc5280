@@ -3,7 +3,19 @@ name:               x509-extensions
 version:            0.1.0.0
 synopsis:           Types that represent the standard X509 extensions
 description:
-  Provides types that represent the contents of the standard X509 extensions
+  @x509-extensions@ provides Haskell types for the standard X.509v3
+  certificate extensions defined in RFC 5280, together with a renderer that
+  serialises each extension value to OpenSSL configuration format.
+  .
+  The library is encode-only: it produces @ByteString@ output suitable for use
+  with OpenSSL config files, but does not parse or decode existing certificate
+  data.
+  .
+  Extensions covered include @BasicConstraints@, @KeyUsage@,
+  @ExtendedKeyUsage@, @SubjectAltName@, @IssuerAltName@,
+  @AuthorityKeyIdentifier@, @SubjectKeyIdentifier@, @CertificatePolicies@,
+  @PolicyMappings@, @NameConstraints@, @CRLDistributionPoints@,
+  @AuthorityInfoAccess@, and @InhibitAnyPolicy@.
 
 license:            BSD-3-Clause
 license-file:       LICENSE
