@@ -54,6 +54,8 @@ module Data.X509.XT
   , mkOther
 
     -- * Alt-name extensions
+  , SubjectAltName (..)
+  , mkSubjectAltName
   , IssuerAltName (..)
   , mkIssuerAltName
 
@@ -149,6 +151,7 @@ import Data.X509.XT.PolicyMappings
   , mkPolicyMappings
   )
 import Data.X509.XT.IssuerAltName (IssuerAltName (..), mkIssuerAltName)
+import Data.X509.XT.SubjectAltName (SubjectAltName (..), mkSubjectAltName)
 import Data.X509.XT.Internal (OID, OIDError (..), mkOID)
 import Data.X509.XT.KeyUsage (KeyUsage, KeyUsageBit (..))
 import Data.X509.XT.SubjectKeyIdentifier (SubjectKeyIdentifier (..))
