@@ -96,12 +96,12 @@ spec = describe "module DataType.X509.Extension.GeneralName" $ do
       mkOtherName 1 [2, 3] UTF8String "hello"
         `shouldBe` Right (OtherName (1 :| [2, 3]) UTF8String "hello")
     it "rejects a negative OID arc" $
-      mkOtherName (-1) [2, 3] UTF8String "hello" `shouldSatisfy` isLeft
+      mkOtherName (-1) [2, 3] UTF8String "hello" `shouldBe` Left InvalidOID
     it "rejects IA5String value containing a non-ASCII character" $
-      mkOtherName 1 [2, 3] IA5String "h\xe9llo" `shouldSatisfy` isLeft
+      mkOtherName 1 [2, 3] IA5String "h\xe9llo" `shouldBe` Left IA5NonAscii
     it "rejects PrintableString value containing a character outside the alphabet" $
-      mkOtherName 1 [2, 3] PrintableString "user@example" `shouldSatisfy` isLeft
+      mkOtherName 1 [2, 3] PrintableString "user@example" `shouldBe` Left PrintableInvalidChar
     it "rejects BMPString value containing a non-BMP character" $
-      mkOtherName 1 [2, 3] BMPString "\x1F600" `shouldSatisfy` isLeft
+      mkOtherName 1 [2, 3] BMPString "\x1F600" `shouldBe` Left BMPNonBMP
 
 

@@ -17,6 +17,7 @@ module DataType.X509.Extension.GeneralName
   , OtherName (..)
   , Asn1StringType (..)
   , DNSNameError (..)
+  , OtherNameError (..)
   , mkDNSName
   , mkOtherName
   )
@@ -145,33 +146,42 @@ mkDNSName t
   isValidChar c = isAlphaNum c || c == '-'
 
 
+-- | Failure modes for 'mkOtherName'.
+data OtherNameError
+  = InvalidOID          -- ^ The OID arcs are invalid; see 'OIDError'.
+  | IA5NonAscii         -- ^ The value contains a code point above U+007F.
+  | PrintableInvalidChar -- ^ The value contains a character outside the PrintableString alphabet.
+  | BMPNonBMP           -- ^ The value contains a code point above U+FFFF.
+  deriving (Eq, Show)
+
+
 {- | Construct an 'OtherName', validating the OID and the text value against
 the declared 'Asn1StringType' character set.
 
-Returns @Left@ with a description if validation fails. The OID is validated
-via 'mkOID'. Character-set constraints:
+Returns @Left@ with an 'OtherNameError' if validation fails. The OID is
+validated via 'mkOID'. Character-set constraints:
 
 * 'UTF8String' — any 'Text' is accepted.
 * 'IA5String' — all code points must be ≤ U+007F.
 * 'PrintableString' — all characters must be in @[A-Za-z0-9 \'()+,-./:=?]@.
 * 'BMPString' — all code points must be ≤ U+FFFF.
 -}
-mkOtherName :: Int -> [Int] -> Asn1StringType -> Text -> Either String OtherName
+mkOtherName :: Int -> [Int] -> Asn1StringType -> Text -> Either OtherNameError OtherName
 mkOtherName firstArc restArcs enc val = do
-  oid <- first (const "invalid OID") (mkOID firstArc restArcs)
+  oid <- first (const InvalidOID) (mkOID firstArc restArcs)
   validateEncoding enc val
   return (OtherName oid enc val)
  where
   validateEncoding UTF8String      _ = Right ()
   validateEncoding IA5String       t
     | T.all (\c -> fromEnum c <= 127) t = Right ()
-    | otherwise = Left "IA5String value contains non-ASCII character"
+    | otherwise = Left IA5NonAscii
   validateEncoding PrintableString t
     | T.all isPrintableChar t = Right ()
-    | otherwise = Left "PrintableString value contains character outside PrintableString alphabet"
+    | otherwise = Left PrintableInvalidChar
   validateEncoding BMPString       t
     | T.all (\c -> fromEnum c <= 0xFFFF) t = Right ()
-    | otherwise = Left "BMPString value contains non-BMP character"
+    | otherwise = Left BMPNonBMP
 
   isPrintableChar c = (isAscii c && isAlphaNum c) || c `elem` (" '()+,-./:=?" :: String)
 

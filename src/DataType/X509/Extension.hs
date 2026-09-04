@@ -37,6 +37,7 @@ module DataType.X509.Extension
   , OtherName (..)
   , Asn1StringType (..)
   , DNSNameError (..)
+  , OtherNameError (..)
   , mkDNSName
   , mkOtherName
 
@@ -100,6 +101,7 @@ import DataType.X509.Extension.GeneralName
   , DNSNameError (..)
   , GeneralName (..)
   , OtherName (..)
+  , OtherNameError (..)
   , mkDNSName
   , mkOtherName
   )
