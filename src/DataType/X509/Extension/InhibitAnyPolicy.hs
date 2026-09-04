@@ -11,6 +11,7 @@ extension (RFC 5280 §4.2.1.14).
 -}
 module DataType.X509.Extension.InhibitAnyPolicy
   ( InhibitAnyPolicy (..)
+  , InhibitAnyPolicyError (..)
   , mkInhibitAnyPolicy
   ) where
 
@@ -30,12 +31,18 @@ newtype InhibitAnyPolicy = InhibitAnyPolicy Int
   deriving (Eq, Show)
 
 
+-- | Failure modes for 'mkInhibitAnyPolicy'.
+data InhibitAnyPolicyError
+  = NegativeSkipCerts -- ^ The skip-certs value is negative.
+  deriving (Eq, Show)
+
+
 {- | Construct an 'InhibitAnyPolicy', validating that the skip-certs value
 is non-negative.
 -}
-mkInhibitAnyPolicy :: Int -> Either String InhibitAnyPolicy
+mkInhibitAnyPolicy :: Int -> Either InhibitAnyPolicyError InhibitAnyPolicy
 mkInhibitAnyPolicy n
-  | n < 0    = Left $ "InhibitAnyPolicy skip-certs must be non-negative; got " <> show n
+  | n < 0    = Left NegativeSkipCerts
   | otherwise = Right (InhibitAnyPolicy n)
 
 

@@ -59,6 +59,7 @@ module DataType.X509.Extension
 
     -- * Policy extensions
   , InhibitAnyPolicy (..)
+  , InhibitAnyPolicyError (..)
   , mkInhibitAnyPolicy
   , PolicyMappings (..)
   , mkPolicyMappings
@@ -114,7 +115,7 @@ import DataType.X509.Extension.CRLDistributionPoints
   , mkDistributionPoint
   )
 import DataType.X509.Extension.HasOID (Extension (..), HasOID (..))
-import DataType.X509.Extension.InhibitAnyPolicy (InhibitAnyPolicy (..), mkInhibitAnyPolicy)
+import DataType.X509.Extension.InhibitAnyPolicy (InhibitAnyPolicy (..), InhibitAnyPolicyError (..), mkInhibitAnyPolicy)
 import DataType.X509.Extension.NameConstraints
   ( NameConstraint (..)
   , NameConstraints (..)

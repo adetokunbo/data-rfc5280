@@ -10,7 +10,6 @@ Tests for 'DataType.X509.Extension.InhibitAnyPolicy'.
 -}
 module X509.Extension.InhibitAnyPolicySpec (spec) where
 
-import Data.Either (isLeft)
 import DataType.X509.Extension (renderOpenSSLConfig)
 import DataType.X509.Extension.InhibitAnyPolicy
 import Test.Hspec
@@ -24,7 +23,7 @@ spec = describe "module DataType.X509.Extension.InhibitAnyPolicy" $ do
     it "accepts a positive value" $
       mkInhibitAnyPolicy 2 `shouldBe` Right (InhibitAnyPolicy 2)
     it "rejects a negative value" $
-      mkInhibitAnyPolicy (-1) `shouldSatisfy` isLeft
+      mkInhibitAnyPolicy (-1) `shouldBe` Left NegativeSkipCerts
   context "ToBuilder" $ do
     it "renders zero" $
       renderOpenSSLConfig (InhibitAnyPolicy 0) `shouldBe` "0"
