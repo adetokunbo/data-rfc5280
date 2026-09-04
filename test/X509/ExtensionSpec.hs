@@ -79,11 +79,11 @@ spec = describe "module DataType.X509.Extension" $ do
     it "accepts a valid OID" $
       mkOID 1 [2, 3, 4] `shouldBe` Right (1 :| [2, 3, 4])
     it "rejects a negative first arc" $
-      mkOID (-1) [] `shouldSatisfy` isLeft
+      mkOID (-1) [] `shouldBe` Left InvalidFirstArc
     it "rejects a first arc greater than 2" $
-      mkOID 3 [] `shouldSatisfy` isLeft
+      mkOID 3 [] `shouldBe` Left InvalidFirstArc
     it "rejects a negative subsequent arc" $
-      mkOID 1 [-1] `shouldSatisfy` isLeft
+      mkOID 1 [-1] `shouldBe` Left NegativeArc
 
 
 notCA :: BasicConstraints

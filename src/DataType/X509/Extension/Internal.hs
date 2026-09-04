@@ -12,6 +12,7 @@ public API stability guarantee.
 module DataType.X509.Extension.Internal
   ( -- * OID
     OID
+  , OIDError (..)
   , mkOID
   , oidBuilder
 
@@ -29,16 +30,23 @@ import Data.List.NonEmpty (NonEmpty (..))
 type OID = NonEmpty Int
 
 
+-- | Failure modes for 'mkOID'.
+data OIDError
+  = InvalidFirstArc -- ^ First arc is not 0, 1, or 2.
+  | NegativeArc     -- ^ One or more subsequent arcs are negative.
+  deriving (Eq, Show)
+
+
 {- | Construct an 'OID', validating that the first arc is 0–2 and all arcs
 are non-negative.
 
 The second-arc ≤ 39 constraint from X.660 is not enforced; it only applies
 under first arcs 0 and 1 and is rarely violated in practice.
 -}
-mkOID :: Int -> [Int] -> Either String OID
+mkOID :: Int -> [Int] -> Either OIDError OID
 mkOID first rest
-  | first < 0 || first > 2 = Left $ "OID first arc must be 0, 1, or 2; got " <> show first
-  | any (< 0) rest         = Left "OID arcs must be non-negative"
+  | first < 0 || first > 2 = Left InvalidFirstArc
+  | any (< 0) rest         = Left NegativeArc
   | otherwise              = Right (first :| rest)
 
 

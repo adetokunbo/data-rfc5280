@@ -22,6 +22,7 @@ module DataType.X509.Extension.GeneralName
   )
 where
 
+import Data.Bifunctor (first)
 import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder, byteString)
 import Data.Char (isAlphaNum, isAscii)
@@ -157,7 +158,7 @@ via 'mkOID'. Character-set constraints:
 -}
 mkOtherName :: Int -> [Int] -> Asn1StringType -> Text -> Either String OtherName
 mkOtherName firstArc restArcs enc val = do
-  oid <- mkOID firstArc restArcs
+  oid <- first (const "invalid OID") (mkOID firstArc restArcs)
   validateEncoding enc val
   return (OtherName oid enc val)
  where

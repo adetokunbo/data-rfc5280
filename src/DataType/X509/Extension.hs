@@ -27,6 +27,7 @@ module DataType.X509.Extension
   , AuthorityKeyIdentifier (..)
   , mkAuthorityKeyIdentifier
   , OID
+  , OIDError (..)
   , mkOID
   , CertificatePolicies (..)
   , mkCertificatePolicies
@@ -122,7 +123,7 @@ import DataType.X509.Extension.PolicyMappings
   , mkPolicyMappings
   )
 import DataType.X509.Extension.IssuerAltName (IssuerAltName (..), mkIssuerAltName)
-import DataType.X509.Extension.Internal (OID, mkOID)
+import DataType.X509.Extension.Internal (OID, OIDError (..), mkOID)
 import DataType.X509.Extension.KeyUsage (KeyUsage, KeyUsageBit (..))
 import DataType.X509.Extension.SubjectKeyIdentifier (SubjectKeyIdentifier (..))
 
