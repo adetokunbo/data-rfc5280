@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : DataType.X509.Extension.PolicyMappings
+Module      : Data.X509.XT.PolicyMappings
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
@@ -10,7 +10,7 @@ SPDX-License-Identifier: BSD3
 Provides 'PolicyMappings', representing the X.509 Policy Mappings extension
 (RFC 5280 §4.2.1.5).
 -}
-module DataType.X509.Extension.PolicyMappings
+module Data.X509.XT.PolicyMappings
   ( PolicyMappings (..)
   , mkPolicyMappings
   , PolicyMapping (..)
@@ -20,8 +20,8 @@ module DataType.X509.Extension.PolicyMappings
 import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
-import DataType.X509.Extension.HasOID (HasOID (..))
-import DataType.X509.Extension.Internal (OID, intersperseCommas, oidBuilder)
+import Data.X509.XT.HasOID (HasOID (..))
+import Data.X509.XT.Internal (OID, intersperseCommas, oidBuilder)
 
 
 {- | A single policy mapping, pairing an issuer domain policy OID with a

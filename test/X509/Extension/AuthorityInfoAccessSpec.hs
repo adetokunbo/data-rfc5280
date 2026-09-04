@@ -6,14 +6,14 @@ Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
-Tests for 'DataType.X509.Extension.AuthorityInfoAccess'.
+Tests for 'Data.X509.XT.AuthorityInfoAccess'.
 -}
 module X509.Extension.AuthorityInfoAccessSpec (spec) where
 
 import qualified Data.ByteString as BS
-import DataType.X509.Extension (renderOpenSSLConfig)
-import DataType.X509.Extension.AuthorityInfoAccess
-import DataType.X509.Extension.GeneralName
+import Data.X509.XT (renderOpenSSLConfig)
+import Data.X509.XT.AuthorityInfoAccess
+import Data.X509.XT.GeneralName
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck (forAll)
@@ -23,7 +23,7 @@ import X509.Extension.Generators (validDnsName)
 
 
 spec :: Spec
-spec = describe "module DataType.X509.Extension.AuthorityInfoAccess" $ do
+spec = describe "module Data.X509.XT.AuthorityInfoAccess" $ do
   context "mkAuthorityInfoAccess" $ do
     it "renders a single OCSP entry" $ do
       uri <- mkURI "http://ocsp.example.com"

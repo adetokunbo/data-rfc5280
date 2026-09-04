@@ -1,7 +1,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 
 {- |
-Module      : DataType.X509.Extension.CRLDistributionPoints
+Module      : Data.X509.XT.CRLDistributionPoints
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
@@ -14,7 +14,7 @@ full-name 'GeneralName' location. The @reasons@, @cRLIssuer@, and
 @nameRelativeToCRLIssuer@ fields from the RFC are not yet supported; those
 require section-based OpenSSL config syntax which this library does not produce.
 -}
-module DataType.X509.Extension.CRLDistributionPoints
+module Data.X509.XT.CRLDistributionPoints
   ( CRLDistributionPoints (..)
   , mkCRLDistributionPoints
   , DistributionPoint (..)
@@ -24,9 +24,9 @@ module DataType.X509.Extension.CRLDistributionPoints
 import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
-import DataType.X509.Extension.GeneralName (GeneralName)
-import DataType.X509.Extension.HasOID (HasOID (..))
-import DataType.X509.Extension.Internal (intersperseCommas)
+import Data.X509.XT.GeneralName (GeneralName)
+import Data.X509.XT.HasOID (HasOID (..))
+import Data.X509.XT.Internal (intersperseCommas)
 
 
 {- | A single CRL distribution point, identified by its full-name location.

@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : DataType.X509.Extension.AuthorityInfoAccess
+Module      : Data.X509.XT.AuthorityInfoAccess
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
@@ -10,7 +10,7 @@ SPDX-License-Identifier: BSD3
 Provides 'AuthorityInfoAccess', representing the X.509 Authority Information
 Access extension (RFC 5280 §4.2.2.1).
 -}
-module DataType.X509.Extension.AuthorityInfoAccess
+module Data.X509.XT.AuthorityInfoAccess
   ( AuthorityInfoAccess (..)
   , mkAuthorityInfoAccess
   , AccessDescription (..)
@@ -20,9 +20,9 @@ where
 import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
-import DataType.X509.Extension.GeneralName (GeneralName)
-import DataType.X509.Extension.HasOID (HasOID (..))
-import DataType.X509.Extension.Internal (intersperseCommas)
+import Data.X509.XT.GeneralName (GeneralName)
+import Data.X509.XT.HasOID (HasOID (..))
+import Data.X509.XT.Internal (intersperseCommas)
 
 
 {- | A single access point within an 'AuthorityInfoAccess' extension.

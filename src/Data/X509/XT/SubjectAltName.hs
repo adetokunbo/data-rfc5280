@@ -1,7 +1,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 
 {- |
-Module      : DataType.X509.Extension.SubjectAltName
+Module      : Data.X509.XT.SubjectAltName
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
@@ -9,7 +9,7 @@ SPDX-License-Identifier: BSD3
 Provides 'SubjectAltName', representing the X.509 Subject Alternative Name
 extension (RFC 5280 §4.2.1.6).
 -}
-module DataType.X509.Extension.SubjectAltName
+module Data.X509.XT.SubjectAltName
   ( SubjectAltName (..)
   , mkSubjectAltName
   ) where
@@ -17,9 +17,9 @@ module DataType.X509.Extension.SubjectAltName
 import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
-import DataType.X509.Extension.GeneralName (GeneralName)
-import DataType.X509.Extension.HasOID (HasOID (..))
-import DataType.X509.Extension.Internal (intersperseCommas)
+import Data.X509.XT.GeneralName (GeneralName)
+import Data.X509.XT.HasOID (HasOID (..))
+import Data.X509.XT.Internal (intersperseCommas)
 
 
 {- | Represents the SubjectAltName extension (RFC 5280 §4.2.1.6).

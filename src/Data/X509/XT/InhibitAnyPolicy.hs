@@ -1,7 +1,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 
 {- |
-Module      : DataType.X509.Extension.InhibitAnyPolicy
+Module      : Data.X509.XT.InhibitAnyPolicy
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
@@ -9,7 +9,7 @@ SPDX-License-Identifier: BSD3
 Provides 'InhibitAnyPolicy', representing the X.509 Inhibit anyPolicy
 extension (RFC 5280 §4.2.1.14).
 -}
-module DataType.X509.Extension.InhibitAnyPolicy
+module Data.X509.XT.InhibitAnyPolicy
   ( InhibitAnyPolicy (..)
   , InhibitAnyPolicyError (..)
   , mkInhibitAnyPolicy
@@ -18,7 +18,7 @@ module DataType.X509.Extension.InhibitAnyPolicy
 import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder, intDec)
 import Data.List.NonEmpty (NonEmpty (..))
-import DataType.X509.Extension.HasOID (HasOID (..))
+import Data.X509.XT.HasOID (HasOID (..))
 
 
 {- | Represents the InhibitAnyPolicy extension (RFC 5280 §4.2.1.14).

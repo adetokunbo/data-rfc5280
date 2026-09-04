@@ -4,14 +4,14 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 
 {- |
-Module      : DataType.X509.Extension.KeyUsage
+Module      : Data.X509.XT.KeyUsage
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
 Provides the 'KeyUsage' extension type.
 -}
-module DataType.X509.Extension.KeyUsage
+module Data.X509.XT.KeyUsage
   ( KeyUsageBit (..)
   , KeyUsage
   ) where
@@ -20,8 +20,8 @@ import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
 import qualified Data.Set.NonEmpty as NES
-import DataType.X509.Extension.HasOID (HasOID (..))
-import DataType.X509.Extension.Internal (intersperseCommas)
+import Data.X509.XT.HasOID (HasOID (..))
+import Data.X509.XT.Internal (intersperseCommas)
 
 
 {- | Represents the bits that can set for @KeyUsage@

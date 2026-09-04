@@ -3,7 +3,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 
 {- |
-Module      : DataType.X509.Extension
+Module      : Data.X509.XT
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
@@ -16,7 +16,7 @@ utility in one place, or import individual extension modules directly.
 
 This library is encode-only; no parser or decoder is provided.
 -}
-module DataType.X509.Extension
+module Data.X509.XT
   ( -- * Extension types
     BasicConstraints (..)
   , BasicConstraintsError (..)
@@ -96,21 +96,21 @@ import qualified Data.ByteString as BS
 import Data.ByteString.Builder (Builder, toLazyByteString)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Set.NonEmpty (fromList)
-import DataType.X509.Extension.AuthorityKeyIdentifier
+import Data.X509.XT.AuthorityKeyIdentifier
   ( AuthorityKeyIdentifier (..)
   , mkAuthorityKeyIdentifier
   )
-import DataType.X509.Extension.BasicConstraints
+import Data.X509.XT.BasicConstraints
   ( BasicConstraints (..)
   , BasicConstraintsError (..)
   , mkBasicConstraints
   )
-import DataType.X509.Extension.CertificatePolicies
+import Data.X509.XT.CertificatePolicies
   ( CertificatePolicies (..)
   , mkCertificatePolicies
   )
-import DataType.X509.Extension.ExtKeyUsage (ExtKeyUsage, ExtKeyUsagePurpose (..))
-import DataType.X509.Extension.GeneralName
+import Data.X509.XT.ExtKeyUsage (ExtKeyUsage, ExtKeyUsagePurpose (..))
+import Data.X509.XT.GeneralName
   ( Asn1StringType (..)
   , DNSNameError (..)
   , DnsName
@@ -129,29 +129,29 @@ import DataType.X509.Extension.GeneralName
   , pattern OtherName
   , pattern RegisteredID
   )
-import DataType.X509.Extension.CRLDistributionPoints
+import Data.X509.XT.CRLDistributionPoints
   ( CRLDistributionPoints (..)
   , DistributionPoint (..)
   , mkCRLDistributionPoints
   , mkDistributionPoint
   )
-import DataType.X509.Extension.HasOID (Extension (..), HasOID (..))
-import DataType.X509.Extension.InhibitAnyPolicy (InhibitAnyPolicy (..), InhibitAnyPolicyError (..), mkInhibitAnyPolicy)
-import DataType.X509.Extension.NameConstraints
+import Data.X509.XT.HasOID (Extension (..), HasOID (..))
+import Data.X509.XT.InhibitAnyPolicy (InhibitAnyPolicy (..), InhibitAnyPolicyError (..), mkInhibitAnyPolicy)
+import Data.X509.XT.NameConstraints
   ( NameConstraint (..)
   , NameConstraints (..)
   , mkNameConstraints
   )
-import DataType.X509.Extension.PolicyMappings
+import Data.X509.XT.PolicyMappings
   ( PolicyMapping (..)
   , PolicyMappings (..)
   , mkPolicyMapping
   , mkPolicyMappings
   )
-import DataType.X509.Extension.IssuerAltName (IssuerAltName (..), mkIssuerAltName)
-import DataType.X509.Extension.Internal (OID, OIDError (..), mkOID)
-import DataType.X509.Extension.KeyUsage (KeyUsage, KeyUsageBit (..))
-import DataType.X509.Extension.SubjectKeyIdentifier (SubjectKeyIdentifier (..))
+import Data.X509.XT.IssuerAltName (IssuerAltName (..), mkIssuerAltName)
+import Data.X509.XT.Internal (OID, OIDError (..), mkOID)
+import Data.X509.XT.KeyUsage (KeyUsage, KeyUsageBit (..))
+import Data.X509.XT.SubjectKeyIdentifier (SubjectKeyIdentifier (..))
 
 
 -- | Render an extension value as a strict 'ByteString' in OpenSSL configuration format.

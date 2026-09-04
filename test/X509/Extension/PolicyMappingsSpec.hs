@@ -6,17 +6,17 @@ Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
-Tests for 'DataType.X509.Extension.PolicyMappings'.
+Tests for 'Data.X509.XT.PolicyMappings'.
 -}
 module X509.Extension.PolicyMappingsSpec (spec) where
 
-import DataType.X509.Extension (renderOpenSSLConfig, NonEmpty (..))
-import DataType.X509.Extension.PolicyMappings
+import Data.X509.XT (renderOpenSSLConfig, NonEmpty (..))
+import Data.X509.XT.PolicyMappings
 import Test.Hspec
 
 
 spec :: Spec
-spec = describe "module DataType.X509.Extension.PolicyMappings" $ do
+spec = describe "module Data.X509.XT.PolicyMappings" $ do
   context "mkPolicyMappings" $ do
     it "renders a single mapping" $
       renderOpenSSLConfig (mkPolicyMappings (mkPolicyMapping (1 :| [2, 3]) (2 :| [5, 4])) [])

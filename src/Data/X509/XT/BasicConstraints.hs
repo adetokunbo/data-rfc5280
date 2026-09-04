@@ -3,14 +3,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : DataType.X509.Extension.BasicConstraints
+Module      : Data.X509.XT.BasicConstraints
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
 Provides the 'BasicConstraints' extension type and its smart constructor.
 -}
-module DataType.X509.Extension.BasicConstraints
+module Data.X509.XT.BasicConstraints
   ( BasicConstraints (..)
   , BasicConstraintsError (..)
   , mkBasicConstraints
@@ -19,7 +19,7 @@ module DataType.X509.Extension.BasicConstraints
 import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder, intDec)
 import Data.List.NonEmpty (NonEmpty (..))
-import DataType.X509.Extension.HasOID (HasOID (..))
+import Data.X509.XT.HasOID (HasOID (..))
 
 
 {- | Represents the basic constraints extension

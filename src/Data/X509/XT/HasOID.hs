@@ -4,7 +4,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : DataType.X509.Extension.HasOID
+Module      : Data.X509.XT.HasOID
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
@@ -13,7 +13,7 @@ Provides the 'HasOID' typeclass for associating extension types with their
 RFC 5280 OIDs, and the 'Extension' wrapper for pairing a value with its
 criticality flag.
 -}
-module DataType.X509.Extension.HasOID
+module Data.X509.XT.HasOID
   ( HasOID (..)
   , Extension (..)
   ) where
@@ -21,7 +21,7 @@ module DataType.X509.Extension.HasOID
 import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder)
 import Data.Proxy (Proxy)
-import DataType.X509.Extension.Internal (OID)
+import Data.X509.XT.Internal (OID)
 
 
 -- | Associates an extension type with its RFC 5280 OID.

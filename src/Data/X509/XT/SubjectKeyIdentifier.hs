@@ -2,14 +2,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : DataType.X509.Extension.SubjectKeyIdentifier
+Module      : Data.X509.XT.SubjectKeyIdentifier
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
 Provides the 'SubjectKeyIdentifier' extension type.
 -}
-module DataType.X509.Extension.SubjectKeyIdentifier
+module Data.X509.XT.SubjectKeyIdentifier
   ( SubjectKeyIdentifier (..)
   ) where
 
@@ -17,7 +17,7 @@ import Data.Builder (ToBuilder (..))
 import Data.ByteString (ByteString)
 import Data.ByteString.Builder (Builder, byteString)
 import Data.List.NonEmpty (NonEmpty (..))
-import DataType.X509.Extension.HasOID (HasOID (..))
+import Data.X509.XT.HasOID (HasOID (..))
 
 
 {- | Represents a SubjectKeyIdentifier value (RFC 5280 §4.2.1.2).

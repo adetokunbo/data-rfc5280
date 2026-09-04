@@ -6,12 +6,12 @@ Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
-Tests for 'DataType.X509.Extension.HasOID'.
+Tests for 'Data.X509.XT.HasOID'.
 -}
 module X509.Extension.HasOIDSpec (spec) where
 
 import Data.Proxy (Proxy (..))
-import DataType.X509.Extension
+import Data.X509.XT
   ( AuthorityKeyIdentifier
   , BasicConstraints (..)
   , CertificatePolicies
@@ -21,14 +21,14 @@ import DataType.X509.Extension
   , SubjectKeyIdentifier
   , renderOpenSSLConfig
   )
-import DataType.X509.Extension.AuthorityInfoAccess (AuthorityInfoAccess)
-import DataType.X509.Extension.HasOID (Extension (..), HasOID (..), extensionOID)
-import DataType.X509.Extension.SubjectAltName (SubjectAltName)
+import Data.X509.XT.AuthorityInfoAccess (AuthorityInfoAccess)
+import Data.X509.XT.HasOID (Extension (..), HasOID (..), extensionOID)
+import Data.X509.XT.SubjectAltName (SubjectAltName)
 import Test.Hspec
 
 
 spec :: Spec
-spec = describe "module DataType.X509.Extension.HasOID" $ do
+spec = describe "module Data.X509.XT.HasOID" $ do
   context "extensionOID" $ do
     it "returns the OID for BasicConstraints" $
       extensionOID (Proxy :: Proxy BasicConstraints) `shouldBe` (2 :| [5, 29, 19])

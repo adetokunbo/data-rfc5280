@@ -3,14 +3,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : DataType.X509.Extension.ExtKeyUsage
+Module      : Data.X509.XT.ExtKeyUsage
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
 Provides the 'ExtKeyUsage' extension type.
 -}
-module DataType.X509.Extension.ExtKeyUsage
+module Data.X509.XT.ExtKeyUsage
   ( ExtKeyUsagePurpose (..)
   , ExtKeyUsage
   )
@@ -20,8 +20,8 @@ import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
 import qualified Data.Set.NonEmpty as NES
-import DataType.X509.Extension.HasOID (HasOID (..))
-import DataType.X509.Extension.Internal (intersperseCommas)
+import Data.X509.XT.HasOID (HasOID (..))
+import Data.X509.XT.Internal (intersperseCommas)
 
 
 {- | Represents the bits that can set for @ExtKeyUsage@

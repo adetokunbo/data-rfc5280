@@ -1,7 +1,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 
 {- |
-Module      : DataType.X509.Extension.IssuerAltName
+Module      : Data.X509.XT.IssuerAltName
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
@@ -9,7 +9,7 @@ SPDX-License-Identifier: BSD3
 Provides 'IssuerAltName', representing the X.509 Issuer Alternative Name
 extension (RFC 5280 §4.2.1.7).
 -}
-module DataType.X509.Extension.IssuerAltName
+module Data.X509.XT.IssuerAltName
   ( IssuerAltName (..)
   , mkIssuerAltName
   ) where
@@ -17,9 +17,9 @@ module DataType.X509.Extension.IssuerAltName
 import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
-import DataType.X509.Extension.GeneralName (GeneralName)
-import DataType.X509.Extension.HasOID (HasOID (..))
-import DataType.X509.Extension.Internal (intersperseCommas)
+import Data.X509.XT.GeneralName (GeneralName)
+import Data.X509.XT.HasOID (HasOID (..))
+import Data.X509.XT.Internal (intersperseCommas)
 
 
 {- | Represents the IssuerAltName extension (RFC 5280 §4.2.1.7).

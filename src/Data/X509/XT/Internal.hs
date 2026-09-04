@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : DataType.X509.Extension.Internal
+Module      : Data.X509.XT.Internal
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
@@ -9,7 +9,7 @@ SPDX-License-Identifier: BSD3
 Internal helpers shared across X.509 extension modules. Not part of the
 public API stability guarantee.
 -}
-module DataType.X509.Extension.Internal
+module Data.X509.XT.Internal
   ( -- * OID
     OID
   , OIDError (..)

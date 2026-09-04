@@ -8,12 +8,12 @@ SPDX-License-Identifier: BSD3
 -}
 module X509.ExtensionSpec (spec) where
 
-import DataType.X509.Extension
+import Data.X509.XT
 import Test.Hspec
 
 
 spec :: Spec
-spec = describe "module DataType.X509.Extension" $ do
+spec = describe "module Data.X509.XT" $ do
   context "BasicConstraints" $ do
     it "renders a non-CA certificate" $
       renderOpenSSLConfig notCA `shouldBe` "CA:FALSE"

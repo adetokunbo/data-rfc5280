@@ -3,7 +3,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 
 {- |
-Module      : DataType.X509.Extension.GeneralName
+Module      : Data.X509.XT.GeneralName
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
@@ -13,7 +13,7 @@ extensions, including SubjectAltName and AuthorityInfoAccess.
 
 'DirectoryName', x400Address, and ediPartyName are not yet modelled.
 -}
-module DataType.X509.Extension.GeneralName
+module Data.X509.XT.GeneralName
   ( GeneralName (DNS, IPAddr, EmailAddr, URIName, Other)
   , pattern RegisteredID
   , DnsName
@@ -41,7 +41,7 @@ import Data.Char (isAlphaNum, isAscii)
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
-import DataType.X509.Extension.Internal (OID, OIDError, mkOID, oidBuilder)
+import Data.X509.XT.Internal (OID, OIDError, mkOID, oidBuilder)
 import Net.IP (IP)
 import qualified Net.IP as IP
 import Text.Email.Validate (EmailAddress)

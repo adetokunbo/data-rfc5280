@@ -6,14 +6,14 @@ Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
-Tests for 'DataType.X509.Extension.SubjectAltName'.
+Tests for 'Data.X509.XT.SubjectAltName'.
 -}
 module X509.Extension.SubjectAltNameSpec (spec) where
 
 import qualified Data.ByteString as BS
-import DataType.X509.Extension (renderOpenSSLConfig)
-import DataType.X509.Extension.GeneralName
-import DataType.X509.Extension.SubjectAltName
+import Data.X509.XT (renderOpenSSLConfig)
+import Data.X509.XT.GeneralName
+import Data.X509.XT.SubjectAltName
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
 import Data.List.NonEmpty (NonEmpty (..))
@@ -23,7 +23,7 @@ import X509.Extension.Generators (validDnsName, vectorOf1)
 
 
 spec :: Spec
-spec = describe "module DataType.X509.Extension.SubjectAltName" $ do
+spec = describe "module Data.X509.XT.SubjectAltName" $ do
   context "mkSubjectAltName" $ do
     it "renders a single DNS name" $ do
       dn <- assertRight (mkDnsName "example.com")

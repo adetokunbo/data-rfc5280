@@ -6,14 +6,14 @@ Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
-Tests for 'DataType.X509.Extension.CRLDistributionPoints'.
+Tests for 'Data.X509.XT.CRLDistributionPoints'.
 -}
 module X509.Extension.CRLDistributionPointsSpec (spec) where
 
 import qualified Data.ByteString as BS
-import DataType.X509.Extension (renderOpenSSLConfig)
-import DataType.X509.Extension.CRLDistributionPoints
-import DataType.X509.Extension.GeneralName
+import Data.X509.XT (renderOpenSSLConfig)
+import Data.X509.XT.CRLDistributionPoints
+import Data.X509.XT.GeneralName
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
 import Data.List.NonEmpty (NonEmpty (..))
@@ -24,7 +24,7 @@ import X509.Extension.Generators (validDnsName, vectorOf1)
 
 
 spec :: Spec
-spec = describe "module DataType.X509.Extension.CRLDistributionPoints" $ do
+spec = describe "module Data.X509.XT.CRLDistributionPoints" $ do
   context "mkCRLDistributionPoints" $ do
     it "renders a single URI distribution point" $ do
       uri <- mkURI "http://crl.example.com/crl.crl"
