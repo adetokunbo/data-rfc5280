@@ -14,7 +14,8 @@ module DataType.X509.Extension.AuthorityInfoAccess
   ( AuthorityInfoAccess (..)
   , mkAuthorityInfoAccess
   , AccessDescription (..)
-  ) where
+  )
+where
 
 import Data.Builder (ToBuilder (..))
 import Data.ByteString.Builder (Builder)
@@ -30,10 +31,10 @@ The 'GeneralName' location is almost always a 'URIName' in practice, but
 any variant is permitted by RFC 5280.
 -}
 data AccessDescription
-  = OCSP GeneralName
-  -- ^ An OCSP responder location. Rendered as @OCSP;\<location\>@.
-  | CAIssuers GeneralName
-  -- ^ A CA issuers location. Rendered as @caIssuers;\<location\>@.
+  = -- | An OCSP responder location. Rendered as @OCSP;\<location\>@.
+    OCSP !GeneralName
+  | -- | A CA issuers location. Rendered as @caIssuers;\<location\>@.
+    CAIssuers !GeneralName
   deriving (Eq, Show)
 
 
@@ -56,7 +57,7 @@ instance HasOID AuthorityInfoAccess where
 
 
 instance ToBuilder AccessDescription Builder where
-  toBuilder (OCSP loc)      = "OCSP;"      <> toBuilder loc
+  toBuilder (OCSP loc) = "OCSP;" <> toBuilder loc
   toBuilder (CAIssuers loc) = "caIssuers;" <> toBuilder loc
 
 
