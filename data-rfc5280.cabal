@@ -20,7 +20,7 @@ license:            BSD-3-Clause
 license-file:       LICENSE
 author:             Tim Emiola
 maintainer:         adetokunbo@emio.la
-category:           Web
+category:           Cryptography
 homepage:           https://github.com/adetokunbo/data-rfc5280#readme
 bug-reports:
   https://github.com/adetokunbo/data-rfc5280/issues
