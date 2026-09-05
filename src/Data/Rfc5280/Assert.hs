@@ -8,8 +8,7 @@ Helpers for lifting RFC 5280 smart-constructor results into 'MonadFail'.
 
 'assertRight' and 'assertJust' convert the two common failure containers
 ('Either' and 'Maybe') into any 'MonadFail' context, producing a clear
-failure message when the value is absent. They are useful in @IO@-based
-code and in test suites alike.
+failure message when the value is absent.
 -}
 module Data.Rfc5280.Assert
   ( assertRight
