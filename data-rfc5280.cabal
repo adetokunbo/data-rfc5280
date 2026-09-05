@@ -37,6 +37,7 @@ source-repository head
 library
   exposed-modules:
     Data.Rfc5280
+    Data.Rfc5280.Assert
     Data.Rfc5280.AuthorityInfoAccess
     Data.Rfc5280.AuthorityKeyIdentifier
     Data.Rfc5280.BasicConstraints
@@ -73,6 +74,7 @@ test-suite test
   hs-source-dirs:   test
   other-modules:
     Rfc5280Spec
+    Rfc5280.AssertSpec
     Rfc5280.AuthorityInfoAccessSpec
     Rfc5280.CRLDistributionPointsSpec
     Rfc5280.Fixtures

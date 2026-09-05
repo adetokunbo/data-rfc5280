@@ -8,6 +8,7 @@ Test suite entry point for data-rfc5280.
 -}
 module Main where
 
+import qualified Rfc5280.AssertSpec as Assert
 import qualified Rfc5280.AuthorityInfoAccessSpec as AuthorityInfoAccess
 import qualified Rfc5280.CRLDistributionPointsSpec as CRLDistributionPoints
 import qualified Rfc5280.GeneralNameSpec as GeneralName
@@ -32,6 +33,7 @@ main = do
   hSetBuffering stdout NoBuffering
   hSetBuffering stderr NoBuffering
   hspec $ do
+    Assert.spec
     Extension.spec
     AuthorityInfoAccess.spec
     CRLDistributionPoints.spec
