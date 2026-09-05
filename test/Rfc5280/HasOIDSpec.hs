@@ -54,4 +54,4 @@ spec = describe "module Data.Rfc5280.HasOID" $ do
 
 
 notCA :: BasicConstraints
-notCA = BasicConstraints { bcIsCA = False, bcPathLength = Nothing }
+notCA = BasicConstraints{bcIsCA = False, bcPathLength = Nothing}

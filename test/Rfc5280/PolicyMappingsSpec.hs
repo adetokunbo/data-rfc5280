@@ -10,7 +10,7 @@ Tests for 'Data.Rfc5280.PolicyMappings'.
 -}
 module Rfc5280.PolicyMappingsSpec (spec) where
 
-import Data.Rfc5280 (renderConfig, NonEmpty (..))
+import Data.Rfc5280 (NonEmpty (..), renderConfig)
 import Data.Rfc5280.PolicyMappings
 import Test.Hspec
 

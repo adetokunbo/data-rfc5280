@@ -10,25 +10,27 @@ Provides the 'SubjectKeyIdentifier' extension type.
 -}
 module Data.Rfc5280.SubjectKeyIdentifier
   ( SubjectKeyIdentifier (..)
-  ) where
+  )
+where
 
-import Data.Rfc5280.Internal (RenderConfig (..))
 import Data.ByteString (ByteString)
 import Data.ByteString.Builder (byteString)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Rfc5280.HasOID (HasOID (..))
+import Data.Rfc5280.Internal (RenderConfig (..))
 
 
-{- | Represents a SubjectKeyIdentifier value (RFC 5280 §4.2.1.2).
--}
+-- | Represents a SubjectKeyIdentifier value (RFC 5280 §4.2.1.2).
 data SubjectKeyIdentifier
-  = Raw !ByteString
-  -- ^ A raw key identifier. The caller supplies the bytes directly —
-  -- typically the SHA-1 hash of the BIT STRING value of the
-  -- subjectPublicKey field.
-  | HashMethod
-  -- ^ Use the default hash method: the 160-bit SHA-1 hash of the
-  -- subjectPublicKey BIT STRING, as defined in RFC 5280 §4.2.1.2.
+  = {- | A raw key identifier. The caller supplies the bytes directly —
+    typically the SHA-1 hash of the BIT STRING value of the
+    subjectPublicKey field.
+    -}
+    Raw !ByteString
+  | {- | Use the default hash method: the 160-bit SHA-1 hash of the
+    subjectPublicKey BIT STRING, as defined in RFC 5280 §4.2.1.2.
+    -}
+    HashMethod
   deriving (Eq, Show)
 
 
@@ -37,5 +39,5 @@ instance HasOID SubjectKeyIdentifier where
 
 
 instance RenderConfig SubjectKeyIdentifier where
-  renderBuilder (Raw x)    = byteString x
+  renderBuilder (Raw x) = byteString x
   renderBuilder HashMethod = "hash"

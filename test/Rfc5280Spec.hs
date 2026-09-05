@@ -73,7 +73,11 @@ spec = describe "module Data.Rfc5280" $ do
     it "sets keyId when keyIdAlways is True" $
       mkAuthorityKeyIdentifier False True False False
         `shouldBe` AuthorityKeyIdentifier
-          { akiKeyId = True, akiKeyIdAlways = True, akiIssuer = False, akiIssuerAlways = False }
+          { akiKeyId = True
+          , akiKeyIdAlways = True
+          , akiIssuer = False
+          , akiIssuerAlways = False
+          }
   context "mkOID" $ do
     it "accepts a valid OID" $
       mkOID 1 [2, 3, 4] `shouldBe` Right (1 :| [2, 3, 4])
@@ -86,15 +90,15 @@ spec = describe "module Data.Rfc5280" $ do
 
 
 notCA :: BasicConstraints
-notCA = BasicConstraints { bcIsCA = False, bcPathLength = Nothing }
+notCA = BasicConstraints{bcIsCA = False, bcPathLength = Nothing}
 
 
 isCA :: BasicConstraints
-isCA = BasicConstraints { bcIsCA = True, bcPathLength = Nothing }
+isCA = BasicConstraints{bcIsCA = True, bcPathLength = Nothing}
 
 
 caWithPathLen :: BasicConstraints
-caWithPathLen = BasicConstraints { bcIsCA = True, bcPathLength = Just 3 }
+caWithPathLen = BasicConstraints{bcIsCA = True, bcPathLength = Just 3}
 
 
 simpleKeyUsage :: KeyUsage
@@ -122,27 +126,27 @@ allExtKeyUsagePurposes = fromList $ ServerAuth :| [ClientAuth, CodeSigning, Emai
 
 
 simpleAKI :: AuthorityKeyIdentifier
-simpleAKI = AuthorityKeyIdentifier { akiKeyId = True, akiKeyIdAlways = True, akiIssuer = False, akiIssuerAlways = False }
+simpleAKI = AuthorityKeyIdentifier{akiKeyId = True, akiKeyIdAlways = True, akiIssuer = False, akiIssuerAlways = False}
 
 
 keyIdOnly :: AuthorityKeyIdentifier
-keyIdOnly = AuthorityKeyIdentifier { akiKeyId = True, akiKeyIdAlways = False, akiIssuer = False, akiIssuerAlways = False }
+keyIdOnly = AuthorityKeyIdentifier{akiKeyId = True, akiKeyIdAlways = False, akiIssuer = False, akiIssuerAlways = False}
 
 
 issuerOnly :: AuthorityKeyIdentifier
-issuerOnly = AuthorityKeyIdentifier { akiKeyId = False, akiKeyIdAlways = False, akiIssuer = True, akiIssuerAlways = False }
+issuerOnly = AuthorityKeyIdentifier{akiKeyId = False, akiKeyIdAlways = False, akiIssuer = True, akiIssuerAlways = False}
 
 
 issuerAlwaysAKI :: AuthorityKeyIdentifier
-issuerAlwaysAKI = AuthorityKeyIdentifier { akiKeyId = False, akiKeyIdAlways = False, akiIssuer = False, akiIssuerAlways = True }
+issuerAlwaysAKI = AuthorityKeyIdentifier{akiKeyId = False, akiKeyIdAlways = False, akiIssuer = False, akiIssuerAlways = True}
 
 
 bothAlways :: AuthorityKeyIdentifier
-bothAlways = AuthorityKeyIdentifier { akiKeyId = False, akiKeyIdAlways = True, akiIssuer = False, akiIssuerAlways = True }
+bothAlways = AuthorityKeyIdentifier{akiKeyId = False, akiKeyIdAlways = True, akiIssuer = False, akiIssuerAlways = True}
 
 
 allDisabled :: AuthorityKeyIdentifier
-allDisabled = AuthorityKeyIdentifier { akiKeyId = False, akiKeyIdAlways = False, akiIssuer = False, akiIssuerAlways = False }
+allDisabled = AuthorityKeyIdentifier{akiKeyId = False, akiKeyIdAlways = False, akiIssuer = False, akiIssuerAlways = False}
 
 
 simpleCP :: CertificatePolicies

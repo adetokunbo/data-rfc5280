@@ -22,7 +22,8 @@ module Data.Rfc5280.Internal
     -- * Builder helpers
   , intersperseCommas
   , intersperseWith
-  ) where
+  )
+where
 
 import Data.ByteString.Builder (Builder, intDec)
 import Data.Foldable (foldl')
@@ -43,8 +44,10 @@ type OID = NonEmpty Int
 
 -- | Failure modes for 'mkOID'.
 data OIDError
-  = InvalidFirstArc -- ^ First arc is not 0, 1, or 2.
-  | NegativeArc     -- ^ One or more subsequent arcs are negative.
+  = -- | First arc is not 0, 1, or 2.
+    InvalidFirstArc
+  | -- | One or more subsequent arcs are negative.
+    NegativeArc
   deriving (Eq, Show)
 
 
@@ -57,8 +60,8 @@ under first arcs 0 and 1 and is rarely violated in practice.
 mkOID :: Int -> [Int] -> Either OIDError OID
 mkOID first rest
   | first < 0 || first > 2 = Left InvalidFirstArc
-  | any (< 0) rest         = Left NegativeArc
-  | otherwise              = Right (first :| rest)
+  | any (< 0) rest = Left NegativeArc
+  | otherwise = Right (first :| rest)
 
 
 -- | Render an 'OID' as a dot-separated sequence of integers.

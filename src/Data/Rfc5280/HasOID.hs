@@ -13,7 +13,8 @@ criticality flag.
 module Data.Rfc5280.HasOID
   ( HasOID (..)
   , Extension (..)
-  ) where
+  )
+where
 
 import Data.Proxy (Proxy)
 import Data.Rfc5280.Internal (OID, RenderConfig (..))
@@ -32,7 +33,7 @@ See <https://datatracker.ietf.org/doc/html/rfc5280#section-4.1.2.9 RFC 5280 §4.
 data Extension a = Extension
   { extCritical :: !Bool
   -- ^ 'True' if the extension is marked critical.
-  , extValue    :: !a
+  , extValue :: !a
   -- ^ The extension value.
   }
   deriving (Eq, Show)
@@ -41,7 +42,7 @@ data Extension a = Extension
 {- | Renders as @\"critical,\<value\>\"@ when 'extCritical' is 'True',
 or just @\<value\>@ otherwise.
 -}
-instance RenderConfig a => RenderConfig (Extension a) where
+instance (RenderConfig a) => RenderConfig (Extension a) where
   renderBuilder (Extension critical val)
-    | critical  = "critical," <> renderBuilder val
+    | critical = "critical," <> renderBuilder val
     | otherwise = renderBuilder val

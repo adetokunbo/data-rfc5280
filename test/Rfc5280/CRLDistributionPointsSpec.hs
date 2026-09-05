@@ -11,16 +11,16 @@ Tests for 'Data.Rfc5280.CRLDistributionPoints'.
 module Rfc5280.CRLDistributionPointsSpec (spec) where
 
 import qualified Data.ByteString as BS
+import Data.List.NonEmpty (NonEmpty (..))
 import Data.Rfc5280 (renderConfig)
 import Data.Rfc5280.CRLDistributionPoints
 import Data.Rfc5280.GeneralName
-import Test.Hspec
-import Test.Hspec.QuickCheck (prop)
-import Data.List.NonEmpty (NonEmpty (..))
-import Test.QuickCheck (choose, forAll, (===))
-import Text.URI (mkURI)
 import Rfc5280.Fixtures (assertRight)
 import Rfc5280.Generators (validDnsName, vectorOf1)
+import Test.Hspec
+import Test.Hspec.QuickCheck (prop)
+import Test.QuickCheck (choose, forAll, (===))
+import Text.URI (mkURI)
 
 
 spec :: Spec
@@ -57,8 +57,9 @@ spec = describe "module Data.Rfc5280.CRLDistributionPoints" $ do
     prop "n distribution points produce exactly n-1 comma separators" $
       forAll (choose (1, 6)) $ \n ->
         forAll (vectorOf1 n validDnsName) $ \(h :| tl) ->
-          let pts = mkCRLDistributionPoints
-                      (mkDistributionPoint (DNS h))
-                      (map (mkDistributionPoint . DNS) tl)
+          let pts =
+                mkCRLDistributionPoints
+                  (mkDistributionPoint (DNS h))
+                  (map (mkDistributionPoint . DNS) tl)
               bs = renderConfig pts
-          in BS.length (BS.filter (== 0x2C) bs) === n - 1
+           in BS.length (BS.filter (== 0x2C) bs) === n - 1

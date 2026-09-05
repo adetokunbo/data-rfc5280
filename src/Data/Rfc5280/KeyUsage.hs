@@ -12,12 +12,13 @@ Provides the 'KeyUsage' extension type.
 module Data.Rfc5280.KeyUsage
   ( KeyUsageBit (..)
   , KeyUsage
-  ) where
+  )
+where
 
 import Data.List.NonEmpty (NonEmpty (..))
-import qualified Data.Set.NonEmpty as NES
 import Data.Rfc5280.HasOID (HasOID (..))
 import Data.Rfc5280.Internal (RenderConfig (..), intersperseCommas)
+import qualified Data.Set.NonEmpty as NES
 
 
 {- | Represents the bits that can set for @KeyUsage@
@@ -25,46 +26,55 @@ import Data.Rfc5280.Internal (RenderConfig (..), intersperseCommas)
 See <https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.3 RFC 5280 §4.2.1.3>.
 -}
 data KeyUsageBit
-  = -- | Verifying digital signatures other than signatures on certificates or
-    -- CRLs. Renders as @\"digitalSignature\"@.
+  = {- | Verifying digital signatures other than signatures on certificates or
+    CRLs. Renders as @\"digitalSignature\"@.
+    -}
     DigitalSignature
-  | -- | Verifying digital signatures to provide non-repudiation of signing
-    -- actions (also called @contentCommitment@). Renders as @\"nonRepudiation\"@.
+  | {- | Verifying digital signatures to provide non-repudiation of signing
+    actions (also called @contentCommitment@). Renders as @\"nonRepudiation\"@.
+    -}
     NonRepudiation
-  | -- | Enciphering private or secret keys (key transport). Renders as
-    -- @\"keyEncipherment\"@.
+  | {- | Enciphering private or secret keys (key transport). Renders as
+    @\"keyEncipherment\"@.
+    -}
     KeyEncipherment
-  | -- | Directly enciphering raw user data without an intermediate symmetric
-    -- cipher. Renders as @\"dataEncipherment\"@.
+  | {- | Directly enciphering raw user data without an intermediate symmetric
+    cipher. Renders as @\"dataEncipherment\"@.
+    -}
     DataEncipherment
-  | -- | Key agreement protocols (e.g. Diffie-Hellman). Renders as
-    -- @\"keyAgreement\"@.
+  | {- | Key agreement protocols (e.g. Diffie-Hellman). Renders as
+    @\"keyAgreement\"@.
+    -}
     KeyAgreement
-  | -- | Verifying signatures on public-key certificates. Renders as
-    -- @\"keyCertSign\"@.
+  | {- | Verifying signatures on public-key certificates. Renders as
+    @\"keyCertSign\"@.
+    -}
     KeyCertSign
-  | -- | Verifying signatures on certificate revocation lists. Renders as
-    -- @\"cRLSign\"@.
+  | {- | Verifying signatures on certificate revocation lists. Renders as
+    @\"cRLSign\"@.
+    -}
     CRLSign
-  | -- | Enciphering data only during key agreement (used with 'KeyAgreement').
-    -- Renders as @\"encipherOnly\"@.
+  | {- | Enciphering data only during key agreement (used with 'KeyAgreement').
+    Renders as @\"encipherOnly\"@.
+    -}
     EncipherOnly
-  | -- | Deciphering data only during key agreement (used with 'KeyAgreement').
-    -- Renders as @\"decipherOnly\"@.
+  | {- | Deciphering data only during key agreement (used with 'KeyAgreement').
+    Renders as @\"decipherOnly\"@.
+    -}
     DecipherOnly
   deriving (Eq, Show, Ord, Enum, Bounded)
 
 
 instance RenderConfig KeyUsageBit where
   renderBuilder DigitalSignature = "digitalSignature"
-  renderBuilder NonRepudiation   = "nonRepudiation"
-  renderBuilder KeyEncipherment  = "keyEncipherment"
+  renderBuilder NonRepudiation = "nonRepudiation"
+  renderBuilder KeyEncipherment = "keyEncipherment"
   renderBuilder DataEncipherment = "dataEncipherment"
-  renderBuilder KeyAgreement     = "keyAgreement"
-  renderBuilder KeyCertSign      = "keyCertSign"
-  renderBuilder CRLSign          = "cRLSign"
-  renderBuilder EncipherOnly     = "encipherOnly"
-  renderBuilder DecipherOnly     = "decipherOnly"
+  renderBuilder KeyAgreement = "keyAgreement"
+  renderBuilder KeyCertSign = "keyCertSign"
+  renderBuilder CRLSign = "cRLSign"
+  renderBuilder EncipherOnly = "encipherOnly"
+  renderBuilder DecipherOnly = "decipherOnly"
 
 
 {- | Represents the 'KeyUsage' extension

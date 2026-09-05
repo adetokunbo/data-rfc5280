@@ -17,10 +17,10 @@ module Data.Rfc5280.BasicConstraints
   )
 where
 
-import Data.Rfc5280.Internal (RenderConfig (..))
 import Data.ByteString.Builder (intDec)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Rfc5280.HasOID (HasOID (..))
+import Data.Rfc5280.Internal (RenderConfig (..))
 
 
 {- | Represents the basic constraints extension

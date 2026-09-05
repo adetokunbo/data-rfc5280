@@ -17,7 +17,8 @@ module Data.Rfc5280.CRLDistributionPoints
   , mkCRLDistributionPoints
   , DistributionPoint (..)
   , mkDistributionPoint
-  ) where
+  )
+where
 
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Rfc5280.GeneralName (GeneralName)

@@ -11,15 +11,15 @@ Tests for 'Data.Rfc5280.IssuerAltName'.
 module Rfc5280.IssuerAltNameSpec (spec) where
 
 import qualified Data.ByteString as BS
+import Data.List.NonEmpty (NonEmpty (..))
 import Data.Rfc5280 (renderConfig)
 import Data.Rfc5280.GeneralName
 import Data.Rfc5280.IssuerAltName
-import Test.Hspec
-import Test.Hspec.QuickCheck (prop)
-import Data.List.NonEmpty (NonEmpty (..))
-import Test.QuickCheck (choose, forAll, (===))
 import Rfc5280.Fixtures (assertRight, testEmail, testIP)
 import Rfc5280.Generators (validDnsName, vectorOf1)
+import Test.Hspec
+import Test.Hspec.QuickCheck (prop)
+import Test.QuickCheck (choose, forAll, (===))
 
 
 spec :: Spec
@@ -40,9 +40,9 @@ spec = describe "module Data.Rfc5280.IssuerAltName" $ do
       renderConfig (mkIssuerAltName (DNS wild) [DNS base])
         `shouldBe` "DNS:*.example.com,DNS:example.com"
     it "renders mixed DNS, IP and email names" $ do
-      ip   <- testIP "192.0.2.1"
+      ip <- testIP "192.0.2.1"
       addr <- testEmail "user@example.com"
-      dn   <- assertRight (mkDnsName "example.com")
+      dn <- assertRight (mkDnsName "example.com")
       renderConfig
         ( mkIssuerAltName
             (DNS dn)
@@ -60,4 +60,4 @@ spec = describe "module Data.Rfc5280.IssuerAltName" $ do
       forAll (choose (1, 6)) $ \n ->
         forAll (vectorOf1 n validDnsName) $ \(h :| tl) ->
           let bs = renderConfig (mkIssuerAltName (DNS h) (map DNS tl))
-          in BS.length (BS.filter (== 0x2C) bs) === n - 1
+           in BS.length (BS.filter (== 0x2C) bs) === n - 1

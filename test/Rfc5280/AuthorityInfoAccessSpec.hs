@@ -14,12 +14,12 @@ import qualified Data.ByteString as BS
 import Data.Rfc5280 (renderConfig)
 import Data.Rfc5280.AuthorityInfoAccess
 import Data.Rfc5280.GeneralName
+import Rfc5280.Fixtures (assertRight)
+import Rfc5280.Generators (validDnsName)
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck (forAll)
 import Text.URI (mkURI)
-import Rfc5280.Fixtures (assertRight)
-import Rfc5280.Generators (validDnsName)
 
 
 spec :: Spec
@@ -34,7 +34,7 @@ spec = describe "module Data.Rfc5280.AuthorityInfoAccess" $ do
       renderConfig (mkAuthorityInfoAccess (CAIssuers (URIName uri)) [])
         `shouldBe` "caIssuers;URI:http://ca.example.com/issuer.crt"
     it "renders OCSP and CAIssuers together" $ do
-      ocspUri   <- mkURI "http://ocsp.example.com"
+      ocspUri <- mkURI "http://ocsp.example.com"
       issuerUri <- mkURI "http://ca.example.com/issuer.crt"
       renderConfig
         ( mkAuthorityInfoAccess

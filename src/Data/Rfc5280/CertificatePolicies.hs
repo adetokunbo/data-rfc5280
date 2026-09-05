@@ -9,7 +9,8 @@ Provides the 'CertificatePolicies' extension type and its smart constructor.
 module Data.Rfc5280.CertificatePolicies
   ( CertificatePolicies (..)
   , mkCertificatePolicies
-  ) where
+  )
+where
 
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Rfc5280.HasOID (HasOID (..))
