@@ -85,7 +85,7 @@ module Data.Rfc5280
   , RenderConfig (..)
   , renderConfig
 
-    -- * Lifting results into MonadFail
+    -- * Lifting results into MonadIO
   , assertRight
   , assertJust
 
