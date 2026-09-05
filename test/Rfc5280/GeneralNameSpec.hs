@@ -12,9 +12,10 @@ module Rfc5280.GeneralNameSpec (spec) where
 
 import Data.Either (isLeft)
 import Data.Rfc5280 (NonEmpty (..), renderConfig)
+import Data.Rfc5280.Assert (assertRight)
 import Data.Rfc5280.GeneralName
 import qualified Data.Text as T
-import Rfc5280.Fixtures (assertRight, testEmail, testIP)
+import Rfc5280.Fixtures (testEmail, testIP)
 import Rfc5280.Generators (nameWithInvalidChar, validDNSName)
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)

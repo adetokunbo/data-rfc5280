@@ -12,9 +12,9 @@ module Rfc5280.AuthorityInfoAccessSpec (spec) where
 
 import qualified Data.ByteString as BS
 import Data.Rfc5280 (renderConfig)
+import Data.Rfc5280.Assert (assertRight)
 import Data.Rfc5280.AuthorityInfoAccess
 import Data.Rfc5280.GeneralName
-import Rfc5280.Fixtures (assertRight)
 import Rfc5280.Generators (validDnsName)
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)

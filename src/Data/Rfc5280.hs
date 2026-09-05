@@ -85,6 +85,10 @@ module Data.Rfc5280
   , RenderConfig (..)
   , renderConfig
 
+    -- * Lifting results into MonadFail
+  , assertRight
+  , assertJust
+
     -- * Re-exported for convenience
 
     -- | 'NonEmpty' from "Data.List.NonEmpty"; 'fromList' from "Data.Set.NonEmpty".
@@ -97,6 +101,7 @@ import Data.ByteString (ByteString)
 import Data.ByteString.Builder (toLazyByteString)
 import qualified Data.ByteString.Lazy as LBS
 import Data.List.NonEmpty (NonEmpty (..))
+import Data.Rfc5280.Assert (assertJust, assertRight)
 import Data.Rfc5280.AuthorityKeyIdentifier
   ( AuthorityKeyIdentifier (..)
   , mkAuthorityKeyIdentifier

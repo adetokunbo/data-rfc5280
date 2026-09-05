@@ -13,9 +13,10 @@ module Rfc5280.IssuerAltNameSpec (spec) where
 import qualified Data.ByteString as BS
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Rfc5280 (renderConfig)
+import Data.Rfc5280.Assert (assertRight)
 import Data.Rfc5280.GeneralName
 import Data.Rfc5280.IssuerAltName
-import Rfc5280.Fixtures (assertRight, testEmail, testIP)
+import Rfc5280.Fixtures (testEmail, testIP)
 import Rfc5280.Generators (validDnsName, vectorOf1)
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
