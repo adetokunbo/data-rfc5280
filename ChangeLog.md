@@ -1,8 +1,8 @@
-# Revision history for x509-extensions
+# Revision history for data-rfc5280
 
-`x509-extensions` uses [PVP Versioning][1].
+`data-rfc5280` uses [PVP Versioning][1].
 
-## 0.1.0.0 -- 2023-09-26
+## 0.1.0.0 -- 2026-09-05
 
 * Initial version.
 
