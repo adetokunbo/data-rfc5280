@@ -4,7 +4,7 @@ version:            0.1.0.0
 synopsis:           Represent the standard X.509v3 certificate extensions
 description:
   @data-rfc5280@ provides Haskell types for the standard X.509v3
-  certificate extensions defined in [RFC 5280](https://datatracker.ietf.org/doc/html/rfc5280)
+  certificate extensions defined in [RFC 5280](https://datatracker.ietf.org/doc/html/rfc5280#section-4.2)
 
   Extensions covered include @BasicConstraints@, @KeyUsage@,
   @ExtendedKeyUsage@, @SubjectAltName@, @IssuerAltName@,
