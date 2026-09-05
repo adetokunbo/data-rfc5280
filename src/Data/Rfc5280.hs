@@ -97,7 +97,6 @@ import Data.ByteString (ByteString)
 import qualified Data.ByteString as BS
 import Data.ByteString.Builder (toLazyByteString)
 import Data.List.NonEmpty (NonEmpty (..))
-import Data.Set.NonEmpty (fromList)
 import Data.Rfc5280.AuthorityKeyIdentifier
   ( AuthorityKeyIdentifier (..)
   , mkAuthorityKeyIdentifier
@@ -155,8 +154,9 @@ import Data.Rfc5280.PolicyMappings
   )
 import Data.Rfc5280.SubjectAltName (SubjectAltName (..), mkSubjectAltName)
 import Data.Rfc5280.SubjectKeyIdentifier (SubjectKeyIdentifier (..))
+import Data.Set.NonEmpty (fromList)
 
 
 -- | Render an extension value as a strict 'ByteString' in OpenSSL configuration format.
-renderConfig :: RenderConfig a => a -> ByteString
+renderConfig :: (RenderConfig a) => a -> ByteString
 renderConfig = BS.toStrict . toLazyByteString . renderBuilder

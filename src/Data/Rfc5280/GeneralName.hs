@@ -36,10 +36,10 @@ where
 import Data.Bifunctor (first)
 import Data.ByteString.Builder (byteString)
 import Data.Char (isAlphaNum, isAscii)
+import Data.Rfc5280.Internal (OID, OIDError, RenderConfig (..), mkOID, oidBuilder)
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
-import Data.Rfc5280.Internal (OID, OIDError, RenderConfig (..), mkOID, oidBuilder)
 import Net.IP (IP)
 import qualified Net.IP as IP
 import Text.Email.Validate (EmailAddress)
@@ -68,8 +68,7 @@ dnsNameText (DnsName t) = t
 Used in extensions such as SubjectAltName and AuthorityInfoAccess.
 -}
 data GeneralName
-  = {- | A DNS hostname. Rendered as @DNS:\<name\>@. Construct via 'mkDnsName'.
-    -}
+  = -- | A DNS hostname. Rendered as @DNS:\<name\>@. Construct via 'mkDnsName'.
     DNS !DnsName
   | -- | An IPv4 or IPv6 address. Rendered as @IP:\<address\>@.
     IPAddr !IP
@@ -95,6 +94,7 @@ validates the OID arcs via 'mkOID'.
 -}
 pattern RegisteredID :: OID -> GeneralName
 pattern RegisteredID o <- RegisteredID_ o
+
 
 {-# COMPLETE DNS, IPAddr, EmailAddr, URIName, RegisteredID, Other #-}
 
@@ -124,7 +124,8 @@ validates the OID arcs and checks the value against the declared encoding.
 -}
 pattern OtherName :: OID -> Asn1StringType -> Text -> OtherName
 pattern OtherName oid enc val <-
-  MkOtherName {onTypeId = oid, onEncoding = enc, onValue = val}
+  MkOtherName{onTypeId = oid, onEncoding = enc, onValue = val}
+
 
 {-# COMPLETE OtherName #-}
 

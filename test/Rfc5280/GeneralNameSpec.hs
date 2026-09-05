@@ -11,15 +11,15 @@ Tests for 'Data.Rfc5280.GeneralName'.
 module Rfc5280.GeneralNameSpec (spec) where
 
 import Data.Either (isLeft)
-import qualified Data.Text as T
-import Data.Rfc5280 (renderConfig, NonEmpty (..))
+import Data.Rfc5280 (NonEmpty (..), renderConfig)
 import Data.Rfc5280.GeneralName
+import qualified Data.Text as T
+import Rfc5280.Fixtures (assertRight, testEmail, testIP)
+import Rfc5280.Generators (nameWithInvalidChar, validDNSName)
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck (forAll, (===))
 import Text.URI (mkURI)
-import Rfc5280.Fixtures (assertRight, testEmail, testIP)
-import Rfc5280.Generators (nameWithInvalidChar, validDNSName)
 
 
 spec :: Spec
@@ -86,9 +86,11 @@ spec = describe "module Data.Rfc5280.GeneralName" $ do
     it "rejects a name exceeding 253 characters" $
       mkDnsName (T.intercalate "." (replicate 5 (T.replicate 50 "a"))) `shouldBe` Left NameTooLong
     prop "accepts any validly-constructed hostname" $
-      forAll validDNSName $ \t -> fmap dnsNameText (mkDnsName t) === Right t
+      forAll validDNSName $
+        \t -> fmap dnsNameText (mkDnsName t) === Right t
     prop "rejects any name containing an invalid label character" $
-      forAll nameWithInvalidChar $ \t -> isLeft (mkDnsName t)
+      forAll nameWithInvalidChar $
+        \t -> isLeft (mkDnsName t)
   context "mkOtherName" $ do
     it "accepts a valid OID and UTF8String value" $ do
       on <- assertRight (mkOtherName 1 [2, 3] UTF8String "hello")

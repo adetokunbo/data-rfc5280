@@ -14,7 +14,8 @@ module Data.Rfc5280.PolicyMappings
   , mkPolicyMappings
   , PolicyMapping (..)
   , mkPolicyMapping
-  ) where
+  )
+where
 
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Rfc5280.HasOID (HasOID (..))
@@ -25,8 +26,10 @@ import Data.Rfc5280.Internal (OID, RenderConfig (..), intersperseCommas, oidBuil
 subject domain policy OID.
 -}
 data PolicyMapping = PolicyMapping
-  { pmIssuerDomainPolicy  :: !OID  -- ^ The issuer's policy OID.
-  , pmSubjectDomainPolicy :: !OID  -- ^ The subject's corresponding policy OID.
+  { pmIssuerDomainPolicy :: !OID
+  -- ^ The issuer's policy OID.
+  , pmSubjectDomainPolicy :: !OID
+  -- ^ The subject's corresponding policy OID.
   }
   deriving (Eq, Show)
 

@@ -18,12 +18,12 @@ import qualified Rfc5280.NameConstraintsSpec as NameConstraints
 import qualified Rfc5280.PolicyMappingsSpec as PolicyMappings
 import qualified Rfc5280.SubjectAltNameSpec as SubjectAltName
 import qualified Rfc5280Spec as Extension
-import System.IO (
-  BufferMode (..),
-  hSetBuffering,
-  stderr,
-  stdout,
- )
+import System.IO
+  ( BufferMode (..)
+  , hSetBuffering
+  , stderr
+  , stdout
+  )
 import Test.Hspec
 
 

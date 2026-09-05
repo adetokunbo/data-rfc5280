@@ -11,12 +11,13 @@ module Data.Rfc5280.InhibitAnyPolicy
   ( InhibitAnyPolicy (..)
   , InhibitAnyPolicyError (..)
   , mkInhibitAnyPolicy
-  ) where
+  )
+where
 
-import Data.Rfc5280.Internal (RenderConfig (..))
 import Data.ByteString.Builder (intDec)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Rfc5280.HasOID (HasOID (..))
+import Data.Rfc5280.Internal (RenderConfig (..))
 
 
 {- | Represents the InhibitAnyPolicy extension (RFC 5280 §4.2.1.14).
@@ -31,7 +32,8 @@ newtype InhibitAnyPolicy = InhibitAnyPolicy Int
 
 -- | Failure modes for 'mkInhibitAnyPolicy'.
 data InhibitAnyPolicyError
-  = NegativeSkipCerts -- ^ The skip-certs value is negative.
+  = -- | The skip-certs value is negative.
+    NegativeSkipCerts
   deriving (Eq, Show)
 
 
@@ -40,7 +42,7 @@ is non-negative.
 -}
 mkInhibitAnyPolicy :: Int -> Either InhibitAnyPolicyError InhibitAnyPolicy
 mkInhibitAnyPolicy n
-  | n < 0    = Left NegativeSkipCerts
+  | n < 0 = Left NegativeSkipCerts
   | otherwise = Right (InhibitAnyPolicy n)
 
 

@@ -14,11 +14,11 @@ import qualified Data.ByteString as BS
 import Data.Rfc5280 (renderConfig)
 import Data.Rfc5280.GeneralName
 import Data.Rfc5280.NameConstraints
+import Rfc5280.Fixtures (assertRight)
+import Rfc5280.Generators (validDnsName)
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck (forAll, (===))
-import Rfc5280.Fixtures (assertRight)
-import Rfc5280.Generators (validDnsName)
 
 
 spec :: Spec
@@ -38,7 +38,7 @@ spec = describe "module Data.Rfc5280.NameConstraints" $ do
         `shouldBe` "excluded;DNS:.example.org"
     it "renders permitted and excluded constraints together" $ do
       permitted <- assertRight (mkDnsConstraint ".example.com")
-      excluded  <- assertRight (mkDnsConstraint ".evil.example.com")
+      excluded <- assertRight (mkDnsConstraint ".evil.example.com")
       renderConfig
         ( mkNameConstraints
             (Permitted (DNS permitted))

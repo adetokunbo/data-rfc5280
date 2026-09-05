@@ -10,7 +10,8 @@ extension (RFC 5280 §4.2.1.7).
 module Data.Rfc5280.IssuerAltName
   ( IssuerAltName (..)
   , mkIssuerAltName
-  ) where
+  )
+where
 
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Rfc5280.GeneralName (GeneralName)

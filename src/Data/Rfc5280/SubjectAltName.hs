@@ -10,7 +10,8 @@ extension (RFC 5280 §4.2.1.6).
 module Data.Rfc5280.SubjectAltName
   ( SubjectAltName (..)
   , mkSubjectAltName
-  ) where
+  )
+where
 
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Rfc5280.GeneralName (GeneralName)
@@ -38,5 +39,3 @@ instance HasOID SubjectAltName where
 
 instance RenderConfig SubjectAltName where
   renderBuilder (SubjectAltName names) = intersperseCommas (fmap renderBuilder names)
-
-

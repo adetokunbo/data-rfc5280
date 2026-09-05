@@ -18,8 +18,8 @@ module Rfc5280.Generators
 where
 
 import Data.List.NonEmpty (NonEmpty (..))
-import qualified Data.Text as T
 import Data.Rfc5280.GeneralName (DnsName, mkDnsName)
+import qualified Data.Text as T
 import Test.QuickCheck (Gen, choose, elements, vectorOf)
 
 
@@ -57,7 +57,7 @@ element. The count @n@ must be ≥ 1; callers should enforce this with
 -}
 vectorOf1 :: Int -> Gen a -> Gen (NonEmpty a)
 vectorOf1 n gen = do
-  h  <- gen
+  h <- gen
   tl <- vectorOf (n - 1) gen
   return (h :| tl)
 
@@ -65,7 +65,7 @@ vectorOf1 n gen = do
 -- | Generates a single label with one invalid character injected in the middle.
 nameWithInvalidChar :: Gen T.Text
 nameWithInvalidChar = do
-  prefix  <- validLabel
+  prefix <- validLabel
   badChar <- elements "!@#$%^&*()"
-  suffix  <- validLabel
+  suffix <- validLabel
   return $ prefix <> T.singleton badChar <> suffix

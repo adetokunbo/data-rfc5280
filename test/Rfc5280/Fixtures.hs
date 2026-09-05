@@ -40,12 +40,12 @@ assertRight = either (fail . show) pure
 
 
 -- | Decode an IP address, failing with a descriptive message if invalid.
-testIP :: MonadFail m => Text -> m IP
+testIP :: (MonadFail m) => Text -> m IP
 testIP t =
   maybe (fail $ "could not decode IP address: " <> T.unpack t) pure (IP.decode t)
 
 
 -- | Parse an email address, failing with a descriptive message if invalid.
-testEmail :: MonadFail m => ByteString -> m EmailAddress
+testEmail :: (MonadFail m) => ByteString -> m EmailAddress
 testEmail bs =
   either (\e -> fail $ "invalid email address: " <> e) pure (validate bs)

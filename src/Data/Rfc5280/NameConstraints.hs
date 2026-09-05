@@ -16,7 +16,8 @@ module Data.Rfc5280.NameConstraints
   ( NameConstraints (..)
   , mkNameConstraints
   , NameConstraint (..)
-  ) where
+  )
+where
 
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Rfc5280.GeneralName (GeneralName)
@@ -55,7 +56,7 @@ instance HasOID NameConstraints where
 
 instance RenderConfig NameConstraint where
   renderBuilder (Permitted name) = "permitted;" <> renderBuilder name
-  renderBuilder (Excluded  name) = "excluded;"  <> renderBuilder name
+  renderBuilder (Excluded name) = "excluded;" <> renderBuilder name
 
 
 instance RenderConfig NameConstraints where

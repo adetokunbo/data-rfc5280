@@ -16,9 +16,9 @@ module Data.Rfc5280.ExtKeyUsage
 where
 
 import Data.List.NonEmpty (NonEmpty (..))
-import qualified Data.Set.NonEmpty as NES
 import Data.Rfc5280.HasOID (HasOID (..))
 import Data.Rfc5280.Internal (RenderConfig (..), intersperseCommas)
+import qualified Data.Set.NonEmpty as NES
 
 
 {- | Represents the bits that can set for @ExtKeyUsage@
@@ -34,13 +34,15 @@ data ExtKeyUsagePurpose
     CodeSigning
   | -- | Email protection (S\/MIME). Renders as @\"emailProtection\"@.
     EmailProtection
-  | -- | Binding an object hash to a trusted time source. Renders as
-    -- @\"timeStamping\"@.
+  | {- | Binding an object hash to a trusted time source. Renders as
+    @\"timeStamping\"@.
+    -}
     TimeStamping
   | -- | Signing OCSP responses. Renders as @\"OCSPSigning\"@ (capital OCSP).
     OCSPSigning
-  | -- | Permits any extended key usage purpose. Renders as
-    -- @\"anyExtendedKeyUsage\"@ (lowercase @any@).
+  | {- | Permits any extended key usage purpose. Renders as
+    @\"anyExtendedKeyUsage\"@ (lowercase @any@).
+    -}
     AnyExtendedKeyUsage
   deriving (Eq, Show, Ord, Enum, Bounded)
 
