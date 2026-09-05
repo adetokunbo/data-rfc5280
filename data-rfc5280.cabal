@@ -1,27 +1,26 @@
 cabal-version:      3.0
 name:               data-rfc5280
 version:            0.1.0.0
-synopsis:           Represent the standard X.509v3 certificate extensions from RFC 5280
+synopsis:           Represent the standard X.509v3 certificate extensions
 description:
   @data-rfc5280@ provides Haskell types for the standard X.509v3
-  certificate extensions defined in RFC 5280, together with a renderer that
-  serialises each extension value to OpenSSL configuration format.
-  .
-  The library is encode-only: it produces @ByteString@ output suitable for use
-  with OpenSSL config files, but does not parse or decode existing certificate
-  data.
-  .
+  certificate extensions defined in [RFC 5280](https://datatracker.ietf.org/doc/html/rfc5280#section-4.2)
+
   Extensions covered include @BasicConstraints@, @KeyUsage@,
   @ExtendedKeyUsage@, @SubjectAltName@, @IssuerAltName@,
   @AuthorityKeyIdentifier@, @SubjectKeyIdentifier@, @CertificatePolicies@,
   @PolicyMappings@, @NameConstraints@, @CRLDistributionPoints@,
   @AuthorityInfoAccess@, and @InhibitAnyPolicy@.
 
+  The package also provides typeclasses that support serialisation to to OpenSSL configuration format
+
+  See the [README](https://github.com/adetokunbo/data-rfc5280/blob/main/README.md) for more details
+
 license:            BSD-3-Clause
 license-file:       LICENSE
 author:             Tim Emiola
 maintainer:         adetokunbo@emio.la
-category:           Web
+category:           Cryptography
 homepage:           https://github.com/adetokunbo/data-rfc5280#readme
 bug-reports:
   https://github.com/adetokunbo/data-rfc5280/issues
