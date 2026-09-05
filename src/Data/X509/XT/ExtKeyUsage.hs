@@ -1,5 +1,4 @@
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
@@ -16,12 +15,10 @@ module Data.X509.XT.ExtKeyUsage
   )
 where
 
-import Data.Builder (ToBuilder (..))
-import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
 import qualified Data.Set.NonEmpty as NES
 import Data.X509.XT.HasOID (HasOID (..))
-import Data.X509.XT.Internal (intersperseCommas)
+import Data.X509.XT.Internal (RenderConfig (..), intersperseCommas)
 
 
 {- | Represents the bits that can set for @ExtKeyUsage@
@@ -48,14 +45,14 @@ data ExtKeyUsagePurpose
   deriving (Eq, Show, Ord, Enum, Bounded)
 
 
-instance ToBuilder ExtKeyUsagePurpose Builder where
-  toBuilder ServerAuth = "serverAuth"
-  toBuilder ClientAuth = "clientAuth"
-  toBuilder CodeSigning = "codeSigning"
-  toBuilder EmailProtection = "emailProtection"
-  toBuilder TimeStamping = "timeStamping"
-  toBuilder OCSPSigning = "OCSPSigning"
-  toBuilder AnyExtendedKeyUsage = "anyExtendedKeyUsage"
+instance RenderConfig ExtKeyUsagePurpose where
+  renderBuilder ServerAuth = "serverAuth"
+  renderBuilder ClientAuth = "clientAuth"
+  renderBuilder CodeSigning = "codeSigning"
+  renderBuilder EmailProtection = "emailProtection"
+  renderBuilder TimeStamping = "timeStamping"
+  renderBuilder OCSPSigning = "OCSPSigning"
+  renderBuilder AnyExtendedKeyUsage = "anyExtendedKeyUsage"
 
 
 {- | Represents the @ExtKeyUsage@ extension
@@ -69,5 +66,5 @@ instance HasOID ExtKeyUsage where
   extensionOID _ = 2 :| [5, 29, 37]
 
 
-instance ToBuilder ExtKeyUsage Builder where
-  toBuilder = intersperseCommas . fmap toBuilder . NES.toList
+instance RenderConfig ExtKeyUsage where
+  renderBuilder = intersperseCommas . fmap renderBuilder . NES.toList

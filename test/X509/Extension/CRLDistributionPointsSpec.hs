@@ -11,7 +11,7 @@ Tests for 'Data.X509.XT.CRLDistributionPoints'.
 module X509.Extension.CRLDistributionPointsSpec (spec) where
 
 import qualified Data.ByteString as BS
-import Data.X509.XT (renderOpenSSLConfig)
+import Data.X509.XT (renderConfig)
 import Data.X509.XT.CRLDistributionPoints
 import Data.X509.XT.GeneralName
 import Test.Hspec
@@ -28,12 +28,12 @@ spec = describe "module Data.X509.XT.CRLDistributionPoints" $ do
   context "mkCRLDistributionPoints" $ do
     it "renders a single URI distribution point" $ do
       uri <- mkURI "http://crl.example.com/crl.crl"
-      renderOpenSSLConfig (mkCRLDistributionPoints (mkDistributionPoint (URIName uri)) [])
+      renderConfig (mkCRLDistributionPoints (mkDistributionPoint (URIName uri)) [])
         `shouldBe` "URI:http://crl.example.com/crl.crl"
     it "renders two URI distribution points" $ do
       uri1 <- mkURI "http://crl1.example.com/crl.crl"
       uri2 <- mkURI "http://crl2.example.com/crl.crl"
-      renderOpenSSLConfig
+      renderConfig
         ( mkCRLDistributionPoints
             (mkDistributionPoint (URIName uri1))
             [mkDistributionPoint (URIName uri2)]
@@ -41,11 +41,11 @@ spec = describe "module Data.X509.XT.CRLDistributionPoints" $ do
         `shouldBe` "URI:http://crl1.example.com/crl.crl,URI:http://crl2.example.com/crl.crl"
     it "renders a DNS-name distribution point" $ do
       dn <- assertRight (mkDnsName "crl.example.com")
-      renderOpenSSLConfig (mkCRLDistributionPoints (mkDistributionPoint (DNS dn)) [])
+      renderConfig (mkCRLDistributionPoints (mkDistributionPoint (DNS dn)) [])
         `shouldBe` "DNS:crl.example.com"
     it "renders an Other distribution point" $ do
       gn <- assertRight (mkOther 1 [2, 3] UTF8String "value")
-      renderOpenSSLConfig
+      renderConfig
         ( mkCRLDistributionPoints
             (mkDistributionPoint gn)
             []
@@ -53,12 +53,12 @@ spec = describe "module Data.X509.XT.CRLDistributionPoints" $ do
         `shouldBe` "otherName:1.2.3;UTF8:value"
     prop "a single distribution point contains no comma" $
       forAll validDnsName $ \dn ->
-        BS.elem 0x2C (renderOpenSSLConfig (mkCRLDistributionPoints (mkDistributionPoint (DNS dn)) [])) === False
+        BS.elem 0x2C (renderConfig (mkCRLDistributionPoints (mkDistributionPoint (DNS dn)) [])) === False
     prop "n distribution points produce exactly n-1 comma separators" $
       forAll (choose (1, 6)) $ \n ->
         forAll (vectorOf1 n validDnsName) $ \(h :| tl) ->
           let pts = mkCRLDistributionPoints
                       (mkDistributionPoint (DNS h))
                       (map (mkDistributionPoint . DNS) tl)
-              bs = renderOpenSSLConfig pts
+              bs = renderConfig pts
           in BS.length (BS.filter (== 0x2C) bs) === n - 1

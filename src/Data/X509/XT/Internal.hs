@@ -10,8 +10,11 @@ Internal helpers shared across X.509 extension modules. Not part of the
 public API stability guarantee.
 -}
 module Data.X509.XT.Internal
-  ( -- * OID
-    OID
+  ( -- * Rendering
+    RenderConfig (..)
+
+    -- * OID
+  , OID
   , OIDError (..)
   , mkOID
   , oidBuilder
@@ -24,6 +27,14 @@ module Data.X509.XT.Internal
 import Data.ByteString.Builder (Builder, intDec)
 import Data.Foldable (foldl')
 import Data.List.NonEmpty (NonEmpty (..))
+
+
+{- | Types that can be rendered to a configuration value as a 'Builder'.
+Implemented by all extension types; used by 'Data.X509.XT.renderConfig'.
+-}
+class RenderConfig a where
+  -- | Render a value as a 'Builder' in OpenSSL extension configuration format.
+  renderBuilder :: a -> Builder
 
 
 -- | An ASN.1 object identifier. Construct with 'mkOID'.

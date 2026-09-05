@@ -1,5 +1,3 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
-
 {- |
 Module      : Data.X509.XT.IssuerAltName
 Copyright   : (c) 2026 Tim Emiola
@@ -14,12 +12,10 @@ module Data.X509.XT.IssuerAltName
   , mkIssuerAltName
   ) where
 
-import Data.Builder (ToBuilder (..))
-import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.X509.XT.GeneralName (GeneralName)
 import Data.X509.XT.HasOID (HasOID (..))
-import Data.X509.XT.Internal (intersperseCommas)
+import Data.X509.XT.Internal (RenderConfig (..), intersperseCommas)
 
 
 {- | Represents the IssuerAltName extension (RFC 5280 §4.2.1.7).
@@ -40,5 +36,5 @@ instance HasOID IssuerAltName where
   extensionOID _ = 2 :| [5, 29, 18]
 
 
-instance ToBuilder IssuerAltName Builder where
-  toBuilder (IssuerAltName names) = intersperseCommas (fmap toBuilder names)
+instance RenderConfig IssuerAltName where
+  renderBuilder (IssuerAltName names) = intersperseCommas (fmap renderBuilder names)

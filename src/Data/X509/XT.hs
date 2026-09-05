@@ -8,13 +8,9 @@ Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
-Re-export facade for all standard X.509 certificate extension types, with
-rendering to OpenSSL configuration format via 'renderOpenSSLConfig'.
-
-Import this module to access every extension type and the 'renderOpenSSLConfig'
-utility in one place, or import individual extension modules directly.
-
-This library is encode-only; no parser or decoder is provided.
+Represent the standard X.509v3 certificate extensions from RFC 5280.
+Each section below provides constructors for one or more extension types;
+'renderConfig' serialises any of them to OpenSSL configuration format.
 -}
 module Data.X509.XT
   ( -- * Extension types
@@ -86,7 +82,8 @@ module Data.X509.XT
   , HasOID (..)
 
     -- * Render to OpenSSL config format
-  , renderOpenSSLConfig
+  , RenderConfig (..)
+  , renderConfig
 
     -- * Re-exported for convenience
 
@@ -96,10 +93,9 @@ module Data.X509.XT
   )
 where
 
-import Data.Builder (ToBuilder (..))
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as BS
-import Data.ByteString.Builder (Builder, toLazyByteString)
+import Data.ByteString.Builder (toLazyByteString)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Set.NonEmpty (fromList)
 import Data.X509.XT.AuthorityKeyIdentifier
@@ -143,7 +139,7 @@ import Data.X509.XT.GeneralName
   )
 import Data.X509.XT.HasOID (Extension (..), HasOID (..))
 import Data.X509.XT.InhibitAnyPolicy (InhibitAnyPolicy (..), InhibitAnyPolicyError (..), mkInhibitAnyPolicy)
-import Data.X509.XT.Internal (OID, OIDError (..), mkOID)
+import Data.X509.XT.Internal (OID, OIDError (..), RenderConfig (..), mkOID)
 import Data.X509.XT.IssuerAltName (IssuerAltName (..), mkIssuerAltName)
 import Data.X509.XT.KeyUsage (KeyUsage, KeyUsageBit (..))
 import Data.X509.XT.NameConstraints
@@ -162,5 +158,5 @@ import Data.X509.XT.SubjectKeyIdentifier (SubjectKeyIdentifier (..))
 
 
 -- | Render an extension value as a strict 'ByteString' in OpenSSL configuration format.
-renderOpenSSLConfig :: (ToBuilder a Builder) => a -> ByteString
-renderOpenSSLConfig = BS.toStrict . toLazyByteString . toBuilder
+renderConfig :: RenderConfig a => a -> ByteString
+renderConfig = BS.toStrict . toLazyByteString . renderBuilder

@@ -1,4 +1,3 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternSynonyms #-}
 
@@ -35,13 +34,12 @@ module Data.X509.XT.GeneralName
 where
 
 import Data.Bifunctor (first)
-import Data.Builder (ToBuilder (..))
-import Data.ByteString.Builder (Builder, byteString)
+import Data.ByteString.Builder (byteString)
 import Data.Char (isAlphaNum, isAscii)
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
-import Data.X509.XT.Internal (OID, OIDError, mkOID, oidBuilder)
+import Data.X509.XT.Internal (OID, OIDError, RenderConfig (..), mkOID, oidBuilder)
 import Net.IP (IP)
 import qualified Net.IP as IP
 import Text.Email.Validate (EmailAddress)
@@ -163,24 +161,24 @@ data Asn1StringType
   deriving (Eq, Show)
 
 
-instance ToBuilder Asn1StringType Builder where
-  toBuilder UTF8String = "UTF8"
-  toBuilder IA5String = "IA5"
-  toBuilder PrintableString = "PRINTABLE"
-  toBuilder BMPString = "BMP"
+instance RenderConfig Asn1StringType where
+  renderBuilder UTF8String = "UTF8"
+  renderBuilder IA5String = "IA5"
+  renderBuilder PrintableString = "PRINTABLE"
+  renderBuilder BMPString = "BMP"
 
 
-instance ToBuilder GeneralName Builder where
-  toBuilder (DNS (DnsName t)) = "DNS:" <> byteString (TE.encodeUtf8 t)
-  toBuilder (IPAddr ip) = "IP:" <> byteString (TE.encodeUtf8 (IP.encode ip))
-  toBuilder (EmailAddr addr) = "email:" <> byteString (Email.toByteString addr)
-  toBuilder (URIName uri) = "URI:" <> byteString (TE.encodeUtf8 (URI.render uri))
-  toBuilder (RegisteredID_ o) = "RID:" <> oidBuilder o
-  toBuilder (Other on) =
+instance RenderConfig GeneralName where
+  renderBuilder (DNS (DnsName t)) = "DNS:" <> byteString (TE.encodeUtf8 t)
+  renderBuilder (IPAddr ip) = "IP:" <> byteString (TE.encodeUtf8 (IP.encode ip))
+  renderBuilder (EmailAddr addr) = "email:" <> byteString (Email.toByteString addr)
+  renderBuilder (URIName uri) = "URI:" <> byteString (TE.encodeUtf8 (URI.render uri))
+  renderBuilder (RegisteredID_ o) = "RID:" <> oidBuilder o
+  renderBuilder (Other on) =
     "otherName:"
       <> oidBuilder (onTypeId on)
       <> ";"
-      <> toBuilder (onEncoding on)
+      <> renderBuilder (onEncoding on)
       <> ":"
       <> byteString (TE.encodeUtf8 (onValue on))
 

@@ -1,4 +1,3 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 
@@ -18,8 +17,8 @@ module Data.X509.XT.BasicConstraints
   )
 where
 
-import Data.Builder (ToBuilder (..))
-import Data.ByteString.Builder (Builder, intDec)
+import Data.X509.XT.Internal (RenderConfig (..))
+import Data.ByteString.Builder (intDec)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.X509.XT.HasOID (HasOID (..))
 
@@ -60,8 +59,8 @@ instance HasOID BasicConstraints where
   extensionOID _ = 2 :| [5, 29, 19]
 
 
-instance ToBuilder BasicConstraints Builder where
-  toBuilder bc =
+instance RenderConfig BasicConstraints where
+  renderBuilder bc =
     let BasicConstraints{bcIsCA, bcPathLength} = bc
         bcPrefix = "CA:"
         bcSuffix = if bcIsCA then "TRUE" else "FALSE"

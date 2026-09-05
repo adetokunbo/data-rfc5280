@@ -1,4 +1,3 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
@@ -15,11 +14,9 @@ module Data.X509.XT.AuthorityKeyIdentifier
   )
 where
 
-import Data.Builder (ToBuilder (..))
-import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.X509.XT.HasOID (HasOID (..))
-import Data.X509.XT.Internal (intersperseCommas)
+import Data.X509.XT.Internal (RenderConfig (..), intersperseCommas)
 
 
 {- | Represents the AuthorityKeyIdentifier extension
@@ -61,8 +58,8 @@ instance HasOID AuthorityKeyIdentifier where
   extensionOID _ = 2 :| [5, 29, 35]
 
 
-instance ToBuilder AuthorityKeyIdentifier Builder where
-  toBuilder aki =
+instance RenderConfig AuthorityKeyIdentifier where
+  renderBuilder aki =
     let keyId
           | akiKeyIdAlways aki = Just "keyid:always"
           | akiKeyId aki = Just "keyid"

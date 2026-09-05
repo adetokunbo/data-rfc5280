@@ -10,7 +10,7 @@ Tests for 'Data.X509.XT.PolicyMappings'.
 -}
 module X509.Extension.PolicyMappingsSpec (spec) where
 
-import Data.X509.XT (renderOpenSSLConfig, NonEmpty (..))
+import Data.X509.XT (renderConfig, NonEmpty (..))
 import Data.X509.XT.PolicyMappings
 import Test.Hspec
 
@@ -19,17 +19,17 @@ spec :: Spec
 spec = describe "module Data.X509.XT.PolicyMappings" $ do
   context "mkPolicyMappings" $ do
     it "renders a single mapping" $
-      renderOpenSSLConfig (mkPolicyMappings (mkPolicyMapping (1 :| [2, 3]) (2 :| [5, 4])) [])
+      renderConfig (mkPolicyMappings (mkPolicyMapping (1 :| [2, 3]) (2 :| [5, 4])) [])
         `shouldBe` "1.2.3:2.5.4"
     it "renders two mappings" $
-      renderOpenSSLConfig
+      renderConfig
         ( mkPolicyMappings
             (mkPolicyMapping (1 :| [2, 3]) (2 :| [5, 4]))
             [mkPolicyMapping (1 :| [2, 4]) (2 :| [5, 5])]
         )
         `shouldBe` "1.2.3:2.5.4,1.2.4:2.5.5"
     it "renders a mapping with multi-arc OIDs" $
-      renderOpenSSLConfig
+      renderConfig
         ( mkPolicyMappings
             (mkPolicyMapping (2 :| [16, 840, 1, 101, 3, 2, 1, 3, 6]) (2 :| [16, 840, 1, 101, 3, 2, 1, 12, 4]))
             []

@@ -1,5 +1,3 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
-
 {- |
 Module      : Data.X509.XT.SubjectAltName
 Copyright   : (c) 2026 Tim Emiola
@@ -14,12 +12,10 @@ module Data.X509.XT.SubjectAltName
   , mkSubjectAltName
   ) where
 
-import Data.Builder (ToBuilder (..))
-import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.X509.XT.GeneralName (GeneralName)
 import Data.X509.XT.HasOID (HasOID (..))
-import Data.X509.XT.Internal (intersperseCommas)
+import Data.X509.XT.Internal (RenderConfig (..), intersperseCommas)
 
 
 {- | Represents the SubjectAltName extension (RFC 5280 §4.2.1.6).
@@ -40,7 +36,7 @@ instance HasOID SubjectAltName where
   extensionOID _ = 2 :| [5, 29, 17]
 
 
-instance ToBuilder SubjectAltName Builder where
-  toBuilder (SubjectAltName names) = intersperseCommas (fmap toBuilder names)
+instance RenderConfig SubjectAltName where
+  renderBuilder (SubjectAltName names) = intersperseCommas (fmap renderBuilder names)
 
 

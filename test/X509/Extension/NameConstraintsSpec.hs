@@ -11,7 +11,7 @@ Tests for 'Data.X509.XT.NameConstraints'.
 module X509.Extension.NameConstraintsSpec (spec) where
 
 import qualified Data.ByteString as BS
-import Data.X509.XT (renderOpenSSLConfig)
+import Data.X509.XT (renderConfig)
 import Data.X509.XT.GeneralName
 import Data.X509.XT.NameConstraints
 import Test.Hspec
@@ -26,20 +26,20 @@ spec = describe "module Data.X509.XT.NameConstraints" $ do
   context "mkNameConstraints" $ do
     it "renders a single permitted DNS constraint" $ do
       dn <- assertRight (mkDnsConstraint ".example.com")
-      renderOpenSSLConfig (mkNameConstraints (Permitted (DNS dn)) [])
+      renderConfig (mkNameConstraints (Permitted (DNS dn)) [])
         `shouldBe` "permitted;DNS:.example.com"
     it "renders a single excluded DNS constraint" $ do
       dn <- assertRight (mkDnsConstraint ".example.com")
-      renderOpenSSLConfig (mkNameConstraints (Excluded (DNS dn)) [])
+      renderConfig (mkNameConstraints (Excluded (DNS dn)) [])
         `shouldBe` "excluded;DNS:.example.com"
     it "renders a single excluded email constraint" $ do
       dn <- assertRight (mkDnsConstraint ".example.org")
-      renderOpenSSLConfig (mkNameConstraints (Excluded (DNS dn)) [])
+      renderConfig (mkNameConstraints (Excluded (DNS dn)) [])
         `shouldBe` "excluded;DNS:.example.org"
     it "renders permitted and excluded constraints together" $ do
       permitted <- assertRight (mkDnsConstraint ".example.com")
       excluded  <- assertRight (mkDnsConstraint ".evil.example.com")
-      renderOpenSSLConfig
+      renderConfig
         ( mkNameConstraints
             (Permitted (DNS permitted))
             [Excluded (DNS excluded)]
@@ -48,7 +48,7 @@ spec = describe "module Data.X509.XT.NameConstraints" $ do
     it "renders multiple permitted constraints" $ do
       dn1 <- assertRight (mkDnsConstraint ".example.com")
       dn2 <- assertRight (mkDnsConstraint ".example.org")
-      renderOpenSSLConfig
+      renderConfig
         ( mkNameConstraints
             (Permitted (DNS dn1))
             [Permitted (DNS dn2)]
@@ -56,7 +56,7 @@ spec = describe "module Data.X509.XT.NameConstraints" $ do
         `shouldBe` "permitted;DNS:.example.com,permitted;DNS:.example.org"
     prop "a permitted constraint output starts with \"permitted;\"" $
       forAll validDnsName $ \dn ->
-        BS.isPrefixOf "permitted;" (renderOpenSSLConfig (mkNameConstraints (Permitted (DNS dn)) [])) === True
+        BS.isPrefixOf "permitted;" (renderConfig (mkNameConstraints (Permitted (DNS dn)) [])) === True
     prop "an excluded constraint output starts with \"excluded;\"" $
       forAll validDnsName $ \dn ->
-        BS.isPrefixOf "excluded;" (renderOpenSSLConfig (mkNameConstraints (Excluded (DNS dn)) [])) === True
+        BS.isPrefixOf "excluded;" (renderConfig (mkNameConstraints (Excluded (DNS dn)) [])) === True

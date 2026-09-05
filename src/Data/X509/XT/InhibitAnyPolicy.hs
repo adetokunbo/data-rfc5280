@@ -1,5 +1,3 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
-
 {- |
 Module      : Data.X509.XT.InhibitAnyPolicy
 Copyright   : (c) 2026 Tim Emiola
@@ -15,8 +13,8 @@ module Data.X509.XT.InhibitAnyPolicy
   , mkInhibitAnyPolicy
   ) where
 
-import Data.Builder (ToBuilder (..))
-import Data.ByteString.Builder (Builder, intDec)
+import Data.X509.XT.Internal (RenderConfig (..))
+import Data.ByteString.Builder (intDec)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.X509.XT.HasOID (HasOID (..))
 
@@ -50,5 +48,5 @@ instance HasOID InhibitAnyPolicy where
   extensionOID _ = 2 :| [5, 29, 54]
 
 
-instance ToBuilder InhibitAnyPolicy Builder where
-  toBuilder (InhibitAnyPolicy n) = intDec n
+instance RenderConfig InhibitAnyPolicy where
+  renderBuilder (InhibitAnyPolicy n) = intDec n

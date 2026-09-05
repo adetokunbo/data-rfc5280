@@ -1,5 +1,3 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
-
 {- |
 Module      : Data.X509.XT.CRLDistributionPoints
 Copyright   : (c) 2026 Tim Emiola
@@ -21,12 +19,10 @@ module Data.X509.XT.CRLDistributionPoints
   , mkDistributionPoint
   ) where
 
-import Data.Builder (ToBuilder (..))
-import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.X509.XT.GeneralName (GeneralName)
 import Data.X509.XT.HasOID (HasOID (..))
-import Data.X509.XT.Internal (intersperseCommas)
+import Data.X509.XT.Internal (RenderConfig (..), intersperseCommas)
 
 
 {- | A single CRL distribution point, identified by its full-name location.
@@ -62,9 +58,9 @@ instance HasOID CRLDistributionPoints where
   extensionOID _ = 2 :| [5, 29, 31]
 
 
-instance ToBuilder DistributionPoint Builder where
-  toBuilder (DistributionPoint name) = toBuilder name
+instance RenderConfig DistributionPoint where
+  renderBuilder (DistributionPoint name) = renderBuilder name
 
 
-instance ToBuilder CRLDistributionPoints Builder where
-  toBuilder (CRLDistributionPoints pts) = intersperseCommas (fmap toBuilder pts)
+instance RenderConfig CRLDistributionPoints where
+  renderBuilder (CRLDistributionPoints pts) = intersperseCommas (fmap renderBuilder pts)

@@ -1,6 +1,3 @@
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
@@ -18,10 +15,8 @@ module Data.X509.XT.HasOID
   , Extension (..)
   ) where
 
-import Data.Builder (ToBuilder (..))
-import Data.ByteString.Builder (Builder)
 import Data.Proxy (Proxy)
-import Data.X509.XT.Internal (OID)
+import Data.X509.XT.Internal (OID, RenderConfig (..))
 
 
 -- | Associates an extension type with its RFC 5280 OID.
@@ -46,7 +41,7 @@ data Extension a = Extension
 {- | Renders as @\"critical,\<value\>\"@ when 'extCritical' is 'True',
 or just @\<value\>@ otherwise.
 -}
-instance (ToBuilder a Builder) => ToBuilder (Extension a) Builder where
-  toBuilder (Extension critical val)
-    | critical  = "critical," <> toBuilder val
-    | otherwise = toBuilder val
+instance RenderConfig a => RenderConfig (Extension a) where
+  renderBuilder (Extension critical val)
+    | critical  = "critical," <> renderBuilder val
+    | otherwise = renderBuilder val

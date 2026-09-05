@@ -1,4 +1,3 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
@@ -17,12 +16,10 @@ module Data.X509.XT.AuthorityInfoAccess
   )
 where
 
-import Data.Builder (ToBuilder (..))
-import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.X509.XT.GeneralName (GeneralName)
 import Data.X509.XT.HasOID (HasOID (..))
-import Data.X509.XT.Internal (intersperseCommas)
+import Data.X509.XT.Internal (RenderConfig (..), intersperseCommas)
 
 
 {- | A single access point within an 'AuthorityInfoAccess' extension.
@@ -56,10 +53,10 @@ instance HasOID AuthorityInfoAccess where
   extensionOID _ = 1 :| [3, 6, 1, 5, 5, 7, 1, 1]
 
 
-instance ToBuilder AccessDescription Builder where
-  toBuilder (OCSP loc) = "OCSP;" <> toBuilder loc
-  toBuilder (CAIssuers loc) = "caIssuers;" <> toBuilder loc
+instance RenderConfig AccessDescription where
+  renderBuilder (OCSP loc) = "OCSP;" <> renderBuilder loc
+  renderBuilder (CAIssuers loc) = "caIssuers;" <> renderBuilder loc
 
 
-instance ToBuilder AuthorityInfoAccess Builder where
-  toBuilder (AuthorityInfoAccess xs) = intersperseCommas (fmap toBuilder xs)
+instance RenderConfig AuthorityInfoAccess where
+  renderBuilder (AuthorityInfoAccess xs) = intersperseCommas (fmap renderBuilder xs)

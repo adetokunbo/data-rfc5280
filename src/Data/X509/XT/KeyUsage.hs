@@ -1,7 +1,5 @@
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeSynonymInstances #-}
 
 {- |
 Module      : Data.X509.XT.KeyUsage
@@ -16,12 +14,10 @@ module Data.X509.XT.KeyUsage
   , KeyUsage
   ) where
 
-import Data.Builder (ToBuilder (..))
-import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
 import qualified Data.Set.NonEmpty as NES
 import Data.X509.XT.HasOID (HasOID (..))
-import Data.X509.XT.Internal (intersperseCommas)
+import Data.X509.XT.Internal (RenderConfig (..), intersperseCommas)
 
 
 {- | Represents the bits that can set for @KeyUsage@
@@ -59,16 +55,16 @@ data KeyUsageBit
   deriving (Eq, Show, Ord, Enum, Bounded)
 
 
-instance ToBuilder KeyUsageBit Builder where
-  toBuilder DigitalSignature = "digitalSignature"
-  toBuilder NonRepudiation   = "nonRepudiation"
-  toBuilder KeyEncipherment  = "keyEncipherment"
-  toBuilder DataEncipherment = "dataEncipherment"
-  toBuilder KeyAgreement     = "keyAgreement"
-  toBuilder KeyCertSign      = "keyCertSign"
-  toBuilder CRLSign          = "cRLSign"
-  toBuilder EncipherOnly     = "encipherOnly"
-  toBuilder DecipherOnly     = "decipherOnly"
+instance RenderConfig KeyUsageBit where
+  renderBuilder DigitalSignature = "digitalSignature"
+  renderBuilder NonRepudiation   = "nonRepudiation"
+  renderBuilder KeyEncipherment  = "keyEncipherment"
+  renderBuilder DataEncipherment = "dataEncipherment"
+  renderBuilder KeyAgreement     = "keyAgreement"
+  renderBuilder KeyCertSign      = "keyCertSign"
+  renderBuilder CRLSign          = "cRLSign"
+  renderBuilder EncipherOnly     = "encipherOnly"
+  renderBuilder DecipherOnly     = "decipherOnly"
 
 
 {- | Represents the 'KeyUsage' extension
@@ -82,5 +78,5 @@ instance HasOID KeyUsage where
   extensionOID _ = 2 :| [5, 29, 15]
 
 
-instance ToBuilder KeyUsage Builder where
-  toBuilder = intersperseCommas . fmap toBuilder . NES.toList
+instance RenderConfig KeyUsage where
+  renderBuilder = intersperseCommas . fmap renderBuilder . NES.toList

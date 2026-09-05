@@ -1,4 +1,3 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
@@ -13,9 +12,9 @@ module Data.X509.XT.SubjectKeyIdentifier
   ( SubjectKeyIdentifier (..)
   ) where
 
-import Data.Builder (ToBuilder (..))
+import Data.X509.XT.Internal (RenderConfig (..))
 import Data.ByteString (ByteString)
-import Data.ByteString.Builder (Builder, byteString)
+import Data.ByteString.Builder (byteString)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.X509.XT.HasOID (HasOID (..))
 
@@ -37,6 +36,6 @@ instance HasOID SubjectKeyIdentifier where
   extensionOID _ = 2 :| [5, 29, 14]
 
 
-instance ToBuilder SubjectKeyIdentifier Builder where
-  toBuilder (Raw x)    = byteString x
-  toBuilder HashMethod = "hash"
+instance RenderConfig SubjectKeyIdentifier where
+  renderBuilder (Raw x)    = byteString x
+  renderBuilder HashMethod = "hash"

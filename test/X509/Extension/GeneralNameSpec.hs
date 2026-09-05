@@ -12,7 +12,7 @@ module X509.Extension.GeneralNameSpec (spec) where
 
 import Data.Either (isLeft)
 import qualified Data.Text as T
-import Data.X509.XT (renderOpenSSLConfig, NonEmpty (..))
+import Data.X509.XT (renderConfig, NonEmpty (..))
 import Data.X509.XT.GeneralName
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
@@ -27,43 +27,43 @@ spec = describe "module Data.X509.XT.GeneralName" $ do
   context "DNS" $
     it "converts to ByteString" $ do
       dn <- assertRight (mkDnsName "example.com")
-      renderOpenSSLConfig (DNS dn) `shouldBe` "DNS:example.com"
+      renderConfig (DNS dn) `shouldBe` "DNS:example.com"
   context "IPAddr (IPv4)" $
     it "converts to ByteString" $ do
       ip <- testIP "192.0.2.1"
-      renderOpenSSLConfig (IPAddr ip) `shouldBe` "IP:192.0.2.1"
+      renderConfig (IPAddr ip) `shouldBe` "IP:192.0.2.1"
   context "IPAddr (IPv6)" $
     it "converts to ByteString" $ do
       ip <- testIP "::1"
-      renderOpenSSLConfig (IPAddr ip) `shouldBe` "IP:::1"
+      renderConfig (IPAddr ip) `shouldBe` "IP:::1"
   context "EmailAddr" $
     it "converts to ByteString" $ do
       addr <- testEmail "user@example.com"
-      renderOpenSSLConfig (EmailAddr addr) `shouldBe` "email:user@example.com"
+      renderConfig (EmailAddr addr) `shouldBe` "email:user@example.com"
   context "URIName" $
     it "converts to ByteString" $ do
       uri <- mkURI "https://example.com"
-      renderOpenSSLConfig (URIName uri) `shouldBe` "URI:https://example.com"
+      renderConfig (URIName uri) `shouldBe` "URI:https://example.com"
   context "RegisteredID" $
     it "converts to ByteString" $ do
       rid <- assertRight (mkRegisteredID 2 [5, 4, 3])
-      renderOpenSSLConfig rid `shouldBe` "RID:2.5.4.3"
+      renderConfig rid `shouldBe` "RID:2.5.4.3"
   context "Other (UTF8String)" $
     it "converts to ByteString" $ do
       gn <- assertRight (mkOther 1 [2, 3] UTF8String "hello")
-      renderOpenSSLConfig gn `shouldBe` "otherName:1.2.3;UTF8:hello"
+      renderConfig gn `shouldBe` "otherName:1.2.3;UTF8:hello"
   context "Other (IA5String)" $
     it "converts to ByteString" $ do
       gn <- assertRight (mkOther 1 [2, 3] IA5String "hello")
-      renderOpenSSLConfig gn `shouldBe` "otherName:1.2.3;IA5:hello"
+      renderConfig gn `shouldBe` "otherName:1.2.3;IA5:hello"
   context "Other (PrintableString)" $
     it "converts to ByteString" $ do
       gn <- assertRight (mkOther 1 [2, 3] PrintableString "Hello World")
-      renderOpenSSLConfig gn `shouldBe` "otherName:1.2.3;PRINTABLE:Hello World"
+      renderConfig gn `shouldBe` "otherName:1.2.3;PRINTABLE:Hello World"
   context "Other (BMPString)" $
     it "converts to ByteString" $ do
       gn <- assertRight (mkOther 1 [2, 3] BMPString "hello")
-      renderOpenSSLConfig gn `shouldBe` "otherName:1.2.3;BMP:hello"
+      renderConfig gn `shouldBe` "otherName:1.2.3;BMP:hello"
   context "mkDnsName" $ do
     it "accepts a simple hostname" $
       fmap dnsNameText (mkDnsName "example.com") `shouldBe` Right "example.com"

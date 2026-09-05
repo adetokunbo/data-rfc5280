@@ -1,4 +1,3 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
@@ -19,12 +18,10 @@ module Data.X509.XT.NameConstraints
   , NameConstraint (..)
   ) where
 
-import Data.Builder (ToBuilder (..))
-import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.X509.XT.GeneralName (GeneralName)
 import Data.X509.XT.HasOID (HasOID (..))
-import Data.X509.XT.Internal (intersperseCommas)
+import Data.X509.XT.Internal (RenderConfig (..), intersperseCommas)
 
 
 {- | A single name constraint, either permitting or excluding a subtree
@@ -56,10 +53,10 @@ instance HasOID NameConstraints where
   extensionOID _ = 2 :| [5, 29, 30]
 
 
-instance ToBuilder NameConstraint Builder where
-  toBuilder (Permitted name) = "permitted;" <> toBuilder name
-  toBuilder (Excluded  name) = "excluded;"  <> toBuilder name
+instance RenderConfig NameConstraint where
+  renderBuilder (Permitted name) = "permitted;" <> renderBuilder name
+  renderBuilder (Excluded  name) = "excluded;"  <> renderBuilder name
 
 
-instance ToBuilder NameConstraints Builder where
-  toBuilder (NameConstraints cs) = intersperseCommas (fmap toBuilder cs)
+instance RenderConfig NameConstraints where
+  renderBuilder (NameConstraints cs) = intersperseCommas (fmap renderBuilder cs)

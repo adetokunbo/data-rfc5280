@@ -1,4 +1,3 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
@@ -17,11 +16,9 @@ module Data.X509.XT.PolicyMappings
   , mkPolicyMapping
   ) where
 
-import Data.Builder (ToBuilder (..))
-import Data.ByteString.Builder (Builder)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.X509.XT.HasOID (HasOID (..))
-import Data.X509.XT.Internal (OID, intersperseCommas, oidBuilder)
+import Data.X509.XT.Internal (OID, RenderConfig (..), intersperseCommas, oidBuilder)
 
 
 {- | A single policy mapping, pairing an issuer domain policy OID with a
@@ -57,9 +54,9 @@ instance HasOID PolicyMappings where
   extensionOID _ = 2 :| [5, 29, 33]
 
 
-instance ToBuilder PolicyMapping Builder where
-  toBuilder pm = oidBuilder (pmIssuerDomainPolicy pm) <> ":" <> oidBuilder (pmSubjectDomainPolicy pm)
+instance RenderConfig PolicyMapping where
+  renderBuilder pm = oidBuilder (pmIssuerDomainPolicy pm) <> ":" <> oidBuilder (pmSubjectDomainPolicy pm)
 
 
-instance ToBuilder PolicyMappings Builder where
-  toBuilder (PolicyMappings ms) = intersperseCommas (fmap toBuilder ms)
+instance RenderConfig PolicyMappings where
+  renderBuilder (PolicyMappings ms) = intersperseCommas (fmap renderBuilder ms)
