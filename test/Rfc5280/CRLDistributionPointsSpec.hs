@@ -1,14 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : X509.Extension.CRLDistributionPointsSpec
+Module      : Rfc5280.CRLDistributionPointsSpec
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
 Tests for 'Data.X509.XT.CRLDistributionPoints'.
 -}
-module X509.Extension.CRLDistributionPointsSpec (spec) where
+module Rfc5280.CRLDistributionPointsSpec (spec) where
 
 import qualified Data.ByteString as BS
 import Data.X509.XT (renderConfig)
@@ -19,8 +19,8 @@ import Test.Hspec.QuickCheck (prop)
 import Data.List.NonEmpty (NonEmpty (..))
 import Test.QuickCheck (choose, forAll, (===))
 import Text.URI (mkURI)
-import X509.Extension.Fixtures (assertRight)
-import X509.Extension.Generators (validDnsName, vectorOf1)
+import Rfc5280.Fixtures (assertRight)
+import Rfc5280.Generators (validDnsName, vectorOf1)
 
 
 spec :: Spec

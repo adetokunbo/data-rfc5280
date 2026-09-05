@@ -8,16 +8,16 @@ Test suite entry point for x509-extensions.
 -}
 module Main where
 
-import qualified X509.Extension.AuthorityInfoAccessSpec as AuthorityInfoAccess
-import qualified X509.Extension.CRLDistributionPointsSpec as CRLDistributionPoints
-import qualified X509.Extension.GeneralNameSpec as GeneralName
-import qualified X509.Extension.HasOIDSpec as HasOID
-import qualified X509.Extension.InhibitAnyPolicySpec as InhibitAnyPolicy
-import qualified X509.Extension.IssuerAltNameSpec as IssuerAltName
-import qualified X509.Extension.NameConstraintsSpec as NameConstraints
-import qualified X509.Extension.PolicyMappingsSpec as PolicyMappings
-import qualified X509.Extension.SubjectAltNameSpec as SubjectAltName
-import qualified X509.ExtensionSpec as Extension
+import qualified Rfc5280.AuthorityInfoAccessSpec as AuthorityInfoAccess
+import qualified Rfc5280.CRLDistributionPointsSpec as CRLDistributionPoints
+import qualified Rfc5280.GeneralNameSpec as GeneralName
+import qualified Rfc5280.HasOIDSpec as HasOID
+import qualified Rfc5280.InhibitAnyPolicySpec as InhibitAnyPolicy
+import qualified Rfc5280.IssuerAltNameSpec as IssuerAltName
+import qualified Rfc5280.NameConstraintsSpec as NameConstraints
+import qualified Rfc5280.PolicyMappingsSpec as PolicyMappings
+import qualified Rfc5280.SubjectAltNameSpec as SubjectAltName
+import qualified Rfc5280Spec as Extension
 import System.IO (
   BufferMode (..),
   hSetBuffering,

@@ -1,5 +1,5 @@
 {- |
-Module      : X509.Extension.Fixtures
+Module      : Rfc5280.Fixtures
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
@@ -11,7 +11,7 @@ constructors) into a 'MonadFail' context, producing a clear failure message on
 'Left'. 'testIP' and 'testEmail' do the same for external-library decoders
 that use 'Maybe' and @Either String@ respectively.
 -}
-module X509.Extension.Fixtures
+module Rfc5280.Fixtures
   ( assertRight
   , testIP
   , testEmail

@@ -1,12 +1,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : X509.ExtensionSpec
+Module      : Rfc5280Spec
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 -}
-module X509.ExtensionSpec (spec) where
+module Rfc5280Spec (spec) where
 
 import Data.X509.XT
 import Test.Hspec

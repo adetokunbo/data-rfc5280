@@ -1,14 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : X509.Extension.IssuerAltNameSpec
+Module      : Rfc5280.IssuerAltNameSpec
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
 Tests for 'Data.X509.XT.IssuerAltName'.
 -}
-module X509.Extension.IssuerAltNameSpec (spec) where
+module Rfc5280.IssuerAltNameSpec (spec) where
 
 import qualified Data.ByteString as BS
 import Data.X509.XT (renderConfig)
@@ -18,8 +18,8 @@ import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
 import Data.List.NonEmpty (NonEmpty (..))
 import Test.QuickCheck (choose, forAll, (===))
-import X509.Extension.Fixtures (assertRight, testEmail, testIP)
-import X509.Extension.Generators (validDnsName, vectorOf1)
+import Rfc5280.Fixtures (assertRight, testEmail, testIP)
+import Rfc5280.Generators (validDnsName, vectorOf1)
 
 
 spec :: Spec

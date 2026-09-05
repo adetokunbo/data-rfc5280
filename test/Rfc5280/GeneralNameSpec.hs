@@ -1,14 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : X509.Extension.GeneralNameSpec
+Module      : Rfc5280.GeneralNameSpec
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
 Tests for 'Data.X509.XT.GeneralName'.
 -}
-module X509.Extension.GeneralNameSpec (spec) where
+module Rfc5280.GeneralNameSpec (spec) where
 
 import Data.Either (isLeft)
 import qualified Data.Text as T
@@ -18,8 +18,8 @@ import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck (forAll, (===))
 import Text.URI (mkURI)
-import X509.Extension.Fixtures (assertRight, testEmail, testIP)
-import X509.Extension.Generators (nameWithInvalidChar, validDNSName)
+import Rfc5280.Fixtures (assertRight, testEmail, testIP)
+import Rfc5280.Generators (nameWithInvalidChar, validDNSName)
 
 
 spec :: Spec

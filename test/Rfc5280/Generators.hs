@@ -1,14 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : X509.Extension.Generators
+Module      : Rfc5280.Generators
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
 Shared QuickCheck generators for X.509 extension test suites.
 -}
-module X509.Extension.Generators
+module Rfc5280.Generators
   ( validLabel
   , validDNSName
   , validDnsName

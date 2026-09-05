@@ -1,14 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : X509.Extension.HasOIDSpec
+Module      : Rfc5280.HasOIDSpec
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
 Tests for 'Data.X509.XT.HasOID'.
 -}
-module X509.Extension.HasOIDSpec (spec) where
+module Rfc5280.HasOIDSpec (spec) where
 
 import Data.Proxy (Proxy (..))
 import Data.X509.XT

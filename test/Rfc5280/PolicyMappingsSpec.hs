@@ -1,14 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : X509.Extension.PolicyMappingsSpec
+Module      : Rfc5280.PolicyMappingsSpec
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
 Tests for 'Data.X509.XT.PolicyMappings'.
 -}
-module X509.Extension.PolicyMappingsSpec (spec) where
+module Rfc5280.PolicyMappingsSpec (spec) where
 
 import Data.X509.XT (renderConfig, NonEmpty (..))
 import Data.X509.XT.PolicyMappings
