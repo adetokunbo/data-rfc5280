@@ -94,8 +94,8 @@ module Data.Rfc5280
 where
 
 import Data.ByteString (ByteString)
-import qualified Data.ByteString as BS
 import Data.ByteString.Builder (toLazyByteString)
+import qualified Data.ByteString.Lazy as LBS
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Rfc5280.AuthorityKeyIdentifier
   ( AuthorityKeyIdentifier (..)
@@ -159,4 +159,4 @@ import Data.Set.NonEmpty (fromList)
 
 -- | Render an extension value as a strict 'ByteString' in OpenSSL configuration format.
 renderConfig :: (RenderConfig a) => a -> ByteString
-renderConfig = BS.toStrict . toLazyByteString . renderBuilder
+renderConfig = LBS.toStrict . toLazyByteString . renderBuilder
