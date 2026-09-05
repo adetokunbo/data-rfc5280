@@ -26,14 +26,16 @@ Each extension value can be serialised to OpenSSL configuration format as a
 import qualified Data.ByteString.Char8 as BC8
 import Data.Rfc5280
 
--- Render the basicConstraints extension for a CA with a path length of 2.
+-- Render a critical nameConstraints extension restricting issuance to
+-- .example.com while excluding .evil.example.com.
 example :: IO ()
-example = case mkBasicConstraints True (Just 2) of
-  Left err -> print err
-  Right bc -> do
-    let ext = Extension {extCritical = True, extValue = bc}
-    BC8.putStrLn $ renderConfig ext
-    -- critical,CA:TRUE,pathLen2
+example = do
+  permitted <- assertRight $ mkDnsConstraint ".example.com"
+  excluded <- assertRight $ mkDnsConstraint ".evil.example.com"
+  let nc = mkNameConstraints (Permitted (DNS permitted)) [Excluded (DNS excluded)]
+      ext = Extension {extCritical = True, extValue = nc}
+  BC8.putStrLn $ renderConfig ext
+  -- critical,permitted;DNS:.example.com,excluded;DNS:.evil.example.com
 ```
 
 [RFC 5280]:           https://datatracker.ietf.org/doc/html/rfc5280
