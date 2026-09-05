@@ -1,9 +1,9 @@
 cabal-version:      3.0
-name:               x509-extensions
+name:               data-rfc5280
 version:            0.1.0.0
-synopsis:           Types that represent the standard X509 extensions
+synopsis:           Represent the standard X.509v3 certificate extensions from RFC 5280
 description:
-  @x509-extensions@ provides Haskell types for the standard X.509v3
+  @data-rfc5280@ provides Haskell types for the standard X.509v3
   certificate extensions defined in RFC 5280, together with a renderer that
   serialises each extension value to OpenSSL configuration format.
   .
@@ -22,9 +22,9 @@ license-file:       LICENSE
 author:             Tim Emiola
 maintainer:         adetokunbo@emio.la
 category:           Web
-homepage:           https://github.com/adetokunbo/x509-extensions#readme
+homepage:           https://github.com/adetokunbo/data-rfc5280#readme
 bug-reports:
-  https://github.com/adetokunbo/x509-extensions/issues
+  https://github.com/adetokunbo/data-rfc5280/issues
 tested-with:        GHC ==8.10.7 || ==9.0.2 || ==9.2.8 || ==9.4.8 || ==9.6.6 || ==9.8.4
 build-type:         Simple
 extra-source-files:
@@ -32,7 +32,7 @@ extra-source-files:
 
 source-repository head
   type:     git
-  location: https://github.com/adetokunbo/x509-extensions.git
+  location: https://github.com/adetokunbo/data-rfc5280.git
 
 library
   exposed-modules:
@@ -95,5 +95,5 @@ test-suite test
     , modern-uri      >=0.3 && <0.4
     , QuickCheck      >=2.13 && < 2.16
     , text            >=1.2 && <2.2
-    , x509-extensions
+    , data-rfc5280
 

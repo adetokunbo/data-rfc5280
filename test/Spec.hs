@@ -4,7 +4,7 @@ Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
-Test suite entry point for x509-extensions.
+Test suite entry point for data-rfc5280.
 -}
 module Main where
 

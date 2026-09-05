@@ -2,6 +2,6 @@ packages: .
 
 test-show-details: streaming
 
-package x509-extensions
+package data-rfc5280
   haddock-options: --hyperlinked-source
 
