@@ -1,6 +1,6 @@
 cabal-version:      3.0
 name:               data-rfc5280
-version:            0.1.0.0
+version:            0.1.0.1
 synopsis:           Represent the standard X.509v3 certificate extensions
 description:
   @data-rfc5280@ provides Haskell types for the standard X.509v3
@@ -12,7 +12,7 @@ description:
   @PolicyMappings@, @NameConstraints@, @CRLDistributionPoints@,
   @AuthorityInfoAccess@, and @InhibitAnyPolicy@.
 
-  The package also provides typeclasses that support serialisation to to OpenSSL configuration format
+  The package also provides typeclasses that support serialisation to OpenSSL configuration format
 
   See the [README](https://github.com/adetokunbo/data-rfc5280/blob/main/README.md) for more details
 
