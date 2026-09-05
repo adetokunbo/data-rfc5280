@@ -1,5 +1,5 @@
 {- |
-Module      : Data.X509.XT.CRLDistributionPoints
+Module      : Data.Rfc5280.CRLDistributionPoints
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
@@ -12,7 +12,7 @@ full-name 'GeneralName' location. The @reasons@, @cRLIssuer@, and
 @nameRelativeToCRLIssuer@ fields from the RFC are not yet supported; those
 require section-based OpenSSL config syntax which this library does not produce.
 -}
-module Data.X509.XT.CRLDistributionPoints
+module Data.Rfc5280.CRLDistributionPoints
   ( CRLDistributionPoints (..)
   , mkCRLDistributionPoints
   , DistributionPoint (..)
@@ -20,9 +20,9 @@ module Data.X509.XT.CRLDistributionPoints
   ) where
 
 import Data.List.NonEmpty (NonEmpty (..))
-import Data.X509.XT.GeneralName (GeneralName)
-import Data.X509.XT.HasOID (HasOID (..))
-import Data.X509.XT.Internal (RenderConfig (..), intersperseCommas)
+import Data.Rfc5280.GeneralName (GeneralName)
+import Data.Rfc5280.HasOID (HasOID (..))
+import Data.Rfc5280.Internal (RenderConfig (..), intersperseCommas)
 
 
 {- | A single CRL distribution point, identified by its full-name location.

@@ -1,5 +1,5 @@
 {- |
-Module      : Data.X509.XT.SubjectAltName
+Module      : Data.Rfc5280.SubjectAltName
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
@@ -7,15 +7,15 @@ SPDX-License-Identifier: BSD3
 Provides 'SubjectAltName', representing the X.509 Subject Alternative Name
 extension (RFC 5280 §4.2.1.6).
 -}
-module Data.X509.XT.SubjectAltName
+module Data.Rfc5280.SubjectAltName
   ( SubjectAltName (..)
   , mkSubjectAltName
   ) where
 
 import Data.List.NonEmpty (NonEmpty (..))
-import Data.X509.XT.GeneralName (GeneralName)
-import Data.X509.XT.HasOID (HasOID (..))
-import Data.X509.XT.Internal (RenderConfig (..), intersperseCommas)
+import Data.Rfc5280.GeneralName (GeneralName)
+import Data.Rfc5280.HasOID (HasOID (..))
+import Data.Rfc5280.Internal (RenderConfig (..), intersperseCommas)
 
 
 {- | Represents the SubjectAltName extension (RFC 5280 §4.2.1.6).

@@ -2,7 +2,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 
 {- |
-Module      : Data.X509.XT.GeneralName
+Module      : Data.Rfc5280.GeneralName
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
@@ -12,7 +12,7 @@ extensions, including SubjectAltName and AuthorityInfoAccess.
 
 'DirectoryName', x400Address, and ediPartyName are not yet modelled.
 -}
-module Data.X509.XT.GeneralName
+module Data.Rfc5280.GeneralName
   ( GeneralName (DNS, IPAddr, EmailAddr, URIName, Other)
   , pattern RegisteredID
   , DnsName
@@ -39,7 +39,7 @@ import Data.Char (isAlphaNum, isAscii)
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
-import Data.X509.XT.Internal (OID, OIDError, RenderConfig (..), mkOID, oidBuilder)
+import Data.Rfc5280.Internal (OID, OIDError, RenderConfig (..), mkOID, oidBuilder)
 import Net.IP (IP)
 import qualified Net.IP as IP
 import Text.Email.Validate (EmailAddress)

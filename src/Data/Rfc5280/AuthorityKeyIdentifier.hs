@@ -1,22 +1,22 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : Data.X509.XT.AuthorityKeyIdentifier
+Module      : Data.Rfc5280.AuthorityKeyIdentifier
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
 Provides the 'AuthorityKeyIdentifier' extension type and its smart constructor.
 -}
-module Data.X509.XT.AuthorityKeyIdentifier
+module Data.Rfc5280.AuthorityKeyIdentifier
   ( AuthorityKeyIdentifier (..)
   , mkAuthorityKeyIdentifier
   )
 where
 
 import Data.List.NonEmpty (NonEmpty (..))
-import Data.X509.XT.HasOID (HasOID (..))
-import Data.X509.XT.Internal (RenderConfig (..), intersperseCommas)
+import Data.Rfc5280.HasOID (HasOID (..))
+import Data.Rfc5280.Internal (RenderConfig (..), intersperseCommas)
 
 
 {- | Represents the AuthorityKeyIdentifier extension

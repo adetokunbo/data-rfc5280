@@ -6,17 +6,17 @@ Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
-Tests for 'Data.X509.XT.PolicyMappings'.
+Tests for 'Data.Rfc5280.PolicyMappings'.
 -}
 module Rfc5280.PolicyMappingsSpec (spec) where
 
-import Data.X509.XT (renderConfig, NonEmpty (..))
-import Data.X509.XT.PolicyMappings
+import Data.Rfc5280 (renderConfig, NonEmpty (..))
+import Data.Rfc5280.PolicyMappings
 import Test.Hspec
 
 
 spec :: Spec
-spec = describe "module Data.X509.XT.PolicyMappings" $ do
+spec = describe "module Data.Rfc5280.PolicyMappings" $ do
   context "mkPolicyMappings" $ do
     it "renders a single mapping" $
       renderConfig (mkPolicyMappings (mkPolicyMapping (1 :| [2, 3]) (2 :| [5, 4])) [])

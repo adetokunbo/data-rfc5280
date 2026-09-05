@@ -6,14 +6,14 @@ Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
-Tests for 'Data.X509.XT.NameConstraints'.
+Tests for 'Data.Rfc5280.NameConstraints'.
 -}
 module Rfc5280.NameConstraintsSpec (spec) where
 
 import qualified Data.ByteString as BS
-import Data.X509.XT (renderConfig)
-import Data.X509.XT.GeneralName
-import Data.X509.XT.NameConstraints
+import Data.Rfc5280 (renderConfig)
+import Data.Rfc5280.GeneralName
+import Data.Rfc5280.NameConstraints
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck (forAll, (===))
@@ -22,7 +22,7 @@ import Rfc5280.Generators (validDnsName)
 
 
 spec :: Spec
-spec = describe "module Data.X509.XT.NameConstraints" $ do
+spec = describe "module Data.Rfc5280.NameConstraints" $ do
   context "mkNameConstraints" $ do
     it "renders a single permitted DNS constraint" $ do
       dn <- assertRight (mkDnsConstraint ".example.com")

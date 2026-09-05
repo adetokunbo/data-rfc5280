@@ -36,24 +36,24 @@ source-repository head
 
 library
   exposed-modules:
-    Data.X509.XT
-    Data.X509.XT.AuthorityInfoAccess
-    Data.X509.XT.AuthorityKeyIdentifier
-    Data.X509.XT.BasicConstraints
-    Data.X509.XT.CertificatePolicies
-    Data.X509.XT.CRLDistributionPoints
-    Data.X509.XT.ExtKeyUsage
-    Data.X509.XT.GeneralName
-    Data.X509.XT.HasOID
-    Data.X509.XT.InhibitAnyPolicy
-    Data.X509.XT.IssuerAltName
-    Data.X509.XT.PolicyMappings
-    Data.X509.XT.KeyUsage
-    Data.X509.XT.NameConstraints
-    Data.X509.XT.SubjectAltName
-    Data.X509.XT.SubjectKeyIdentifier
+    Data.Rfc5280
+    Data.Rfc5280.AuthorityInfoAccess
+    Data.Rfc5280.AuthorityKeyIdentifier
+    Data.Rfc5280.BasicConstraints
+    Data.Rfc5280.CertificatePolicies
+    Data.Rfc5280.CRLDistributionPoints
+    Data.Rfc5280.ExtKeyUsage
+    Data.Rfc5280.GeneralName
+    Data.Rfc5280.HasOID
+    Data.Rfc5280.InhibitAnyPolicy
+    Data.Rfc5280.IssuerAltName
+    Data.Rfc5280.PolicyMappings
+    Data.Rfc5280.KeyUsage
+    Data.Rfc5280.NameConstraints
+    Data.Rfc5280.SubjectAltName
+    Data.Rfc5280.SubjectKeyIdentifier
   other-modules:
-    Data.X509.XT.Internal
+    Data.Rfc5280.Internal
   hs-source-dirs:   src
   build-depends:
     , base                 >=4.10 && <5

@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : Data.X509.XT.Internal
+Module      : Data.Rfc5280.Internal
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
@@ -9,7 +9,7 @@ SPDX-License-Identifier: BSD3
 Internal helpers shared across X.509 extension modules. Not part of the
 public API stability guarantee.
 -}
-module Data.X509.XT.Internal
+module Data.Rfc5280.Internal
   ( -- * Rendering
     RenderConfig (..)
 
@@ -30,7 +30,7 @@ import Data.List.NonEmpty (NonEmpty (..))
 
 
 {- | Types that can be rendered to a configuration value as a 'Builder'.
-Implemented by all extension types; used by 'Data.X509.XT.renderConfig'.
+Implemented by all extension types; used by 'Data.Rfc5280.renderConfig'.
 -}
 class RenderConfig a where
   -- | Render a value as a 'Builder' in OpenSSL extension configuration format.

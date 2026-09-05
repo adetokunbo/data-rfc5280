@@ -1,19 +1,19 @@
 {- |
-Module      : Data.X509.XT.CertificatePolicies
+Module      : Data.Rfc5280.CertificatePolicies
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
 Provides the 'CertificatePolicies' extension type and its smart constructor.
 -}
-module Data.X509.XT.CertificatePolicies
+module Data.Rfc5280.CertificatePolicies
   ( CertificatePolicies (..)
   , mkCertificatePolicies
   ) where
 
 import Data.List.NonEmpty (NonEmpty (..))
-import Data.X509.XT.HasOID (HasOID (..))
-import Data.X509.XT.Internal (OID, RenderConfig (..), intersperseCommas, oidBuilder)
+import Data.Rfc5280.HasOID (HasOID (..))
+import Data.Rfc5280.Internal (OID, RenderConfig (..), intersperseCommas, oidBuilder)
 
 
 {- | Represents @CertificatePolicies@ (RFC 5280 §4.2.1.4).

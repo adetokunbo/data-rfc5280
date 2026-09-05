@@ -19,7 +19,7 @@ where
 
 import Data.List.NonEmpty (NonEmpty (..))
 import qualified Data.Text as T
-import Data.X509.XT.GeneralName (DnsName, mkDnsName)
+import Data.Rfc5280.GeneralName (DnsName, mkDnsName)
 import Test.QuickCheck (Gen, choose, elements, vectorOf)
 
 

@@ -8,12 +8,12 @@ SPDX-License-Identifier: BSD3
 -}
 module Rfc5280Spec (spec) where
 
-import Data.X509.XT
+import Data.Rfc5280
 import Test.Hspec
 
 
 spec :: Spec
-spec = describe "module Data.X509.XT" $ do
+spec = describe "module Data.Rfc5280" $ do
   context "BasicConstraints" $ do
     it "renders a non-CA certificate" $
       renderConfig notCA `shouldBe` "CA:FALSE"

@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : Data.X509.XT.BasicConstraints
+Module      : Data.Rfc5280.BasicConstraints
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
@@ -10,17 +10,17 @@ SPDX-License-Identifier: BSD3
 
 Provides the 'BasicConstraints' extension type and its smart constructor.
 -}
-module Data.X509.XT.BasicConstraints
+module Data.Rfc5280.BasicConstraints
   ( BasicConstraints (..)
   , BasicConstraintsError (..)
   , mkBasicConstraints
   )
 where
 
-import Data.X509.XT.Internal (RenderConfig (..))
+import Data.Rfc5280.Internal (RenderConfig (..))
 import Data.ByteString.Builder (intDec)
 import Data.List.NonEmpty (NonEmpty (..))
-import Data.X509.XT.HasOID (HasOID (..))
+import Data.Rfc5280.HasOID (HasOID (..))
 
 
 {- | Represents the basic constraints extension

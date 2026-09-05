@@ -6,17 +6,17 @@ Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
-Tests for 'Data.X509.XT.InhibitAnyPolicy'.
+Tests for 'Data.Rfc5280.InhibitAnyPolicy'.
 -}
 module Rfc5280.InhibitAnyPolicySpec (spec) where
 
-import Data.X509.XT (renderConfig)
-import Data.X509.XT.InhibitAnyPolicy
+import Data.Rfc5280 (renderConfig)
+import Data.Rfc5280.InhibitAnyPolicy
 import Test.Hspec
 
 
 spec :: Spec
-spec = describe "module Data.X509.XT.InhibitAnyPolicy" $ do
+spec = describe "module Data.Rfc5280.InhibitAnyPolicy" $ do
   context "mkInhibitAnyPolicy" $ do
     it "accepts zero" $
       mkInhibitAnyPolicy 0 `shouldBe` Right (InhibitAnyPolicy 0)

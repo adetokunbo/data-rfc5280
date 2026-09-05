@@ -6,14 +6,14 @@ Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
-Tests for 'Data.X509.XT.IssuerAltName'.
+Tests for 'Data.Rfc5280.IssuerAltName'.
 -}
 module Rfc5280.IssuerAltNameSpec (spec) where
 
 import qualified Data.ByteString as BS
-import Data.X509.XT (renderConfig)
-import Data.X509.XT.GeneralName
-import Data.X509.XT.IssuerAltName
+import Data.Rfc5280 (renderConfig)
+import Data.Rfc5280.GeneralName
+import Data.Rfc5280.IssuerAltName
 import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
 import Data.List.NonEmpty (NonEmpty (..))
@@ -23,7 +23,7 @@ import Rfc5280.Generators (validDnsName, vectorOf1)
 
 
 spec :: Spec
-spec = describe "module Data.X509.XT.IssuerAltName" $ do
+spec = describe "module Data.Rfc5280.IssuerAltName" $ do
   context "mkIssuerAltName" $ do
     it "renders a single DNS name" $ do
       dn <- assertRight (mkDnsName "example.com")

@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : Data.X509.XT.HasOID
+Module      : Data.Rfc5280.HasOID
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
@@ -10,13 +10,13 @@ Provides the 'HasOID' typeclass for associating extension types with their
 RFC 5280 OIDs, and the 'Extension' wrapper for pairing a value with its
 criticality flag.
 -}
-module Data.X509.XT.HasOID
+module Data.Rfc5280.HasOID
   ( HasOID (..)
   , Extension (..)
   ) where
 
 import Data.Proxy (Proxy)
-import Data.X509.XT.Internal (OID, RenderConfig (..))
+import Data.Rfc5280.Internal (OID, RenderConfig (..))
 
 
 -- | Associates an extension type with its RFC 5280 OID.

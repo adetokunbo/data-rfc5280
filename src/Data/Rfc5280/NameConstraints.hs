@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : Data.X509.XT.NameConstraints
+Module      : Data.Rfc5280.NameConstraints
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
@@ -12,16 +12,16 @@ Provides 'NameConstraints', representing the X.509 Name Constraints extension
 The @minimum@ and @maximum@ fields of @GeneralSubtree@ are not modelled; they
 are almost never used in practice and are not supported in OpenSSL config format.
 -}
-module Data.X509.XT.NameConstraints
+module Data.Rfc5280.NameConstraints
   ( NameConstraints (..)
   , mkNameConstraints
   , NameConstraint (..)
   ) where
 
 import Data.List.NonEmpty (NonEmpty (..))
-import Data.X509.XT.GeneralName (GeneralName)
-import Data.X509.XT.HasOID (HasOID (..))
-import Data.X509.XT.Internal (RenderConfig (..), intersperseCommas)
+import Data.Rfc5280.GeneralName (GeneralName)
+import Data.Rfc5280.HasOID (HasOID (..))
+import Data.Rfc5280.Internal (RenderConfig (..), intersperseCommas)
 
 
 {- | A single name constraint, either permitting or excluding a subtree

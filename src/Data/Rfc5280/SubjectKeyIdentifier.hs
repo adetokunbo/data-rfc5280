@@ -1,22 +1,22 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : Data.X509.XT.SubjectKeyIdentifier
+Module      : Data.Rfc5280.SubjectKeyIdentifier
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
 Provides the 'SubjectKeyIdentifier' extension type.
 -}
-module Data.X509.XT.SubjectKeyIdentifier
+module Data.Rfc5280.SubjectKeyIdentifier
   ( SubjectKeyIdentifier (..)
   ) where
 
-import Data.X509.XT.Internal (RenderConfig (..))
+import Data.Rfc5280.Internal (RenderConfig (..))
 import Data.ByteString (ByteString)
 import Data.ByteString.Builder (byteString)
 import Data.List.NonEmpty (NonEmpty (..))
-import Data.X509.XT.HasOID (HasOID (..))
+import Data.Rfc5280.HasOID (HasOID (..))
 
 
 {- | Represents a SubjectKeyIdentifier value (RFC 5280 §4.2.1.2).

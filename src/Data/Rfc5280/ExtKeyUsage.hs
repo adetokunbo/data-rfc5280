@@ -2,14 +2,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {- |
-Module      : Data.X509.XT.ExtKeyUsage
+Module      : Data.Rfc5280.ExtKeyUsage
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
 
 Provides the 'ExtKeyUsage' extension type.
 -}
-module Data.X509.XT.ExtKeyUsage
+module Data.Rfc5280.ExtKeyUsage
   ( ExtKeyUsagePurpose (..)
   , ExtKeyUsage
   )
@@ -17,8 +17,8 @@ where
 
 import Data.List.NonEmpty (NonEmpty (..))
 import qualified Data.Set.NonEmpty as NES
-import Data.X509.XT.HasOID (HasOID (..))
-import Data.X509.XT.Internal (RenderConfig (..), intersperseCommas)
+import Data.Rfc5280.HasOID (HasOID (..))
+import Data.Rfc5280.Internal (RenderConfig (..), intersperseCommas)
 
 
 {- | Represents the bits that can set for @ExtKeyUsage@

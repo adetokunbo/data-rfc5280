@@ -3,7 +3,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 
 {- |
-Module      : Data.X509.XT
+Module      : Data.Rfc5280
 Copyright   : (c) 2026 Tim Emiola
 Maintainer  : Tim Emiola <adetokunbo@emio.la>
 SPDX-License-Identifier: BSD3
@@ -12,7 +12,7 @@ Represent the standard X.509v3 certificate extensions from RFC 5280.
 Each section below provides constructors for one or more extension types;
 'renderConfig' serialises any of them to OpenSSL configuration format.
 -}
-module Data.X509.XT
+module Data.Rfc5280
   ( -- * Extension types
     BasicConstraints (..)
   , BasicConstraintsError (..)
@@ -98,27 +98,27 @@ import qualified Data.ByteString as BS
 import Data.ByteString.Builder (toLazyByteString)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Set.NonEmpty (fromList)
-import Data.X509.XT.AuthorityKeyIdentifier
+import Data.Rfc5280.AuthorityKeyIdentifier
   ( AuthorityKeyIdentifier (..)
   , mkAuthorityKeyIdentifier
   )
-import Data.X509.XT.BasicConstraints
+import Data.Rfc5280.BasicConstraints
   ( BasicConstraints (..)
   , BasicConstraintsError (..)
   , mkBasicConstraints
   )
-import Data.X509.XT.CRLDistributionPoints
+import Data.Rfc5280.CRLDistributionPoints
   ( CRLDistributionPoints (..)
   , DistributionPoint (..)
   , mkCRLDistributionPoints
   , mkDistributionPoint
   )
-import Data.X509.XT.CertificatePolicies
+import Data.Rfc5280.CertificatePolicies
   ( CertificatePolicies (..)
   , mkCertificatePolicies
   )
-import Data.X509.XT.ExtKeyUsage (ExtKeyUsage, ExtKeyUsagePurpose (..))
-import Data.X509.XT.GeneralName
+import Data.Rfc5280.ExtKeyUsage (ExtKeyUsage, ExtKeyUsagePurpose (..))
+import Data.Rfc5280.GeneralName
   ( Asn1StringType (..)
   , DNSNameError (..)
   , DnsName
@@ -137,24 +137,24 @@ import Data.X509.XT.GeneralName
   , pattern OtherName
   , pattern RegisteredID
   )
-import Data.X509.XT.HasOID (Extension (..), HasOID (..))
-import Data.X509.XT.InhibitAnyPolicy (InhibitAnyPolicy (..), InhibitAnyPolicyError (..), mkInhibitAnyPolicy)
-import Data.X509.XT.Internal (OID, OIDError (..), RenderConfig (..), mkOID)
-import Data.X509.XT.IssuerAltName (IssuerAltName (..), mkIssuerAltName)
-import Data.X509.XT.KeyUsage (KeyUsage, KeyUsageBit (..))
-import Data.X509.XT.NameConstraints
+import Data.Rfc5280.HasOID (Extension (..), HasOID (..))
+import Data.Rfc5280.InhibitAnyPolicy (InhibitAnyPolicy (..), InhibitAnyPolicyError (..), mkInhibitAnyPolicy)
+import Data.Rfc5280.Internal (OID, OIDError (..), RenderConfig (..), mkOID)
+import Data.Rfc5280.IssuerAltName (IssuerAltName (..), mkIssuerAltName)
+import Data.Rfc5280.KeyUsage (KeyUsage, KeyUsageBit (..))
+import Data.Rfc5280.NameConstraints
   ( NameConstraint (..)
   , NameConstraints (..)
   , mkNameConstraints
   )
-import Data.X509.XT.PolicyMappings
+import Data.Rfc5280.PolicyMappings
   ( PolicyMapping (..)
   , PolicyMappings (..)
   , mkPolicyMapping
   , mkPolicyMappings
   )
-import Data.X509.XT.SubjectAltName (SubjectAltName (..), mkSubjectAltName)
-import Data.X509.XT.SubjectKeyIdentifier (SubjectKeyIdentifier (..))
+import Data.Rfc5280.SubjectAltName (SubjectAltName (..), mkSubjectAltName)
+import Data.Rfc5280.SubjectKeyIdentifier (SubjectKeyIdentifier (..))
 
 
 -- | Render an extension value as a strict 'ByteString' in OpenSSL configuration format.
