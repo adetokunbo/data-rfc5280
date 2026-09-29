@@ -2,6 +2,10 @@
 
 `data-rfc5280` uses [PVP Versioning][1].
 
+## 0.1.0.3 -- 2026-09-29
+
+* Adjust upper bound of the nonempty dependency
+
 ## 0.1.0.2 -- 2026-09-05
 
 * Adjust bounds of some dependencies
